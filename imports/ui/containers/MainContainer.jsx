@@ -6,4 +6,4 @@ export default MainContainer = withTracker(({params}) => {
     return {
         currentUser,
     };
-}, MainPage);
+})(MainPage);
