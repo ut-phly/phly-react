@@ -31,39 +31,35 @@ export default class LoginPage extends Component {
         return (
             <div>
                 <div>
-                    <div>
+                    <h1>Login</h1>
+                </div>
+                <div>
+                    { error.length > 0 ?
+                        <div>{error}</div>
+                        : '' }
+                    <form id="login-form"
+                        onSubmit={this.handleSubmit}>
                         <div>
-                            <h1>Login</h1>
+                            <input type="email"
+                                id="login-email"
+                                placeholder="email"/>
                         </div>
                         <div>
-                            { error.length > 0 ?
-                                <div>{error}</div>
-                                : '' }
-                            <form id="login-form"
-                                onSubmit={this.handleSubmit}>
-                                <div>
-                                    <input type="email"
-                                        id="login-email"
-                                        placeholder="email"/>
-                                </div>
-                                <div>
-                                    <input type="password"
-                                        id="login-password"
-                                        placeholder="password"/>
-                                </div>
-                                <div>
-                                    <input type="submit"
-                                        id="login-button"
-                                        value="Login"/>
-                                </div>
-                                <div>
-                                    <p>
-                                        Don't have an account? Register <Link to="/register">here</Link>
-                                    </p>
-                                </div>
-                            </form>
+                            <input type="password"
+                                id="login-password"
+                                placeholder="password"/>
                         </div>
-                    </div>
+                        <div>
+                            <input type="submit"
+                                id="login-button"
+                                value="Login"/>
+                        </div>
+                        <div>
+                            <p>
+                                Don't have an account? Register <Link to="/register">here</Link>
+                            </p>
+                        </div>
+                    </form>
                 </div>
             </div>
         );
