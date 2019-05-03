@@ -23,7 +23,7 @@ export default class RegisterPage extends Component {
                     error: err.reason
                 });
             } else {
-                this.props.history.push('/login');
+                this.props.history.push('/home');
             }
         });
     }

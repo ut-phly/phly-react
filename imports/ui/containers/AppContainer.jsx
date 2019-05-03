@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withHistory } from 'react-router-dom';
+import { withHistory, Link } from 'react-router-dom';
 import MainContainer from './MainContainer.jsx';
 
 export default class AppContainer extends Component {
@@ -42,13 +42,15 @@ export default class AppContainer extends Component {
                 <nav className="">
                     <div className="container">
                         <div className="">
-                            <a className="" href="#">Phly</a>
+                            <a className="" href="/home">Phly</a>
                         </div>
                         <div className="">
                             <ul className="">
                                 <li>
                                     <a href="#" onClick={this.logout}>Logout</a>
                                 </li>
+                                <li><Link to="/home">Campaigns</Link></li>
+                                <li><Link to="/home/profile">Profile</Link></li>
                             </ul>
                         </div>
                     </div>
