@@ -39,20 +39,16 @@ export default class AppContainer extends Component {
     render(){
         return (
             <div>
-                <nav className="">
-                    <div className="container">
-                        <div className="">
-                            <a className="" href="/home">Phly</a>
-                        </div>
-                        <div className="">
-                            <ul className="">
-                                <li>
-                                    <a href="#" onClick={this.logout}>Logout</a>
-                                </li>
-                                <li><Link to="/home">Campaigns</Link></li>
-                                <li><Link to="/home/profile">Profile</Link></li>
-                            </ul>
-                        </div>
+                <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+                    <a className="navbar-brand" href="/home">Phly</a>
+                    <div className="collapse navbar-collapse">
+                        <ul className="navbar-nav">
+                            <li className="navbar-item">
+                                <a className="nav-link" href="#" onClick={this.logout}>Logout</a>
+                            </li>
+                            <li className="navbar-item"><Link className="nav-link" to="/home">Campaigns</Link></li>
+                            <li className="navbar-item"><Link className="nav-link" to="/home/profile">Profile</Link></li>
+                        </ul>
                     </div>
                 </nav>
                 <MainContainer />

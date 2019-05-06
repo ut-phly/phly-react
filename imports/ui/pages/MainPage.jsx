@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { withHistory, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import CampaignList from '../pages/CampaignList.jsx';
+import CampaignPage from '../pages/CampaignPage.jsx';
 import Profile from '../pages/Profile.jsx';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
@@ -21,10 +22,10 @@ export default class MainPage extends Component {
 
         return (
             <div>
-                <div className="container">
-                    <h1>
+                <div className="card mb-3">
+                    <h2 className="card-header">
                         { loggedIn ? 'Welcome ' + currentUser.username : '' }
-                    </h1>
+                    </h2>
 
                     <Switch>
                         <Route
@@ -32,6 +33,10 @@ export default class MainPage extends Component {
                             render={(props) => <CampaignList {...props} campaigns={this.props.campaigns}/>}
                         />
                         <Route path="/home/profile" component={Profile}/>
+                        <Route
+                            path="/home/:id"
+                            render={(props) => <CampaignPage {...props} campaigns={this.props.campaigns}/>}
+                        />
                     </Switch>
                 </div>
             </div>

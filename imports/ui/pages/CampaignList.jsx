@@ -30,15 +30,16 @@ export default class CampaignList extends Component {
         let userDataAvailable = (currentUser !== undefined);
 
         return(
-            <div>
-                <form onSubmit={this.handleSubmit.bind(this)}>
+            <div className="card-body">
+                <form className="form-group" onSubmit={this.handleSubmit.bind(this)}>
                     <input
+                        className="form-control"
                         type="text"
                         ref="nameInput"
                         placeholder=" Add new campaign"
                     />
                 </form>
-                <ul className="campaigns">
+                <ul className="list-group">
                     {this.renderCampaigns()}
                 </ul>
             </div>

@@ -31,40 +31,46 @@ export default class RegisterPage extends Component {
     render() {
         const error = this.state.error;
         return (
-            <div>
-                <div>
+            <div className="card mb-3">
+                <div className="card-header">
                     <h1>Register</h1>
                 </div>
-                <div>
+                <div className="card-body">
                     { error.length > 0 ?
                         <div>{error}</div>
                         : '' }
                     <form id="login-form"
                         onSubmit={this.handleSubmit}>
-                        <div>
-                            <input type="text"
+                        <div className="form-group">
+                            <input
+                                className="form-control"
+                                type="text"
                                 id="register-username"
                                 placeholder="username"/>
                         </div>
-                        <div>
-                            <input type="email"
+                        <div className="form-group">
+                            <input
+                                className="form-control"
+                                type="email"
                                 id="register-email"
                                 placeholder="email"/>
                         </div>
-                        <div>
-                            <input type="password"
+                        <div className="form-group">
+                            <input
+                                className="form-control"
+                                type="password"
                                 id="register-password"
                                 placeholder="password"/>
                         </div>
-                        <div>
-                            <input type="submit"
+                        <div className="form-group">
+                            <input
+                                className="btn btn-primary"
+                                type="submit"
                                 id="login-button"
                                 value="Login"/>
-                        </div>
-                        <div>
-                            <p>
+                            <small className="form-text text-muted">
                                 Already have an account? Login <Link to="/login">here</Link>
-                            </p>
+                            </small>
                         </div>
                     </form>
                 </div>
