@@ -25,33 +25,33 @@ export default class AddCampaign extends Component {
                   <div class="invalid-feedback">Please fill out this field.</div>
               </div>
               <div className="form-group">
-                <label for="start-date">Start Date:</label>
+              <label class="col-sm-3 control-label">Start Date</label>
+                <div class="col-sm-3">
                   <input
                       className="form-control"
-                      type="text"
+                      type="date"
                       ref="nameInput"
-                      placeholder="MM/DD/YYYY"
+                      placeholder=""
                       required
                   />
+                  </div>
                   <div class="valid-feedback">Valid.</div>
                   <div class="invalid-feedback">Please fill out this field</div>
               </div>
-              <form id="profileForm" class="form-horizontal">
                 <div className="form-group">
                   <label class="col-sm-3 control-label">End Date</label>
                   <div class="col-sm-3">
                     <input
-                        type="text"
-                        class="form-control"
-                        name="end-date"
-                        placeholder="YYYY"
-                        required
+                      className="form-control"
+                      type="date"
+                      ref="nameInput"
+                      placeholder=""
+                      required
                     />
                     </div>
                     <div class="valid-feedback">Valid.</div>
                     <div class="invalid-feedback">Please fill out this field</div>
                 </div>
-              </form>
               <div className="form-group">
                 <label for="descip">Description:</label>
                   <input
