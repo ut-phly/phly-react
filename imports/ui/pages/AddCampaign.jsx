@@ -64,7 +64,7 @@ export default class AddCampaign extends Component {
                   <div class="valid-feedback">Valid.</div>
                   <div class="invalid-feedback">Please fill out this field</div>
               </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <Link to="/home">Submit</Link>
               </form>
             </div>
         )
