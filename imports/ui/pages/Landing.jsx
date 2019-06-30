@@ -5,8 +5,8 @@ import { withHistory, Link } from 'react-router-dom';
 
 export default class Landing extends Component {
     render() {
-        let loggedIn = Meteor.user();
-        if (loggedIn !== '') this.props.history.push('/home');
+        //let loggedIn = Meteor.user();
+        //if (loggedIn !== '') this.props.history.push('/home');
 
         return(
             <div className="card mb-3">
