@@ -8,7 +8,7 @@
     "visualize": "meteor --production --extra-packages bundle-visualizer"
   },
   "dependencies": {
-    "@babel/runtime": "^7.1.5",
+    "@babel/runtime": "^7.4.5",
     "bcrypt": "^3.0.5",
     "meteor-node-stubs": "^0.4.1",
     "react": "^16.8.6",
@@ -16,7 +16,7 @@
     "react-bootstrap-date-picker": "^5.1.0",
     "react-dom": "^16.8.6",
     "react-router": "^5.0.0",
-    "react-router-dom": "^5.0.0",
+    "react-router-dom": "^5.0.1",
     "simple-schema": "^1.1.0"
   },
   "meteor": {
