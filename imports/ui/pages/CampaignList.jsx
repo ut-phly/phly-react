@@ -17,15 +17,15 @@ export default class CampaignList extends Component {
         });
     }
 
-    handleSubmit(event) {
-        event.preventDefault();
-
-        const name = ReactDOM.findDOMNode(this.refs.nameInput).value.trim();
-        Meteor.call('campaigns.insert', name);
-        ReactDOM.findDOMNode(this.refs.nameInput).value = '';
-        this.props.history.push('/addCampaign');
-        <Link to="/addCampaign">here</Link>
-    }
+    // handleSubmit(event) {
+    //     event.preventDefault();
+    //
+    //     const name = ReactDOM.findDOMNode(this.refs.nameInput).value.trim();
+    //     Meteor.call('campaigns.insert', name);
+    //     ReactDOM.findDOMNode(this.refs.nameInput).value = '';
+    //     this.props.history.push('/addCampaign');
+    //     <Link to="/addCampaign">here</Link>
+    // }
 
 
     render() {
@@ -36,17 +36,9 @@ export default class CampaignList extends Component {
 
         return(
             <div className="card-body">
-                <form className="form-group">
-                    <input
-                        className="form-control"
-                        type="text"
-                        ref="nameInput"
-                        placeholder=" Add new campaign"
-                    />
-                </form>
-                <ul className="list-group">
-                    {this.renderCampaigns()}
-                </ul>
+              <ul className="list-group">
+                  {this.renderCampaigns()}
+              </ul>
                 <div className="form-group">
                   <small className="form-text text-muted">
                       <Link to="/addCampaign">Create New Campaign</Link>

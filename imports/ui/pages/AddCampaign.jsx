@@ -1,10 +1,73 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { withHistory, Link } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 
 import Campaigns from '../../api/campaigns.js';
 
 export default class AddCampaign extends Component {
+  constructor(props){
+    super(props);
+
+    this.state = {
+      newCampaign: {
+        name: '',
+        startDate: '',
+        endDate: '',
+        description: '',
+        userId: '',
+      }
+    }
+
+    // This binding is necessary to make `this` work in the callback
+    this.handleName = this.handleName.bind(this);
+    this.handleStartDate = this.handleStartDate.bind(this);
+    this.handleEndDate = this.handleEndDate.bind(this);
+    this.handleDescription = this.handleDescription.bind(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
+  }
+
+  handleName(e){
+    let value = e.target.value;
+    this.setState( prevState => ({ newUser :
+     {...prevState.newUser, name: value
+     }
+    }), () => console.log(this.state.newUser))
+  }
+
+  handleStartDate(e){
+    let value = e.target.value;
+    this.setState( prevState => ({ newUser :
+     {...prevState.newUser, startDate: value
+     }
+    }), () => console.log(this.state.newUser))
+  }
+
+  handleEndDate(e){
+    let value = e.target.value;
+    this.setState( prevState => ({ newUser :
+     {...prevState.newUser, endDate: value
+     }
+    }), () => console.log(this.state.newUser))
+  }
+
+  handleDescription(e){
+    let value = e.target.value;
+    this.setState( prevState => ({ newUser :
+     {...prevState.newUser, description: value
+     }
+    }), () => console.log(this.state.newUser))
+  }
+
+  handleFormSubmit(e){
+    Campaigns.insert({
+      name: this.state.newCampaign.name,
+      startDate: this.state.newCampaign.startDate,
+      endDate: this.state.newCampaign.endDate,
+      description: this.state.newCampaign.description,
+      userId: this.props.currentUser,
+    });
+  }
 
     render() {
 
@@ -13,12 +76,13 @@ export default class AddCampaign extends Component {
               <h1>Create your new Campaign!</h1>
               <form action="/action_page.php" class="was-validated">
                 <div class="form-group">
-                  <label for="name">Name:</label>
+                  <label>Name:</label>
                   <input
                       className="form-control"
                       type="text"
                       ref="nameInput"
                       placeholder="Name"
+                      onChange={this.handleName}
                       required
                   />
                   <div class="valid-feedback">Valid.</div>
@@ -32,6 +96,7 @@ export default class AddCampaign extends Component {
                       type="date"
                       ref="nameInput"
                       placeholder=""
+                      onChange={this.handleStartDate}
                       required
                   />
                   </div>
@@ -46,6 +111,7 @@ export default class AddCampaign extends Component {
                       type="date"
                       ref="nameInput"
                       placeholder=""
+                      onChange={this.handleEndDate}
                       required
                     />
                     </div>
@@ -53,18 +119,20 @@ export default class AddCampaign extends Component {
                     <div class="invalid-feedback">Please fill out this field</div>
                 </div>
               <div className="form-group">
-                <label for="descip">Description:</label>
+                <label>Description:</label>
                   <input
                       className="form-control"
                       type="text"
                       ref="nameInput"
                       placeholder="Please describe your campaign"
+                      onChange={this.handleDescription}
                       required
                   />
                   <div class="valid-feedback">Valid.</div>
                   <div class="invalid-feedback">Please fill out this field</div>
               </div>
-              <Link to="/home">Submit</Link>
+              <Link to="/home">Homepage</Link>
+              <Button onClick={this.handleFormSubmit}>Submit</Button>
               </form>
             </div>
         )

@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import CampaignList from '../pages/CampaignList.jsx';
 import CampaignPage from '../pages/CampaignPage.jsx';
 import Profile from '../pages/Profile.jsx';
+import AddCampaign from '../pages/AddCampaign.jsx'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 export default class MainPage extends Component {

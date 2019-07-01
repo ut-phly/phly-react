@@ -15,11 +15,15 @@ if (Meteor.isServer) {
 
 Meteor.methods({
     'campaigns.insert'(name) {
+        debugger;
         check(name, String);
 
         Campaigns.insert({
             name: name,
-            userId: this.userId
+            startDate: startDate,
+            endDate: endDate,
+            description: description,
+            userId: this.userId,
         });
     }
 });
