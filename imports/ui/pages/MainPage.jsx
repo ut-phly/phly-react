@@ -7,6 +7,7 @@ import CampaignPage from '../pages/CampaignPage.jsx';
 import Profile from '../pages/Profile.jsx';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
+
 export default class MainPage extends Component {
     constructor(props) {
         super(props);
