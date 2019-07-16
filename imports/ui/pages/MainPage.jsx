@@ -39,6 +39,9 @@ export default class MainPage extends Component {
                             render={(props) => <CampaignPage {...props} campaigns={this.props.campaigns}/>}
                         />
                     </Switch>
+                    <li>
+                      <Link to="/AddCampaign">Add Campaign</Link>
+                    </li>
                 </div>
             </div>
         );

@@ -51,7 +51,6 @@ export default class AppContainer extends Component {
                         </ul>
                     </div>
                 </nav>
-                <MainContainer />
             </div>
         );
     }

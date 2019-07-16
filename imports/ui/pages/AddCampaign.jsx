@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { withHistory, Link } from 'react-router-dom';
+import { withHistory, withRouter, Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 
-import Campaigns from '../../api/campaigns.js';
+import { Campaigns } from '../../api/campaigns.js';
 
 export default class AddCampaign extends Component {
   constructor(props){
@@ -60,13 +60,33 @@ export default class AddCampaign extends Component {
   }
 
   handleFormSubmit(e){
+    e.preventDefault();
     Campaigns.insert({
-      name: this.state.newCampaign.name,
-      startDate: this.state.newCampaign.startDate,
-      endDate: this.state.newCampaign.endDate,
-      description: this.state.newCampaign.description,
+      // name: this.state.newCampaign.name,
+      // startDate: this.state.newCampaign.startDate,
+      // endDate: this.state.newCampaign.endDate,
+      // description: this.state.newCampaign.description,
+      // userId: this.props.currentUser,
+      name: this.refs.name,
+      startDate: this.refs.startDate,
+      endDate: this.refs.endDate,
+      description: this.refs.description,
       userId: this.props.currentUser,
     });
+    // const campaign = {
+    //   name: this.refs.name,
+    //   startDate: this.refs.startDate,
+    //   endDate: this.refs.endDate,
+    //   description: this.refs.description,
+    //   userId: this.props.currentUser,
+    // };
+    //
+    // Campaigns.schema.validate(campaign);
+    // Campaigns.insert(campaign);
+
+    console.log("Success, campaign submitted!");
+
+    this.props.history.push('/');
   }
 
     render() {
@@ -80,52 +100,52 @@ export default class AddCampaign extends Component {
                   <input
                       className="form-control"
                       type="text"
-                      ref="nameInput"
+                      ref="name"
                       placeholder="Name"
-                      onChange={this.handleName}
+                      //onChange={this.handleName}
                       required
                   />
                   <div class="valid-feedback">Valid.</div>
                   <div class="invalid-feedback">Please fill out this field.</div>
-              </div>
-              <div className="form-group">
-              <label class="col-sm-3 control-label">Start Date</label>
-                <div class="col-sm-3">
-                  <input
-                      className="form-control"
-                      type="date"
-                      ref="nameInput"
-                      placeholder=""
-                      onChange={this.handleStartDate}
-                      required
-                  />
-                  </div>
-                  <div class="valid-feedback">Valid.</div>
-                  <div class="invalid-feedback">Please fill out this field</div>
-              </div>
+                </div>
                 <div className="form-group">
-                  <label class="col-sm-3 control-label">End Date</label>
+                  <label class="col-sm-3 control-label">Start Date</label>
                   <div class="col-sm-3">
                     <input
                       className="form-control"
                       type="date"
-                      ref="nameInput"
+                      ref="startDate"
                       placeholder=""
-                      onChange={this.handleEndDate}
+                      //onChange={this.handleStartDate}
                       required
+                      />
+                  </div>
+                  <div class="valid-feedback">Valid.</div>
+                  <div class="invalid-feedback">Please fill out this field</div>
+              </div>
+              <div className="form-group">
+                <label class="col-sm-3 control-label">End Date</label>
+                <div class="col-sm-3">
+                  <input
+                    className="form-control"
+                    type="date"
+                    ref="endDate"
+                    placeholder=""
+                    //onChange={this.handleStartDate}
+                    required
                     />
-                    </div>
-                    <div class="valid-feedback">Valid.</div>
-                    <div class="invalid-feedback">Please fill out this field</div>
                 </div>
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field</div>
+              </div>
               <div className="form-group">
                 <label>Description:</label>
                   <input
                       className="form-control"
                       type="text"
-                      ref="nameInput"
+                      ref="description"
                       placeholder="Please describe your campaign"
-                      onChange={this.handleDescription}
+                      //onChange={this.handleDescription}
                       required
                   />
                   <div class="valid-feedback">Valid.</div>
