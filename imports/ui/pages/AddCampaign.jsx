@@ -1,4 +1,6 @@
+import ReactDOM from 'react-dom';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Meteor } from 'meteor/meteor';
 import { withHistory, withRouter, Link } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
@@ -60,33 +62,29 @@ export default class AddCampaign extends Component {
   }
 
   handleFormSubmit(e){
+    debugger;
     e.preventDefault();
+    console.log(this.name._getText());
+    console.log(this.refs.startDate);
+    console.log(this.refs.endDate);
+    console.log(this.refs.description);
+    console.log(this.props.currentUser);
+
+    let testStartDate = new Date(2019, 11, 13);
+    let testEndDate = new Date(2019, 12, 13);
+
     Campaigns.insert({
-      // name: this.state.newCampaign.name,
-      // startDate: this.state.newCampaign.startDate,
-      // endDate: this.state.newCampaign.endDate,
-      // description: this.state.newCampaign.description,
-      // userId: this.props.currentUser,
-      name: this.refs.name,
-      startDate: this.refs.startDate,
-      endDate: this.refs.endDate,
-      description: this.refs.description,
-      userId: this.props.currentUser,
+
+      name: 'trialName',
+      startDate: testStartDate,
+      endDate: testEndDate,
+      description: 'testDescription',
+      userId: 'testCurrentUser',
     });
-    // const campaign = {
-    //   name: this.refs.name,
-    //   startDate: this.refs.startDate,
-    //   endDate: this.refs.endDate,
-    //   description: this.refs.description,
-    //   userId: this.props.currentUser,
-    // };
-    //
-    // Campaigns.schema.validate(campaign);
-    // Campaigns.insert(campaign);
 
     console.log("Success, campaign submitted!");
 
-    this.props.history.push('/');
+    //this.props.history.push('/');
   }
 
     render() {
@@ -100,7 +98,7 @@ export default class AddCampaign extends Component {
                   <input
                       className="form-control"
                       type="text"
-                      ref="name"
+                      ref={(name) => { this.name = name }}
                       placeholder="Name"
                       //onChange={this.handleName}
                       required
@@ -152,9 +150,15 @@ export default class AddCampaign extends Component {
                   <div class="invalid-feedback">Please fill out this field</div>
               </div>
               <Link to="/home">Homepage</Link>
-              <Button onClick={this.handleFormSubmit}>Submit</Button>
+              <Button onClick={this.handleFormSubmit.bind(this)}>Submit</Button>
               </form>
             </div>
         )
     }
+
+    // AddCampaign.propTypes = {
+    //     username: PropTypes.string
+    // }
 }
+
+//export default withRouter(New);

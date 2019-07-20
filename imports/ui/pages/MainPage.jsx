@@ -35,6 +35,10 @@ export default class MainPage extends Component {
                         />
                         <Route path="/home/profile" component={Profile}/>
                         <Route
+                            path="/home/addcampaign"
+                            render={(props) => <AddCampaign {...props} campaigns={this.props.campaigns}/>}
+                        />
+                        <Route
                             path="/home/:id"
                             render={(props) => <CampaignPage {...props} campaigns={this.props.campaigns}/>}
                         />
