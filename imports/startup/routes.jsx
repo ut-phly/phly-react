@@ -9,6 +9,7 @@ import LoginPage from '../ui/pages/LoginPage.jsx';
 import Landing from '../ui/pages/Landing.jsx';
 import AddCampaign from '../ui/pages/AddCampaign.jsx';
 
+
 export const renderRoutes = () => (
     <Router>
         <div>
@@ -17,6 +18,7 @@ export const renderRoutes = () => (
             <Route path="/register" component={RegisterPage}/>
             <Route path="/home" component={AppContainer}/>
             <Route path="/addCampaign" component={AddCampaign}/>
+
         </div>
     </Router>
 );

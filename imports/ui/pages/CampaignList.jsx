@@ -47,7 +47,7 @@ export default class CampaignList extends Component {
                 </ul>
                 <div className="form-group">
                   <small className="form-text text-muted">
-                      <Link to="addCampaign">Create New Campaign</Link>
+                      <Link to="/addCampaign">Create New Campaign</Link>
                   </small>
                 </div>
             </div>
