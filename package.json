@@ -20,6 +20,7 @@
     "react-dom": "^16.8.6",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.1",
+    "simpl-schema": "^1.5.5",
     "simple-schema": "^1.1.0"
   },
   "meteor": {
