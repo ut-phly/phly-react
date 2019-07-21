@@ -84,7 +84,7 @@ export default class AddCampaign extends Component {
               <input
                 className="form-control"
                 type="text"
-                id="startDate"
+                id="description"
                 placeholder="Write your campaign description here"
                 required
             />
