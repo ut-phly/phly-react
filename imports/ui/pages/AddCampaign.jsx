@@ -76,8 +76,8 @@ export default class AddCampaign extends Component {
     Campaigns.insert({
 
       name: 'trialName',
-      startDate: testStartDate,
-      endDate: testEndDate,
+      startDate: 'testStartDate',
+      endDate: 'testEndDate',
       description: 'testDescription',
       userId: 'testCurrentUser',
     });
@@ -87,74 +87,78 @@ export default class AddCampaign extends Component {
     //this.props.history.push('/');
   }
 
-    render() {
 
-        return (
-            <div className="card-body">
-              <h1>Create your new Campaign!</h1>
-              <form action="/action_page.php" class="was-validated">
-                <div class="form-group">
-                  <label>Name:</label>
-                  <input
-                      className="form-control"
-                      type="text"
-                      ref={(name) => { this.name = name }}
-                      placeholder="Name"
-                      //onChange={this.handleName}
-                      required
-                  />
-                  <div class="valid-feedback">Valid.</div>
-                  <div class="invalid-feedback">Please fill out this field.</div>
-                </div>
-                <div className="form-group">
-                  <label class="col-sm-3 control-label">Start Date</label>
-                  <div class="col-sm-3">
-                    <input
-                      className="form-control"
-                      type="date"
-                      ref="startDate"
-                      placeholder=""
-                      //onChange={this.handleStartDate}
-                      required
-                      />
-                  </div>
-                  <div class="valid-feedback">Valid.</div>
-                  <div class="invalid-feedback">Please fill out this field</div>
-              </div>
-              <div className="form-group">
-                <label class="col-sm-3 control-label">End Date</label>
-                <div class="col-sm-3">
+
+  render() {
+
+      return (
+
+          <div className="card-body">
+            <h1>Create your new Campaign!</h1>
+            <form class="needs-validation" novalidate>
+              <div class="form-group">
+                <div class="col-md-4 mb-3">
+                  <label for="validationCustom01">Name:</label>
                   <input
                     className="form-control"
-                    type="date"
-                    ref="endDate"
-                    placeholder=""
-                    //onChange={this.handleStartDate}
+                    type="text"
+                    id="validationCustom01"
+                    placeholder="Name"
+                    ref={(name) => { this.name = name }}
                     required
-                    />
-                </div>
+                />
                 <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field</div>
-              </div>
-              <div className="form-group">
-                <label>Description:</label>
-                  <input
-                      className="form-control"
-                      type="text"
-                      ref="description"
-                      placeholder="Please describe your campaign"
-                      //onChange={this.handleDescription}
-                      required
+                <div class="invalid-feedback">Please fill out this field.</div>
+            </div>
+            <div className="container">
+              <form onSubmit={this.handleSubmit}>
+                <div className="form-group">
+                  <label>Select Date: </label>
+                  <DatePicker
+                    selected={this.state.startDate}
+                    onChange={this.handleChange}
+                    name="startDate"
+                    dateFormat="MM/DD/YYYY"
                   />
-                  <div class="valid-feedback">Valid.</div>
-                  <div class="invalid-feedback">Please fill out this field</div>
-              </div>
-              <Link to="/home">Homepage</Link>
-              <Button onClick={this.handleFormSubmit.bind(this)}>Submit</Button>
+                </div>
+                <div className="form-group">
+                  <button className="btn btn-success">Add Date</button>
+                </div>
               </form>
             </div>
-        )
-    }
+            <div class="col-md-4 mb-3">
+              <label for="endDate">End Date</label>
+                <input
+                    className="form-control"
+                    type="date"
+                    id="endDate"
+                    placeholder=""
+                    required
+                />
+                <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Please fill out this field</div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <label for="validationDescription">Description:</label>
+              <input
+                className="form-control"
+                type="text"
+                id="validationDescription"
+                placeholder="Description"
+                required
+            />
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback">Please fill out this field.</div>
+        </div>
+            </div>
+            <Link to="/home">Homepage</Link>
+            <Button onClick={this.handleFormSubmit.bind(this)}>Submit</Button>
+            </form>
+          </div>
+
+      )
+  }
+
 
     // AddCampaign.propTypes = {
     //     username: PropTypes.string
