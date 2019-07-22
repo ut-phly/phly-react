@@ -3,17 +3,19 @@ import { Meteor } from 'meteor/meteor';
 import { withHistory, Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
+import { withRouter } from 'react-router-dom';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Campaigns from '../../api/campaigns.js';
+import { Campaigns1 } from '../../api/campaigns1.js';
 
-export default class AddCampaign extends Component {
+ class AddCampaign extends Component {
 
   // constructor(props) {
   //   super(props)
-  //   this.state = {
+  //   this.state =. {
   //     startDate: moment()
   //   };
   //   this.handleChange = this.handleChange.bind(this);
@@ -32,73 +34,93 @@ export default class AddCampaign extends Component {
   //   console.log(main.format('L'));
   // }
 
+  submitCampaign(event) {
+    event.preventDefault();
+    //inserts current user info in db
+    Campaigns1.insert({
+      name: this.refs.name.value,
+      startDate: this.refs.startDate.value,
+      endDate: this.refs.endDate.value,
+      description: this.refs.description.value,
+      // createdAt: new Date(),
+    })
+
+    this.props.history.push('/');
+  }
+
     render() {
 
         return (
 
             <div className="card-body">
               <h1>Create your new Campaign!</h1>
-              <form class="needs-validation" novalidate>
-                <div class="form-group">
-                  <div class="col-md-4 mb-3">
-                    <label for="validationCustom01">Name:</label>
+              <form className="needs-validation" novalidate onSubmit={this.submitCampaign.bind(this)}>
+                <div className="form-group">
+                  <div className="col-md-4 mb-3">
+                    <label htmlFor="validationCustom01">Name:</label>
                     <input
                       className="form-control"
+                      ref="name"
                       type="text"
                       id="validationCustom01"
                       placeholder="Write your campaign name here"
                       required
                   />
-                  <div class="valid-feedback">Valid.</div>
-                  <div class="invalid-feedback">Please fill out this field.</div>
+                  <div className="valid-feedback">Valid.</div>
+                  <div className="invalid-feedback">Please fill out this field.</div>
               </div>
-              <div class="form-group">
-                <div class="col-md-4 mb-3">
-                  <label for="validationCustom01">Start Date:</label>
+              <div className="form-group">
+                <div className="col-md-4 mb-3">
+                  <label htmlFor="validationCustom01">Start Date:</label>
                   <input
                     className="form-control"
+                    ref="startDate"
                     type="date"
                     id="startDate"
                     placeholder=""
                     required
                 />
-                <div class="valid-feedback">Valid.</div>
-                <div class="invalid-feedback">Please fill out this field.</div>
+                <div className="valid-feedback">Valid.</div>
+                <div className="invalid-feedback">Please fill out this field.</div>
             </div>
-            <div class="form-group">
-              <div class="col-md-4 mb-3">
-                <label for="validationCustom01">End Date:</label>
+            <div className="form-group">
+              <div className="col-md-4 mb-3">
+                <label htmlFor="validationCustom01">End Date:</label>
                 <input
                   className="form-control"
+                  ref="endDate"
                   type="date"
                   id="endDate"
                   placeholder=""
                   required
               />
-              <div class="valid-feedback">Valid.</div>
-              <div class="invalid-feedback">Please fill out this field.</div>
+              <div className="valid-feedback">Valid.</div>
+              <div className="invalid-feedback">Please fill out this field.</div>
           </div>
-          <div class="form-group">
-            <div class="col-md-4 mb-3">
-              <label for="validationCustom01">Description:</label>
+          <div className="form-group">
+            <div className="col-md-4 mb-3">
+              <label htmlFor="validationCustom01">Description:</label>
               <input
                 className="form-control"
+                ref="description"
                 type="text"
                 id="description"
                 placeholder="Write your campaign description here"
                 required
             />
-            <div class="valid-feedback">Valid.</div>
-            <div class="invalid-feedback">Please fill out this field.</div>
+            <div className="valid-feedback">Valid.</div>
+            <div className="invalid-feedback">Please fill out this field.</div>
         </div>
         </div>
           </div>
             </div>
               </div>
-              <button class="btn btn-primary btn-sm" type="submit" link to="/home">Submit</button>
+              <button className="btn btn-primary btn-sm" type="submit" name="action">Submit</button>
               </form>
             </div>
 
         )
     }
 }
+
+export default withRouter(AddCampaign);
