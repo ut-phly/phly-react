@@ -10,6 +10,7 @@ const CampaignsSchema = new SimpleSchema({
  startDate: {type: String},
  endDate: {type: Date},
  description: {type: String, optional: true},
+ user : {type: String},
 });
 
 Campaigns1.attachSchema(CampaignsSchema);

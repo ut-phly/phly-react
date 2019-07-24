@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { withHistory, Link } from 'react-router-dom';
 
-import Campaigns from '../../api/campaigns.js';
+import Campaigns from '../../api/campaigns1.js';
 
 export default class CampaignPage extends Component {
 

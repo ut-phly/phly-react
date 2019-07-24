@@ -8,31 +8,10 @@ import { withRouter } from 'react-router-dom';
 import 'react-datepicker/dist/react-datepicker.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import Campaigns from '../../api/campaigns.js';
 import { Campaigns1 } from '../../api/campaigns1.js';
+//import { CampaignList } from '../campaignlist.jsx';
 
  class AddCampaign extends Component {
-
-  // constructor(props) {
-  //   super(props)
-  //   this.state =. {
-  //     startDate: moment()
-  //   };
-  //   this.handleChange = this.handleChange.bind(this);
-  //   this.handleSubmit = this.handleSubmit.bind(this);
-  // }
-  //
-  // handleChange(date) {
-  //   this.setState({
-  //     startDate: date
-  //   })
-  // }
-  //
-  // handleSubmit(e) {
-  //   e.preventDefault();
-  //   let main = this.state.startDate
-  //   console.log(main.format('L'));
-  // }
 
   submitCampaign(event) {
     event.preventDefault();
@@ -42,6 +21,7 @@ import { Campaigns1 } from '../../api/campaigns1.js';
       startDate: this.refs.startDate.value,
       endDate: this.refs.endDate.value,
       description: this.refs.description.value,
+      user : 'Tara',
       // createdAt: new Date(),
     })
 

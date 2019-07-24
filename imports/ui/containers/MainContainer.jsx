@@ -1,7 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
-
-import Campaigns from '../../api/campaigns.js';
+import Campaigns from '../../api/campaigns1.js';
 
 import MainPage from '../pages/MainPage.jsx';
 
