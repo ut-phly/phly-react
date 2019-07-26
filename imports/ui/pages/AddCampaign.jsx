@@ -4,6 +4,9 @@ import { withHistory, Link } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import { withRouter } from 'react-router-dom';
+import { Redirect } from 'react-router';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+//import '../../../server/methods.js';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -12,23 +15,43 @@ import { Campaigns1 } from '../../api/campaigns1.js';
 //import { CampaignList } from '../campaignlist.jsx';
 
  class AddCampaign extends Component {
+   constructor(props) {
+       super(props);
+
+       this.submitCampaign = this.submitCampaign.bind(this);
+   }
 
   submitCampaign(event) {
     event.preventDefault();
     //inserts current user info in db
-    Campaigns1.insert({
+    const campaign = {
       name: this.refs.name.value,
       startDate: this.refs.startDate.value,
       endDate: this.refs.endDate.value,
       description: this.refs.description.value,
-      user : 'Tara',
+      user : 'Tara', //change to this.props.username
       // createdAt: new Date(),
-    })
+    }
 
-    this.props.history.push('/');
+    Meteor.call('insertCampaigns1', campaign, (error, result) =>{
+      if(error) {
+        alert("Oups something went wrong: " + error.reason);
+      } else {
+        alert("Campaign added");
+        this.props.history.replace('/home');
+      }
+    });
   }
 
     render() {
+
+      // if (this.state.toDashboard === true) {
+      //   return(
+      //     <Router>
+      //       <Redirect to='/home' />
+      //     </Router>
+      //   )
+      // }
 
         return (
 

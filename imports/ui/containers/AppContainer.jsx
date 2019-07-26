@@ -2,6 +2,10 @@ import React, { Component } from 'react';
 import { withHistory, Link } from 'react-router-dom';
 import MainContainer from './MainContainer.jsx';
 
+import List from 'material-ui/List';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+
 export default class AppContainer extends Component {
     constructor(props) {
         super(props);
@@ -51,7 +55,11 @@ export default class AppContainer extends Component {
                         </ul>
                     </div>
                 </nav>
-                <MainContainer />
+                <Router>
+                  <MuiThemeProvider>
+                    <MainContainer />
+                  </MuiThemeProvider>
+                </Router>
             </div>
         );
     }

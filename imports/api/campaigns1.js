@@ -5,10 +5,22 @@ import SimpleSchema from 'simpl-schema';
 
 export const Campaigns1 = new Mongo.Collection('campaigns1');
 
+Campaigns1.allow({
+  insert() { return false; },
+  update() { return false; },
+  remove() { return false; }
+});
+
+Campaigns1.deny({
+  insert() { return true; },
+  update() { return true; },
+  remove() { return true; }
+});
+
 const CampaignsSchema = new SimpleSchema({
  name: {type: String},
  startDate: {type: String},
- endDate: {type: Date},
+ endDate: {type: String},
  description: {type: String, optional: true},
  user : {type: String},
 });
