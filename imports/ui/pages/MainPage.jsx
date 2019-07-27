@@ -8,7 +8,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import AddCampaign from './AddCampaign.jsx';
 import CampaignListBox from './CampaignListBox.jsx';
-import CampaignList from '../pages/campaignlist.jsx';
+import CampaignList from '../pages/CampaignList.jsx';
 import List from 'material-ui/List';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { createContainer } from 'meteor/react-meteor-data';
@@ -33,7 +33,7 @@ export default class MainPage extends Component {
                       <Route path="/home/profile" component={Profile}/>
                       <Route
                         path="/home/addCampaign"
-                        render={(props) => <AddCampaign {...props} history={history}/>}
+                        render={(props) => <AddCampaign {...props} history={history} currentUser={currentUser}/>}
                       />
                   </Switch>
               </div>
