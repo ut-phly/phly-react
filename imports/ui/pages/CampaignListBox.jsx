@@ -6,11 +6,12 @@ import CampaignPage from '../pages/CampaignPage.jsx';
 import Profile from '../pages/Profile.jsx';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import CampaignList from '../pages/campaignlist.jsx';
+import CampaignList from '../pages/CampaignList.jsx';
 import List from 'material-ui/List';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import { Campaigns1 } from '../../api/campaigns1.js';
+import { Meteor } from 'meteor/meteor';
 
 class CampaignListBox extends Component {
   constructor(props) {
@@ -65,6 +66,7 @@ class CampaignListBox extends Component {
   }
 }
 
+
 CampaignListBox.propTypes = {
   campaigns: PropTypes.array.isRequired,
 };
@@ -75,4 +77,7 @@ export default withTracker(() => {
   return {
     campaigns: Campaigns1.find({}).fetch(),
   };
+
+  console.log(this.props.campaigns.name);
+
 })(CampaignListBox);
