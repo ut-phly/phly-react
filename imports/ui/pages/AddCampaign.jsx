@@ -29,10 +29,20 @@ import { Campaigns1 } from '../../api/campaigns1.js';
       startDate: this.refs.startDate.value,
       endDate: this.refs.endDate.value,
       description: this.refs.description.value,
-      user : 'Tara', //change to this.props.username
+      // user : 'Tara', //change to this.props.username
+      user: this.props.currentUser.username,
       // createdAt: new Date(),
     }
 
+    console.log(this.props.currentUser.username);
+
+    Meteor.methods({
+      insertCampaigns1(campaign) {
+        Campaigns1.insert(campaign);
+      }
+    });
+
+    // need to use meteor method
     Meteor.call('insertCampaigns1', campaign, (error, result) =>{
       if(error) {
         alert("Oups something went wrong: " + error.reason);
@@ -41,6 +51,7 @@ import { Campaigns1 } from '../../api/campaigns1.js';
         this.props.history.replace('/home');
       }
     });
+
   }
 
     render() {
