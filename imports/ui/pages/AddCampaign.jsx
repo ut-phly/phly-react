@@ -7,6 +7,7 @@ import { withRouter } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 //import '../../../server/methods.js';
+import { insert } from '../../api/methods.js';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -21,6 +22,8 @@ import { Campaigns1 } from '../../api/campaigns1.js';
        this.submitCampaign = this.submitCampaign.bind(this);
    }
 
+
+
   submitCampaign(event) {
     event.preventDefault();
     //inserts current user info in db
@@ -30,27 +33,30 @@ import { Campaigns1 } from '../../api/campaigns1.js';
       endDate: this.refs.endDate.value,
       description: this.refs.description.value,
       // user : 'Tara', //change to this.props.username
-      user: this.props.currentUser.username,
+      user: this.props.currentUser.username
       // createdAt: new Date(),
+
     }
+    console.log(typeof campaign.startDate);
+    insert.call(campaign, (err, res) => {
+      if(err) {
+        console.log(err.message);
+      }
+    });
 
     console.log(this.props.currentUser.username);
 
-    Meteor.methods({
-      insertCampaigns1(campaign) {
-        Campaigns1.insert(campaign);
-      }
-    });
 
-    // need to use meteor method
-    Meteor.call('insertCampaigns1', campaign, (error, result) =>{
-      if(error) {
-        alert("Oups something went wrong: " + error.reason);
-      } else {
-        alert("Campaign added");
-        this.props.history.replace('/home');
-      }
-    });
+
+    // // need to use meteor method
+    // Meteor.call('insertCampaigns1', campaign, (error, result) =>{
+    //   if(error) {
+    //     alert("Oups something went wrong: " + error.reason);
+    //   } else {
+    //     alert("Campaign added");
+    //     this.props.history.replace('/home');
+    //   }
+    // });
 
   }
 
