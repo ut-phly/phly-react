@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import SimpleSchema from 'simpl-schema';
-import { Campaigns1 } from '../imports/api/campaigns1.js';
+import { Campaigns1 } from './campaigns1.js';
 
 export const insert = new ValidatedMethod({
   name: 'Campaigns1.methods.insert',
@@ -13,6 +13,7 @@ export const insert = new ValidatedMethod({
     user: { type: String}
   }).validator(),
   run(newCampaign) {
+    debugger;
     Campaigns1.insert(newCampaign)
   }
 });

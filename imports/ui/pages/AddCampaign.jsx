@@ -37,38 +37,14 @@ import { Campaigns1 } from '../../api/campaigns1.js';
       // createdAt: new Date(),
 
     }
-    console.log(typeof campaign.startDate);
     insert.call(campaign, (err, res) => {
       if(err) {
         console.log(err.message);
       }
     });
-
-    console.log(this.props.currentUser.username);
-
-
-
-    // // need to use meteor method
-    // Meteor.call('insertCampaigns1', campaign, (error, result) =>{
-    //   if(error) {
-    //     alert("Oups something went wrong: " + error.reason);
-    //   } else {
-    //     alert("Campaign added");
-    //     this.props.history.replace('/home');
-    //   }
-    // });
-
   }
 
     render() {
-
-      // if (this.state.toDashboard === true) {
-      //   return(
-      //     <Router>
-      //       <Redirect to='/home' />
-      //     </Router>
-      //   )
-      // }
 
         return (
 
