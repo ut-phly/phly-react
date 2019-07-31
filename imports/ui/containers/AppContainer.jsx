@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withHistory, Link } from 'react-router-dom';
 import MainContainer from './MainContainer.jsx';
+import MainPage from '../pages/MainPage/MainPage.jsx';
 
 export default class AppContainer extends Component {
     constructor(props) {
