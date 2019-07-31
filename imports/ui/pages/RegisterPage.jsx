@@ -1,17 +1,35 @@
 import React, { Component } from 'react';
-import { withHistory, Link } from 'react-router-dom';
+import { withHistory, Link, Redirect } from 'react-router-dom';
 import { Accounts } from 'meteor/accounts-base';
+
+import {
+    Menu,
+    Container,
+    Button,
+    Grid,
+    Header,
+    Responsive,
+    Segment,
+    Form
+} from 'semantic-ui-react';
 
 export default class RegisterPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            error: ''
+            error: '',
+
         };
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleSubmit(e) {
+    handleRegister = () => {
+        this.setState(() => ({
+            login: true
+        }))
+    }
+
+    handleSubmit = (e) => {
         e.preventDefault();
         let username = document.getElementById('register-username').value;
         let email = document.getElementById('register-email').value;
@@ -30,50 +48,64 @@ export default class RegisterPage extends Component {
 
     render() {
         const error = this.state.error;
+
+        if (this.state.login === true) return <Redirect to='/login'/>
+
         return (
-            <div className="card mb-3">
-                <div className="card-header">
-                    <h1>Register</h1>
-                </div>
-                <div className="card-body">
-                    { error.length > 0 ?
-                        <div>{error}</div>
-                        : '' }
-                    <form id="login-form"
-                        onSubmit={this.handleSubmit}>
-                        <div className="form-group">
-                            <input
-                                className="form-control"
-                                type="text"
-                                id="register-username"
-                                placeholder="username"/>
-                        </div>
-                        <div className="form-group">
-                            <input
-                                className="form-control"
-                                type="email"
-                                id="register-email"
-                                placeholder="email"/>
-                        </div>
-                        <div className="form-group">
-                            <input
-                                className="form-control"
-                                type="password"
-                                id="register-password"
-                                placeholder="password"/>
-                        </div>
-                        <div className="form-group">
-                            <input
-                                className="btn btn-primary"
-                                type="submit"
-                                id="login-button"
-                                value="Login"/>
-                            <small className="form-text text-muted">
-                                Already have an account? Login <Link to="/login">here</Link>
-                            </small>
-                        </div>
-                    </form>
-                </div>
+            <div>
+                <Menu fixed='top' inverted color='blue'>
+                    <Container>
+                        <Menu.Item header
+                                    style={{
+                                        fontFamily: 'Nunito',
+                                        fontSize: '1.2em',
+                                        letterSpacing: '2px'}}>
+                                PHLY</Menu.Item>
+                        <Menu.Item position='right'>
+                            <Button onClick={this.handleRegister} style={{ marginLeft: '1.5em' }}>Login</Button>
+                        </Menu.Item>
+                    </Container>
+                </Menu>
+
+                <Responsive>
+                    <Segment style={{ padding: '8em', paddingTop: '12em', backgroundColor: '#F9FFFF'}} vertical>
+                        <Grid container stackable  centered verticalAlign='middle'>
+                            <Grid.Column width={8}>
+                                <Header as='h1'
+                                        color='orange'
+                                        style={{
+                                            fontSize: '3.5em',
+                                            letterSpacing: '1.5px' }}>
+                                    Register
+                                </Header>
+                                <Form>
+                                    <Form.Field>
+                                        <input
+                                            className="form-control"
+                                            type="email"
+                                            id="register-username"
+                                            placeholder="Username"/>
+                                    </Form.Field>
+                                    <Form.Field>
+                                        <input
+                                            className="form-control"
+                                            type="email"
+                                            id="register-email"
+                                            placeholder="Email"/>
+                                    </Form.Field>
+                                    <Form.Field>
+                                        <input
+                                            className="form-control"
+                                            type="password"
+                                            id="register-password"
+                                            placeholder="Password"/>
+                                    </Form.Field>
+                                    <Button onClick={this.handleSubmit} color='orange' type='submit'>Submit</Button>
+                                </Form>
+                            </Grid.Column>
+                        </Grid>
+                    </Segment>
+                </Responsive>
             </div>
         );
     }
