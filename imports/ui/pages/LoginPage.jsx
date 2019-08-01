@@ -1,17 +1,34 @@
 import React, { Component } from 'react';
-import { withHistory, Link } from 'react-router-dom';
+import { withHistory, Link, Redirect } from 'react-router-dom';
 import { createContainer } from 'meteor/react-meteor-data';
+
+import {
+    Menu,
+    Container,
+    Button,
+    Grid,
+    Header,
+    Responsive,
+    Segment,
+    Form
+} from 'semantic-ui-react';
 
 export default class LoginPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            error: ''
+            error: '',
+            register: false
         };
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleSubmit(e) {
+    handleRegister = () => {
+        this.setState(() => ({
+            register: true
+        }))
+    }
+
+    handleSubmit = (e) => {
         e.preventDefault();
         let email = document.getElementById('login-email').value;
         let password = document.getElementById('login-password').value;
@@ -28,42 +45,57 @@ export default class LoginPage extends Component {
 
     render() {
         const error = this.state.error;
+
+        if (this.state.register === true) return <Redirect to='/register'/>
+
         return (
-            <div className="card mb-3">
-                <div className="card-header">
-                    <h1>Login</h1>
-                </div>
-                <div className="card-body">
-                    { error.length > 0 ?
-                        <div>{error}</div>
-                        : '' }
-                    <form id="login-form" onSubmit={this.handleSubmit}>
-                        <div className="form-group">
-                            <input
-                                className="form-control"
-                                type="email"
-                                id="login-email"
-                                placeholder="email"/>
-                        </div>
-                        <div className="form-group">
-                            <input
-                                className="form-control"
-                                type="password"
-                                id="login-password"
-                                placeholder="password"/>
-                        </div>
-                        <div className="form-group">
-                            <input
-                                className="btn btn-primary"
-                                type="submit"
-                                id="login-button"
-                                value="Login"/>
-                            <small className="form-text text-muted">
-                                Don't have an account? Register <Link to="/register">here</Link>
-                            </small>
-                        </div>
-                    </form>
-                </div>
+            <div>
+                <Menu fixed='top' inverted color='blue'>
+                    <Container>
+                        <Menu.Item header
+                                    style={{
+                                        fontFamily: 'Nunito',
+                                        fontSize: '1.2em',
+                                        letterSpacing: '2px'}}>
+                                PHLY</Menu.Item>
+                        <Menu.Item position='right'>
+                            <Button onClick={this.handleRegister} style={{ marginLeft: '1.5em' }}>Sign Up</Button>
+                        </Menu.Item>
+                    </Container>
+                </Menu>
+
+                <Responsive>
+                    <Segment style={{ padding: '8em', paddingTop: '12em', backgroundColor: '#F9FFFF'}} vertical>
+                        <Grid container stackable  centered verticalAlign='middle'>
+                            <Grid.Column width={8}>
+                                <Header as='h1'
+                                        color='orange'
+                                        style={{
+                                            fontSize: '3.5em',
+                                            letterSpacing: '1.5px' }}>
+                                    Login
+                                </Header>
+                                <Form>
+                                    <Form.Field>
+                                        <input
+                                            className="form-control"
+                                            type="email"
+                                            id="login-email"
+                                            placeholder="Email"/>
+                                    </Form.Field>
+                                    <Form.Field>
+                                        <input
+                                            className="form-control"
+                                            type="password"
+                                            id="login-password"
+                                            placeholder="Password"/>
+                                    </Form.Field>
+                                    <Button onClick={this.handleSubmit} color='orange' type='submit'>Submit</Button>
+                                </Form>
+                            </Grid.Column>
+                        </Grid>
+                    </Segment>
+                </Responsive>
             </div>
         );
     }
