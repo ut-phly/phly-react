@@ -29,7 +29,7 @@ export default class AddCampaign extends Component {
       const owner= Meteor.userId()
       console.log(username);
       console.log(owner);
-      Campaigns.insert({
+      const campaign = ({
         name: campaign,
         createAt: date,
         owner: owner,

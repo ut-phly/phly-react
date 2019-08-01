@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 
@@ -10,6 +11,17 @@ Campaigns.schema = new SimpleSchema({
   username: {type: String},
 });
 
-//this will automatically check against the scehma when
-//when we call Lists.insert, update and upsert
+//this will automatically check against the scehma when created
 Campaigns.attachSchema(Campaigns.schema);
+
+Meteor.methods({
+  'campaigns.insert'(campaign) {
+    // add validation that the user is signed in and the schema is correct
+    Campaigns.insert({
+        name: campaign.name,
+        createAt: campaing.date,
+        owner: campaign.owner,
+        username: campaign.username,
+    });
+  }
+});
