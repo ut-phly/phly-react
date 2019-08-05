@@ -10,6 +10,7 @@ export default class CampaignPage extends Component {
   }
 
 // add link to public campaign page here
+//figure out how to pass props for specific campaign to Campaign Page
   render() {
     return (
         <div>
