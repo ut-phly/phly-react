@@ -18,7 +18,6 @@ export default class CampaignList extends Component {
   }
 
   render() {
-    console.log(this.props.campaigns)
     return (
       <div>
         <List>

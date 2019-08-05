@@ -5,18 +5,18 @@ import { withHistory, Link } from 'react-router-dom';
 //import Campaigns from '../../api/campaigns.js';
 
 export default class CampaignPage extends Component {
+  constructor(props) {
+    super(props);
+  }
 
-    render() {
-        let myCampaigns = this.props.campaigns;
-        let check = myCampaigns.some(c => c._id === this.props.match.params.id);
-        let campaign = myCampaigns.find(c => c._id === this.props.match.params.id);
-
-        return (
-            <div className="card-body">
-                <h3>
-                    { check ? campaign.name : "" }
-                </h3>
-            </div>
-        )
-    }
+// add link to public campaign page here
+  render() {
+    return (
+        <div>
+          <div className="card mb-3">
+            <h2 className="card-header">Campaign Page</h2>
+          </div>
+        </div>
+    );
+  }
 }
