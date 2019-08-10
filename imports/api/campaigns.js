@@ -4,9 +4,15 @@ import SimpleSchema from 'simpl-schema';
 
 export const Campaigns = new Mongo.Collection('campaigns');
 
+if (Meteor.isServer) {
+  Meteor.publish('campaigns', function campaignPublication() {
+    return Campaigns.find();
+  })
+}
+
 Campaigns.schema = new SimpleSchema({
   name: {type: String},
-  createAt: {type: Date},
+  createdAt: {type: Date},
   owner: {type: String},
   username: {type: String},
 });
@@ -16,10 +22,11 @@ Campaigns.attachSchema(Campaigns.schema);
 
 Meteor.methods({
   'campaigns.insert'(campaign) {
+    console.log(campaign);
     // add validation that the user is signed in and the schema is correct
     Campaigns.insert({
         name: campaign.name,
-        createAt: campaing.date,
+        createdAt: new Date(),
         owner: campaign.owner,
         username: campaign.username,
     });

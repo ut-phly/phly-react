@@ -6,9 +6,9 @@ import { Campaigns } from '../../api/campaigns.js';
 import MainPage from '../pages/MainPage/MainPage.jsx';
 
 export default MainContainer = withTracker(({params}) => {
-    //Meteor.subscribe('campaigns');
+    Meteor.subscribe('campaigns');
     const currentUser = Meteor.user();
-    const campaigns = Campaigns.find({}).fetch();
+    const campaigns = Campaigns.find({ owner: Meteor.userId() }).fetch();
 
     return {
         currentUser: currentUser,

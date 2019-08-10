@@ -39,12 +39,13 @@ export default class MainPage extends Component {
                           render={(props) => <AddCampaign {...props} history={history} currentUser={this.props.currentUser} />}
                         />
                         <Route
-                            path="/home/:id"
-                            render={(props) => <CampaignPage {...props} campaigns={this.props.campaigns}/>}
+                          path="/home/:id"
+                          render={(props) => <CampaignPage {...props} campaigns={this.props.campaigns}/>}
                         />
                     </Switch>
                 </div>
                 <CampaignList
+                  history={history}
                   campaigns={this.props.campaigns}
                 />
             </div>

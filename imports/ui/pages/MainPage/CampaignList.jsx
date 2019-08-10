@@ -13,12 +13,11 @@ export default class CampaignList extends Component {
 
   renderCampaigns() {
     return this.props.campaigns.map((campaign) => (
-      <CampaignItem key={campaign._id} campaign={campaign}/>
+      <CampaignItem key={campaign._id} history={this.props.history} campaign={campaign}/>
     ));
   }
 
   render() {
-    console.log(this.props.campaigns)
     return (
       <div>
         <List>
@@ -30,5 +29,6 @@ export default class CampaignList extends Component {
 }
 
 CampaignList.propTypes = {
+  history: PropTypes.object.isRequired,
   campaigns: PropTypes.array.isRequired,
 };
