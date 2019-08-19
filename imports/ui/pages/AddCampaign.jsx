@@ -11,8 +11,13 @@ import { Campaigns } from '../../api/campaigns.js';
 export default class AddCampaign extends Component {
     constructor(props) {
       super(props);
-      // this.state = { campaignName: '' };
-      // this.handleChange = this.handleChange.bind(this);
+      this.state = {
+        name: '',
+        description: '',
+        startDate: new Date(),
+        endDate: new Date(),
+      };
+      this.handleChange = this.handleChange.bind(this);
       this.handleSubmit = this.handleSubmit.bind(this);
     }
 
@@ -21,19 +26,29 @@ export default class AddCampaign extends Component {
     // }
 
     handleSubmit(event) {
-      alert('The campaign is: ' + this.input.value);
-      event.preventDefault();
-      const name = this.input.value;
-      const username = Meteor.user().username;
-      const date = new Date();
-      const owner= Meteor.userId();
-      const campaign = {
-        name: name,
-        owner: owner,
-        username: username,
-      };
-      Meteor.call('campaigns.insert', campaign);
-    }
+  // this.setState({ [event.target.name]: event.target.value });
+  event.preventDefault();
+  const date = new Date();
+  var campaign = {
+    name: this.state.name,
+    owner: Meteor.userId(),
+    username: Meteor.user().username,
+    description: this.state.description,
+    startDate: this.state.startDate,
+    endDate: this.state.endDate,
+  }
+  alert('The campaign is: ' + campaign.name + ' description: ' + campaign.description);
+  alert('startDate: ' + campaign.startDate + ' endDate: ' + campaign.endDate);
+  Meteor.call('campaigns.insert', campaign);
+}
+
+handleChange(key){
+  return function(e){
+    var state = {};
+    state[key] = e.target.value;
+    this.setState(state);
+  }.bind(this);
+}
 
     render() {
       // return (
@@ -47,11 +62,22 @@ export default class AddCampaign extends Component {
       //   </form>
       // );
       return (
-        <form onSubmit={this.handleSubmit}>
+        <form className = "needs-validation" novalidate onSubmit={this.handleSubmit}>
           <label>
-            Name:
-            <input type="text" ref={(input) => this.input = input} />
+            Name: <br />
+            <input type="text" value = {this.state.name} onChange={this.handleChange('name')} />
           </label>
+          <label>
+          <br />
+            Description: <br />
+            <input type="text" value = {this.state.description} onChange = {this.handleChange('description')} />
+          </label>
+          <br />
+          <label for="startDate"> Start Date <br /> </label>
+          <input type ="date" id="startStart" name="startDate"/>
+          <br />
+          <label for="endDate"> End Date <br /> </label>
+          <input type ="date" id="endStart" name="endDate"/>
           <input type="submit" value="Submit" />
         </form>
       );
