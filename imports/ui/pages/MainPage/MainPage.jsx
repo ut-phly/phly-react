@@ -12,41 +12,76 @@ import Profile from '../../pages/Profile.jsx';
 import AddCampaign from '../../pages/AddCampaign.jsx';
 import CampaignList from './CampaignList.jsx';
 
+import {
+    Header,
+    Container,
+    Menu,
+    Segment
+} from 'semantic-ui-react'
 
 export default class MainPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: ''
+            logout: false
         };
     }
 
+    handleLogout = () => {
+        this.setState(() => ({
+            register: true
+        }))
+    }
+
     render() {
-        let currentUser = this.props.currentUser;
-        let userDataAvailable = (currentUser !== undefined);
-        let loggedIn = (currentUser && userDataAvailable);
+        let user = this.props.currentUser;
+        let username = '';
+
+        if (user) {
+            username = this.props.currentUser.username;
+        }
+        if (this.state.logout === true) return <Redirect to='/home'/>
 
         return (
             <div>
-                <div className="card mb-3">
-                    <h2 className="card-header">
-                        { loggedIn ? 'Welcome ' + currentUser.username : '' }
-                    </h2>
-                    <Switch>
-                        <Route path="/home/profile" component={Profile}/>
-                        <Route
-                          path="/home/addCampaign"
-                          render={(props) => <AddCampaign {...props} history={history} currentUser={this.props.currentUser} />}
-                        />
-                        <Route
-                            path="/home/:id"
-                            render={(props) => <CampaignPage {...props} campaigns={this.props.campaigns}/>}
-                        />
-                    </Switch>
-                </div>
-                <CampaignList
-                  campaigns={this.props.campaigns}
-                />
+                <Menu fixed='left' pointing vertical inverted color='blue'>
+                    <Container style={{ paddingTop: '4em' }}>
+                        <Menu.Item>
+                            <Header as='h1' color='orange'
+                                    style={{
+                                        fontSize: '2em',
+                                        letterSpacing: '1.5px' }}>
+                                Welcome {username}
+                            </Header>
+                        </Menu.Item>
+                        <Menu.Item>
+                            <Link to="/home">CAMPAIGNS</Link>
+                        </Menu.Item>
+                        <Menu.Item>
+                            <Link to="/home/profile">PROFILE</Link>
+                        </Menu.Item>
+                    </Container>
+                </Menu>
+                <Segment style={{ padding: '7em', paddingLeft: '20em', backgroundColor: '#F9FFFF'}} vertical>
+                    { user ?
+                        <Switch>
+                            <Route
+                                exact path="/home"
+                                render={(props) => <CampaignList {...props} campaigns={this.props.campaigns}/>}
+                            />
+                            <Route path="/home/profile" component={Profile}/>
+                            <Route
+                              path="/home/new"
+                              render={(props) => <AddCampaign {...props} history={history} currentUser={this.props.currentUser} />}
+                            />
+                            <Route
+                                path="/home/:id"
+                                render={(props) => <CampaignPage {...props} campaigns={campaigns}/>}
+                            />
+                        </Switch>
+                        : ''
+                    }
+                </Segment>
             </div>
         );
     }

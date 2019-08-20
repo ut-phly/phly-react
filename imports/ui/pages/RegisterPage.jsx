@@ -81,21 +81,18 @@ export default class RegisterPage extends Component {
                                 <Form>
                                     <Form.Field>
                                         <input
-                                            className="form-control"
-                                            type="email"
+                                            type="text"
                                             id="register-username"
                                             placeholder="Username"/>
                                     </Form.Field>
                                     <Form.Field>
                                         <input
-                                            className="form-control"
                                             type="email"
                                             id="register-email"
                                             placeholder="Email"/>
                                     </Form.Field>
                                     <Form.Field>
                                         <input
-                                            className="form-control"
                                             type="password"
                                             id="register-password"
                                             placeholder="Password"/>

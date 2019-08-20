@@ -1,17 +1,29 @@
+import { Meteor } from 'meteor/meteor';
+
 import React, { Component } from 'react';
 import { withHistory, Link } from 'react-router-dom';
 import MainContainer from './MainContainer.jsx';
 import MainPage from '../pages/MainPage/MainPage.jsx';
 
+import {
+    Menu,
+    Container,
+    Button,
+    Grid,
+    Header
+} from 'semantic-ui-react';
+
 export default class AppContainer extends Component {
     constructor(props) {
         super(props);
-        this.state = this.getMeteorData();
-        this.logout = this.logout.bind(this);
-    }
+        const user = Meteor.user();
+        const auth =  Meteor.userId() !== null;
 
-    getMeteorData(){
-        return { isAuthenticated: Meteor.userId() !== null };
+        this.state = {
+            isAuthenticated: auth,
+            currentUser: user
+        };
+        this.logout = this.logout.bind(this);
     }
 
     componentWillMount(){
@@ -38,21 +50,23 @@ export default class AppContainer extends Component {
     }
 
     render(){
+
         return (
             <div>
-                <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-                    <a className="navbar-brand" href="/home">Phly</a>
-                    <div className="collapse navbar-collapse">
-                        <ul className="navbar-nav">
-                            <li className="navbar-item">
-                                <a className="nav-link" href="#" onClick={this.logout}>Logout</a>
-                            </li>
-                            <li className="navbar-item"><Link className="nav-link" to="/home">Campaigns</Link></li>
-                            <li className="navbar-item"><Link className="nav-link" to="/home/profile">Profile</Link></li>
-                        </ul>
-                    </div>
-                </nav>
                 <MainContainer />
+                <Menu fixed='top' inverted color='blue'>
+                    <Container>
+                        <Menu.Item header
+                                    style={{
+                                        fontFamily: 'Nunito',
+                                        fontSize: '1.2em',
+                                        letterSpacing: '2px'}}>
+                                PHLY</Menu.Item>
+                        <Menu.Item position='right'>
+                            <Button onClick={this.logout} style={{ marginLeft: '1.5em' }}>Logout</Button>
+                        </Menu.Item>
+                    </Container>
+                </Menu>
             </div>
         );
     }

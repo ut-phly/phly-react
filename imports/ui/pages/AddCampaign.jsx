@@ -23,14 +23,14 @@ export default class AddCampaign extends Component {
     handleSubmit(event) {
       alert('The campaign is: ' + this.input.value);
       event.preventDefault();
-      const campaign = this.input.value;
+      const name = this.input.value;
       const username = Meteor.user().username;
       const date = new Date();
       const owner= Meteor.userId()
       console.log(username);
       console.log(owner);
       const campaign = ({
-        name: campaign,
+        name: name,
         createAt: date,
         owner: owner,
         username: username,

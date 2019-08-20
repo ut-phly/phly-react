@@ -36,6 +36,10 @@ export default class Landing extends Component {
         }))
     }
 
+    handleSubmit = () => {
+        
+    }
+
     render() {
         let loggedIn = (Meteor.user() === null) ? false : true;
         if (loggedIn) this.props.history.push('/home');
@@ -166,7 +170,7 @@ export default class Landing extends Component {
                                 </p>
                             </Grid.Column>
                             <Grid.Column>
-                                <Form>
+                                <Form onSubmit={this.handleSubmit}>
                                     <Form.Field>
                                       <input placeholder='Name' />
                                     </Form.Field>
