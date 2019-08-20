@@ -18,7 +18,6 @@ export default class CampaignList extends Component {
   }
 
   render() {
-
     return (
         <div>
             <Header as='h1'
@@ -37,5 +36,6 @@ export default class CampaignList extends Component {
 }
 
 CampaignList.propTypes = {
+  history: PropTypes.object.isRequired,
   campaigns: PropTypes.array.isRequired,
 };
