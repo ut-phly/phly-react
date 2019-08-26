@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { withHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+import 'react-day-picker/lib/style.css';
 import { withRouter } from 'react-router-dom';
 
 import { Button, Form } from 'semantic-ui-react';
@@ -25,20 +27,25 @@ export default class AddCampaign extends Component {
     //   this.setState({ value: event.target.value });
     // }
 
-    handleSubmit(event) {
+  handleSubmit(event) {
   // this.setState({ [event.target.name]: event.target.value });
   event.preventDefault();
   const date = new Date();
   var campaign = {
     name: this.state.name,
+    createdAt: new Date(),
     owner: Meteor.userId(),
     username: Meteor.user().username,
-    description: this.state.description,
     startDate: this.state.startDate,
     endDate: this.state.endDate,
+    description: this.state.description,
   }
+  var test = "hello";
   alert('The campaign is: ' + campaign.name + ' description: ' + campaign.description);
   alert('startDate: ' + campaign.startDate + ' endDate: ' + campaign.endDate);
+  alert('obeject type' + typeof this.state.startDate);
+  alert('obeject type' + typeof campaign.startDate);
+
   Meteor.call('campaigns.insert', campaign);
 }
 
@@ -49,6 +56,15 @@ handleChange(key){
     this.setState(state);
   }.bind(this);
 }
+
+handleStartDayChange(day){
+  this.setState({startDate: day});
+}
+
+handleEndDayChange(day){
+  this.setState({endDate: day});
+}
+
 
     render() {
       // return (
@@ -74,10 +90,10 @@ handleChange(key){
           </label>
           <br />
           <label for="startDate"> Start Date <br /> </label>
-          <input type ="date" id="startStart" name="startDate"/>
+          <DayPickerInput onDayChange={this.handleStartDayChange.bind(this)}/>
           <br />
-          <label for="endDate"> End Date <br /> </label>
-          <input type ="date" id="endStart" name="endDate"/>
+          <label for="startDate"> End Date <br /> </label>
+          <DayPickerInput onDayChange={this.handleEndDayChange.bind(this)}/>
           <input type="submit" value="Submit" />
         </form>
       );
