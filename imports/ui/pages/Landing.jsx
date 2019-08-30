@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { withHistory, Link, Redirect } from 'react-router-dom';
 
+import logo from '/logo.png';
+
 import {
     Responsive,
     Menu,
@@ -11,9 +13,9 @@ import {
     Grid,
     Header,
     Icon,
-    Form
+    Form,
+    Image
 } from 'semantic-ui-react';
-
 
 export default class Landing extends Component {
     constructor(props) {
@@ -37,7 +39,7 @@ export default class Landing extends Component {
     }
 
     handleSubmit = () => {
-        
+
     }
 
     render() {
@@ -56,6 +58,7 @@ export default class Landing extends Component {
                                         fontFamily: 'Nunito',
                                         fontSize: '1.2em',
                                         letterSpacing: '2px'}}>
+                                <Image src={logo} avatar/>
                                 PHLY</Menu.Item>
                         <Menu.Item position='right'>
                             <Button onClick={this.handleLogin} inverted>Login</Button>

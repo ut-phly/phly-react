@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { withHistory, Link } from 'react-router-dom';
+import { withHistory, Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
@@ -16,7 +16,9 @@ import {
     Header,
     Container,
     Menu,
-    Segment
+    Segment,
+    Button,
+    Icon
 } from 'semantic-ui-react'
 
 export default class MainPage extends Component {
@@ -28,9 +30,16 @@ export default class MainPage extends Component {
     }
 
     handleLogout = () => {
-        this.setState(() => ({
-            register: true
-        }))
+
+        Meteor.logout( (err) => {
+            if (err) {
+                console.log( err.reason );
+            } else {
+                this.setState(() => ({
+                    logout: true
+                }));
+            }
+        });
     }
 
     render() {
@@ -40,29 +49,35 @@ export default class MainPage extends Component {
         if (user) {
             username = this.props.currentUser.username;
         }
-        if (this.state.logout === true) return <Redirect to='/home'/>
+
+        if (this.state.logout === true) return <Redirect to="/login"/>
 
         return (
             <div>
                 <Menu fixed='left' pointing vertical inverted color='blue'>
-                    <Container style={{ paddingTop: '4em' }}>
+                    <Container style={{ paddingTop: '1em' }}>
                         <Menu.Item>
-                            <Header as='h1' color='orange'
+                            <Header textAlign='center' as='h1' color='orange'
                                     style={{
                                         fontSize: '2em',
                                         letterSpacing: '1.5px' }}>
-                                Welcome {username}
+                                {username}
                             </Header>
                         </Menu.Item>
-                        <Menu.Item>
-                            <Link to="/home">CAMPAIGNS</Link>
+                        <Menu.Item as={ Link } name='campaigns' to="/home">
+                            <Icon name="handshake outline"/>
+                            Campaigns
                         </Menu.Item>
-                        <Menu.Item>
-                            <Link to="/home/profile">PROFILE</Link>
+                        <Menu.Item as={ Link } name='profile' to="/home/profile">
+                            <Icon name="user circle outline"/>
+                            Profile
+                        </Menu.Item>
+                        <Menu.Item position='right'>
+                            <Button onClick={this.handleLogout}>Logout</Button>
                         </Menu.Item>
                     </Container>
                 </Menu>
-                <Segment style={{ padding: '7em', paddingLeft: '20em', backgroundColor: '#F9FFFF'}} vertical>
+                <Segment style={{ padding: '3em', paddingLeft: '18em', backgroundColor: '#F9FFFF'}} vertical>
                     { user ?
                         <Switch>
                             <Route
@@ -72,11 +87,11 @@ export default class MainPage extends Component {
                             <Route path="/home/profile" component={Profile}/>
                             <Route
                               path="/home/new"
-                              render={(props) => <AddCampaign {...props} history={history} currentUser={this.props.currentUser} />}
+                              render={(props) => <AddCampaign {...props} history={this.history} currentUser={this.props.currentUser} />}
                             />
                             <Route
                                 path="/home/:id"
-                                render={(props) => <CampaignPage {...props} campaigns={campaigns}/>}
+                                render={(props) => <CampaignPage {...props} campaigns={this.props.campaigns}/>}
                             />
                         </Switch>
                         : ''
@@ -89,5 +104,5 @@ export default class MainPage extends Component {
 
 MainPage.propTypes = {
     currentUser: PropTypes.object,
-    campaigns: PropTypes.array,
+    campaigns: PropTypes.array.isRequired,
 }

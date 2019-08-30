@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { Campaigns } from '../api/campaigns.js';
 
-import { List } from 'semantic-ui-react';
+import { Segment } from 'semantic-ui-react';
 
 export default class Campaign extends Component {
     constructor(props) {
@@ -13,16 +13,16 @@ export default class Campaign extends Component {
     }
 
     render() {
+        console.log(this.props.campaign._id);
         return (
-            <List.Item className="list-group-item">
+            <Segment>
                 <Link to={`/home/${this.props.campaign._id}`}>{this.props.campaign.name}</Link>
-            </List.Item>
+            </Segment>
         )
     }
 }
 
 
 Campaign.propTypes = {
-  //key: PropTypes.string,
   campaign: PropTypes.object.isRequired,
 };

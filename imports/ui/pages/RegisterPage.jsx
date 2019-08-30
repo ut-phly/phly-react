@@ -18,7 +18,8 @@ export default class RegisterPage extends Component {
         super(props);
         this.state = {
             error: '',
-
+            login: false,
+            return: false
         };
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -26,6 +27,12 @@ export default class RegisterPage extends Component {
     handleRegister = () => {
         this.setState(() => ({
             login: true
+        }))
+    }
+
+    handleReturn = () => {
+        this.setState(() => ({
+            return: true
         }))
     }
 
@@ -50,12 +57,14 @@ export default class RegisterPage extends Component {
         const error = this.state.error;
 
         if (this.state.login === true) return <Redirect to='/login'/>
+        if (this.state.return === true) return <Redirect to='/'/>
 
         return (
             <div>
                 <Menu fixed='top' inverted color='blue'>
                     <Container>
                         <Menu.Item header
+                                    onClick={this.handleReturn}
                                     style={{
                                         fontFamily: 'Nunito',
                                         fontSize: '1.2em',

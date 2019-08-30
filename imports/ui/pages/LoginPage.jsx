@@ -18,7 +18,8 @@ export default class LoginPage extends Component {
         super(props);
         this.state = {
             error: '',
-            register: false
+            register: false,
+            return: false
         };
     }
 
@@ -43,21 +44,30 @@ export default class LoginPage extends Component {
         });
     }
 
+    handleReturn = () => {
+        this.setState(() => ({
+            return: true
+        }))
+    }
+
     render() {
         const error = this.state.error;
 
         if (this.state.register === true) return <Redirect to='/register'/>
+        if (this.state.return === true) return <Redirect to='/'/>
 
         return (
             <div>
                 <Menu fixed='top' inverted color='blue'>
                     <Container>
                         <Menu.Item header
+                                    onClick={this.handleReturn}
                                     style={{
                                         fontFamily: 'Nunito',
                                         fontSize: '1.2em',
                                         letterSpacing: '2px'}}>
-                                PHLY</Menu.Item>
+                            PHLY
+                        </Menu.Item>
                         <Menu.Item position='right'>
                             <Button onClick={this.handleRegister} style={{ marginLeft: '1.5em' }}>Sign Up</Button>
                         </Menu.Item>

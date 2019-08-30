@@ -23,7 +23,6 @@ export default class AppContainer extends Component {
             isAuthenticated: auth,
             currentUser: user
         };
-        this.logout = this.logout.bind(this);
     }
 
     componentWillMount(){
@@ -38,35 +37,11 @@ export default class AppContainer extends Component {
         }
     }
 
-    logout(e){
-        e.preventDefault();
-        Meteor.logout( (err) => {
-            if (err) {
-                console.log( err.reason );
-            } else {
-                this.props.history.push('/login');
-            }
-        });
-    }
-
     render(){
 
         return (
             <div>
                 <MainContainer />
-                <Menu fixed='top' inverted color='blue'>
-                    <Container>
-                        <Menu.Item header
-                                    style={{
-                                        fontFamily: 'Nunito',
-                                        fontSize: '1.2em',
-                                        letterSpacing: '2px'}}>
-                                PHLY</Menu.Item>
-                        <Menu.Item position='right'>
-                            <Button onClick={this.logout} style={{ marginLeft: '1.5em' }}>Logout</Button>
-                        </Menu.Item>
-                    </Container>
-                </Menu>
             </div>
         );
     }

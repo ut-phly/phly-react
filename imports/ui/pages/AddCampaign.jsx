@@ -1,62 +1,84 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
-import { withHistory } from 'react-router-dom';
+import { withHistory, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
-import { Button, Form } from 'semantic-ui-react';
+import {
+    Button,
+    Form,
+    Responsive,
+    Segment,
+    Grid,
+    Header
+} from 'semantic-ui-react';
 
 import { Campaigns } from '../../api/campaigns.js';
 
 export default class AddCampaign extends Component {
     constructor(props) {
-      super(props);
-      // this.state = { campaignName: '' };
-      // this.handleChange = this.handleChange.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
+        super(props);
+        this.state = {
+            created: false,
+            campaign: null
+        };
+
     }
 
     // handleChange(event) {
     //   this.setState({ value: event.target.value });
     // }
 
-    handleSubmit(event) {
-      alert('The campaign is: ' + this.input.value);
-      event.preventDefault();
-      const name = this.input.value;
-      const username = Meteor.user().username;
-      const date = new Date();
-      const owner= Meteor.userId();
-      const campaign = {
-        name: name,
-        owner: owner,
-        username: username,
-      };
-      Meteor.call('campaigns.insert', campaign);
+    handleSubmit = (e) => {
+        e.preventDefault();
+        let name = document.getElementById('campaign-name').value;
+        let username = Meteor.user().username;
+        let date = new Date();
+        let owner= Meteor.userId();
+        this.state.campaign = {
+            name: name,
+            owner: owner,
+            username: username,
+            date: date
+        };
+        Meteor.call('campaigns.insert', this.state.campaign);
+        this.setState(() => ({
+          created: true
+        }));
     }
 
     render() {
-      // return (
-      //   <form onSubmit={this.handleSubmit}>
-      //     <input
-      //       type="text"
-      //       value={this.state.campaignname}
-      //       onChange={this.handleChange}
-      //     />
-      //     <input type="submit" value="Submit" />
-      //   </form>
-      // );
-      return (
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Name:
-            <input type="text" ref={(input) => this.input = input} />
-          </label>
-          <input type="submit" value="Submit" />
-        </form>
-      );
+
+        if (this.state.created === true) return <Redirect to={`/home/${this.state.campaign._id}`}/>
+
+        return (
+            <Responsive>
+                <Segment style={{ backgroundColor: '#F9FFFF'}} vertical>
+                    <Grid container stackable>
+                        <Grid.Column width={8}>
+                            <Header as='h1'
+                                    color='orange'
+                                    style={{
+                                        fontSize: '2em',
+                                        letterSpacing: '1.5px' }}>
+                                Add New Campaign
+                            </Header>
+                            <Form>
+                                <Form.Field>
+                                    <input
+                                        type="text"
+                                        id="campaign-name"
+                                        placeholder="Name"/>
+                                </Form.Field>
+                                <Button onClick={this.handleSubmit} color='orange' type='submit'>Submit</Button>
+                            </Form>
+                        </Grid.Column>
+                    </Grid>
+                </Segment>
+            </Responsive>
+        );
     }
-  }
+}
 
 //export default withRouter(AddCampaign);
 AddCampaign.propTypes = {
