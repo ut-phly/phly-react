@@ -35,5 +35,18 @@ Meteor.methods({
         endDate: campaign.endDate,
         description: campaign.description,
     });
+  },
+  'campaigns.edit'(campaign, id) {
+    // add validation that the user is signed in and the schema is correct
+    Campaigns.update(
+      { _id: id },
+      {
+        $set:
+        { name: campaign.name,
+          description: campaign.description,
+          startDate: campaign.startDate,
+          endDate: campaign.endDate,
+        }
+    });
   }
 });

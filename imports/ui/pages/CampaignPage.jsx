@@ -2,50 +2,66 @@ import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { withHistory, Link } from 'react-router-dom';
 import { Campaigns } from '../../api/campaigns.js';
-
-//import Campaigns from '../../api/campaigns.js';
+import DayPickerInput from 'react-day-picker/DayPickerInput';
 
 export default class CampaignPage extends Component {
   constructor(props) {
     super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  //function to find specific campaign
-
-// add link to public campaign page here
-//figure out how to pass props for specific campaign to Campaign Page
-
-  renderObj () {
-    return (
-      <div>
-      {this.props.location.state.campaignStartDate}
-      </div>
-    )
+  handleSubmit(event) {
+    event.preventDefault();
+    const date = new Date();
+    var campaign = {
+      name: this.state.name,
+      owner: Meteor.userId(),
+      username: Meteor.user().username,
+      startDate: this.state.startDate,
+      endDate: this.state.endDate,
+      description: this.state.description,
+    }
+    Meteor.call('campaigns.edit', campaign, this.props.location.state.campaignID);
+    var obj = Campaigns.findOne({ _id: this.props.match.params.id });
+    console.log(obj);
   }
+
+  handleChange(key){
+    return function(e){
+      var state = {};
+      state[key] = e.target.value;
+      this.setState(state);
+    }.bind(this);
+  }
+
+  handleStartDayChange(day){
+    this.setState({startDate: day});
+  }
+
+  handleEndDayChange(day){
+    this.setState({endDate: day});
+  }
+
 
   render() {
-    // console.log("props " + this.props);
-    var userIDname = this.props.location.state.campaignID;
-    // console.log(userIDname);
-    console.log("id");
-    console.log(this.props.location.state.campaignID);
-    console.log("name");
-    console.log(this.props.location.state.campaignNAME);
-    console.log("camp");
-    console.log(this.props.location.state.camp);
-    console.log("startDate HERE");
-    console.log(this.props.location.state.campaignStartDate);
-    console.log("des");
-    console.log(this.props.location.state.campaignDes);
-    // Campaigns.findById(userIDname, function(err, campaigns) {});
 
-    // console.log("collection");
-    // console.log(Campaigns.find().fetch());
+    var obj = Campaigns.findOne({ _id: this.props.match.params.id });
+    if(obj != null){
+      var campName = obj.name;
+      var campDes = obj.description;
+      var campStartDate = obj.startDate;
+      var startString = campStartDate.toLocaleDateString();
+      var campEndDate = obj.endDate;
+      var endString = campEndDate.toLocaleDateString();
+    }
     return (
         <div>
           <div className="card mb-3">
-            <h2 className="card-header">{this.props.location.state.campaignNAME}</h2>
-            <h3> Description: {this.props.location.state.campaignDes}</h3>
+            <h2 className="card-header">{campName}</h2>
+            <h3> Description: {campDes}</h3>
+            <h3> Start Date: {startString}</h3>
+            <h3> End Date: {endString}</h3>
             <Link to={{
               pathname: `/public/${this.props.location.state.campaignID}`,
               state: {
@@ -53,7 +69,19 @@ export default class CampaignPage extends Component {
               }
             }}>Public Campaign Link</Link>
           </div>
-          <Link to="/home/addCampaign">Edit</Link>
+          <form className = "needs-validation" novalidate onSubmit={this.handleSubmit}>
+            <label>
+              EDIT name: <br />
+              <input type="text" defaultValue = {campName} onChange={this.handleChange('name')}/>
+              <br /> EDIT Description: <br />
+              <input type="text" defaultValue = {campDes} onChange={this.handleChange('description')}/>
+              <br /> EDIT Start Date: <br />
+              <DayPickerInput placeholder = {campStartDate} onDayChange={this.handleStartDayChange.bind(this)}/>
+              <br /> EDIT End Date: <br />
+              <DayPickerInput placeholder = {campEndDate} onDayChange={this.handleEndDayChange.bind(this)}/>
+              <input type="submit" value="Submit" />
+            </label>
+          </form>
         </div>
     );
   }

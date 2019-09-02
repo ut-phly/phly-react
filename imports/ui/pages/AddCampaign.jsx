@@ -23,60 +23,39 @@ export default class AddCampaign extends Component {
       this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    // handleChange(event) {
-    //   this.setState({ value: event.target.value });
-    // }
+    handleSubmit(event) {
+      event.preventDefault();
+      const date = new Date();
+      var campaign = {
+        name: this.state.name,
+        createdAt: new Date(),
+        owner: Meteor.userId(),
+        username: Meteor.user().username,
+        startDate: this.state.startDate,
+        endDate: this.state.endDate,
+        description: this.state.description,
+      }
+      Meteor.call('campaigns.insert', campaign);
+    }
 
-  handleSubmit(event) {
-  // this.setState({ [event.target.name]: event.target.value });
-  event.preventDefault();
-  const date = new Date();
-  var campaign = {
-    name: this.state.name,
-    createdAt: new Date(),
-    owner: Meteor.userId(),
-    username: Meteor.user().username,
-    startDate: this.state.startDate,
-    endDate: this.state.endDate,
-    description: this.state.description,
-  }
-  var test = "hello";
-  alert('The campaign is: ' + campaign.name + ' description: ' + campaign.description);
-  alert('startDate: ' + campaign.startDate + ' endDate: ' + campaign.endDate);
-  alert('obeject type' + typeof this.state.startDate);
-  alert('obeject type' + typeof campaign.startDate);
+    handleChange(key){
+      return function(e){
+        var state = {};
+        state[key] = e.target.value;
+        this.setState(state);
+      }.bind(this);
+    }
 
-  Meteor.call('campaigns.insert', campaign);
-}
+    handleStartDayChange(day){
+      this.setState({startDate: day});
+    }
 
-handleChange(key){
-  return function(e){
-    var state = {};
-    state[key] = e.target.value;
-    this.setState(state);
-  }.bind(this);
-}
-
-handleStartDayChange(day){
-  this.setState({startDate: day});
-}
-
-handleEndDayChange(day){
-  this.setState({endDate: day});
-}
+    handleEndDayChange(day){
+      this.setState({endDate: day});
+    }
 
 
     render() {
-      // return (
-      //   <form onSubmit={this.handleSubmit}>
-      //     <input
-      //       type="text"
-      //       value={this.state.campaignname}
-      //       onChange={this.handleChange}
-      //     />
-      //     <input type="submit" value="Submit" />
-      //   </form>
-      // );
       return (
         <form className = "needs-validation" novalidate onSubmit={this.handleSubmit}>
           <label>
