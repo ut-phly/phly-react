@@ -23,8 +23,6 @@ export default class CampaignPage extends Component {
       description: this.state.description,
     }
     Meteor.call('campaigns.edit', campaign, this.props.location.state.campaignID);
-    var obj = Campaigns.findOne({ _id: this.props.match.params.id });
-    console.log(obj);
   }
 
   handleChange(key){
