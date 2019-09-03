@@ -24,5 +24,17 @@ Meteor.methods({
         owner: campaign.owner,
         username: campaign.username,
     });
+  },
+
+  'getClientToken'(clientId) {
+    var generateToken = Meteor.wrapAsync(gateway.clientToken.generate, gateway.clientToken);
+    var options = {};
+
+    if (clientId) {
+      options.clientId = clientId;
+    }
+
+    var response = generateToken(options);
+    return response.clientToken;
   }
 });
