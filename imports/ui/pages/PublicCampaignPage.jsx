@@ -29,10 +29,10 @@ export default class CampaignPage extends Component {
               return;
             }
             // Verify browser support before proceeding.
-            // if (!venmoInstance.isBrowserSupported()) {
-            //   console.log('Browser does not support Venmo');
-            //   return;
-            // }
+            if (!venmoInstance.isBrowserSupported()) {
+              console.log('Browser does not support Venmo');
+              return;
+            }
 
             displayVenmoButton(venmoInstance);
             if (venmoInstance.hasTokenizationResult()) {
@@ -56,9 +56,34 @@ export default class CampaignPage extends Component {
               venmoInstance.tokenize(function (tokenizeErr, payload) {
                 venmoButton.removeAttribute('disabled');
 
+                if (tokenizeErr) {
+                 handleVenmoError(tokenizeErr);
+               } else {
+                 handleVenmoSuccess(payload);
+               }
+
               });
             });
           }
+
+          function handleVenmoError(err) {
+            if (err.code === 'VENMO_CANCELED') {
+              console.log('App is not available or user aborted payment flow');
+            } else if (err.code === 'VENMO_APP_CANCELED') {
+              console.log('User canceled payment flow');
+            } else {
+              console.error('An error occurred:', err.message);
+            }
+          }
+
+
+          function handleVenmoSuccess(payload) {
+            // Send payload.nonce to your server.
+            console.log('Got a payment method nonce:', payload.nonce);
+            // Display the Venmo username in your checkout UI.
+            console.log('Venmo user:', payload.details.username);
+          }
+
         });
         braintree.setup(clientToken, "dropin", {
           container: "payment-form", // Injecting into <div id="payment-form"></div>
@@ -78,6 +103,7 @@ export default class CampaignPage extends Component {
                   if (error) {
                     throw new Meteor.Error('transaction-creation-failed');
                   } else {
+                    console.log("iphone");
                     alert('Thank you for your donation!');
                   }
                 });
