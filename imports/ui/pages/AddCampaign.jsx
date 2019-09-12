@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { withHistory, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import DayPickerInput from 'react-day-picker/DayPickerInput';
+import 'react-day-picker/lib/style.css';
 import { withRouter } from 'react-router-dom';
 
 import {
@@ -17,67 +19,78 @@ import { Campaigns } from '../../api/campaigns.js';
 
 export default class AddCampaign extends Component {
     constructor(props) {
-        super(props);
-        this.state = {
-            created: false,
-            campaign: null
-        };
-
+      super(props);
+      this.state = {
+        name: '',
+        description: '',
+        startDate: new Date(),
+        endDate: new Date(),
+        created: false
+      };
+      this.handleChange = this.handleChange.bind(this);
+      this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    // handleChange(event) {
-    //   this.setState({ value: event.target.value });
-    // }
-
-    handleSubmit = (e) => {
-        e.preventDefault();
-        let name = document.getElementById('campaign-name').value;
-        let username = Meteor.user().username;
-        let date = new Date();
-        let owner = this.props.org;
-        this.state.campaign = {
-            name: name,
-            owner: owner,
-            username: username,
-            date: date
-        };
-        Meteor.call('campaigns.insert', this.state.campaign);
-        Meteor.call('organizations.addCampaign', owner, this.state.campaign);
-        this.setState(() => ({
-          created: true
-        }));
+    handleSubmit(event) {
+      event.preventDefault();
+      const date = new Date();
+      var campaign = {
+        name: this.state.name,
+        createdAt: new Date(),
+        owner: Meteor.userId(),
+        username: Meteor.user().username,
+        startDate: this.state.startDate,
+        endDate: this.state.endDate,
+        description: this.state.description,
+      }
+      Meteor.call('campaigns.insert', campaign);
+      Meteor.call('organizations.addCampaign', owner, this.state.campaign);
+      this.setState(() => ({
+        created: true
+      }));
     }
+
+    handleChange(key){
+      return function(e){
+        var state = {};
+        state[key] = e.target.value;
+        this.setState(state);
+      }.bind(this);
+    }
+
+    handleStartDayChange(day){
+      this.setState({startDate: day});
+    }
+
+    handleEndDayChange(day){
+      this.setState({endDate: day});
+    }
+
 
     render() {
 
         if (this.state.created === true) return <Redirect to='/home'/>
 
-        return (
-            <Responsive>
-                <Segment style={{ backgroundColor: '#F9FFFF'}} vertical>
-                    <Grid container stackable>
-                        <Grid.Column width={8}>
-                            <Header as='h1'
-                                    color='orange'
-                                    style={{
-                                        fontSize: '2em',
-                                        letterSpacing: '1.5px' }}>
-                                Add New Campaign
-                            </Header>
-                            <Form>
-                                <Form.Field>
-                                    <input
-                                        type="text"
-                                        id="campaign-name"
-                                        placeholder="Name"/>
-                                </Form.Field>
-                                <Button onClick={this.handleSubmit} color='orange' type='submit'>Submit</Button>
-                            </Form>
-                        </Grid.Column>
-                    </Grid>
-                </Segment>
-            </Responsive>
-        );
+      return (
+        <form className = "needs-validation" novalidate onSubmit={this.handleSubmit}>
+          <label>
+            Name: <br />
+            <input type="text" value = {this.state.name} onChange={this.handleChange('name')} />
+          </label>
+          <label>
+          <br />
+            Description: <br />
+            <input type="text" value = {this.state.description} onChange = {this.handleChange('description')} />
+          </label>
+          <br />
+          <label for="startDate"> Start Date <br /> </label>
+          <DayPickerInput onDayChange={this.handleStartDayChange.bind(this)}/>
+          <br />
+          <label for="startDate"> End Date <br /> </label>
+          <DayPickerInput onDayChange={this.handleEndDayChange.bind(this)}/>
+          <input type="submit" value="Submit" />
+        </form>
+      );
     }
 }
 

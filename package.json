@@ -16,6 +16,8 @@
         "postcss-load-config": "^2.1.0",
         "react": "^16.8.6",
         "react-addons-pure-render-mixin": "^15.6.2",
+        "react-datepicker": "^2.8.0",
+        "react-day-picker": "^7.3.2",
         "react-dom": "^16.8.6",
         "react-router": "^5.0.0",
         "react-router-dom": "^5.0.0",

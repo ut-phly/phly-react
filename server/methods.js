@@ -24,5 +24,16 @@ Meteor.methods({
         owner: campaign.owner,
         username: campaign.username,
     });
+  },
+  'campaigns.save'(campaign, id) {
+    // add validation that the user is signed in and the schema is correct
+    Campaigns.save({
+        _id: id,
+        name: campaign.name,
+        createdAt: new Date(),
+        owner: campaign.owner,
+        username: campaign.username,
+
+    });
   }
 });
