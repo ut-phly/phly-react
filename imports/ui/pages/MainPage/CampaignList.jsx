@@ -13,6 +13,7 @@ import {
 } from 'semantic-ui-react';
 
 import Campaign from '../../Campaign.jsx';
+import { Campaigns } from '../../../api/campaigns.js';
 
 export default class CampaignList extends Component {
     constructor(props) {
@@ -30,7 +31,11 @@ export default class CampaignList extends Component {
 
     renderCampaigns() {
         return this.props.campaigns.map((campaign) => (
-            <Campaign key={campaign._id} campaign={campaign}/>
+            <Campaign
+                as={ Link }
+                to={`/home/${campaign._id}`}
+                key={campaign._id}
+                campaign={campaign}/>
         ));
     }
 
@@ -55,9 +60,9 @@ export default class CampaignList extends Component {
                             New
                         </Button>
                     </Segment>
-                    <Segment.Group>
+                    <Grid padded>
                         {this.renderCampaigns()}
-                    </Segment.Group>
+                    </Grid>
                 </Responsive>
           </div>
         );

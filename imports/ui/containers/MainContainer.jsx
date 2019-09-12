@@ -2,20 +2,25 @@ import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import { Campaigns } from '../../api/campaigns.js';
+import { Organizations } from '../../api/organizations.js';
 
 import MainPage from '../pages/MainPage/MainPage.jsx';
 
-export default MainContainer = withTracker(({params}) => {
+export default MainContainer = withTracker(({history}) => {
     Meteor.subscribe('campaigns');
+    Meteor.subscribe('organizations');
     const currentUser = Meteor.user();
     console.log(currentUser);
     console.log(Meteor.userId());
     const campaigns = Campaigns.find({ owner: Meteor.userId() }).fetch();
+    const organizations = Organizations.find({ owner: Meteor.userId() }).fetch();
 
     console.log(campaigns);
+    console.log(organizations);
     return {
+        history: history,
         currentUser: currentUser,
         campaigns: campaigns,
-        //campaigns: Campaigns.find({}).fetch()
+        organizations: organizations
     };
 })(MainPage);

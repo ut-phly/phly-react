@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { withHistory, Link, Redirect } from 'react-router-dom';
 
-import logo from '/logo.png';
-
 import {
     Responsive,
     Menu,
@@ -14,7 +12,8 @@ import {
     Header,
     Icon,
     Form,
-    Image
+    Image,
+    Message
 } from 'semantic-ui-react';
 
 export default class Landing extends Component {
@@ -22,7 +21,8 @@ export default class Landing extends Component {
         super(props);
         this.state = {
             register: false,
-            login: false
+            login: false,
+            success: false
         };
     }
 
@@ -39,7 +39,21 @@ export default class Landing extends Component {
     }
 
     handleSubmit = () => {
+        let name = document.getElementById('name').value;
+        let university = document.getElementById('university').value;
+        let org = document.getElementById('org').value;
+        let email = document.getElementById('email').value;
+        let phone = document.getElementById('phone').value;
 
+        Meteor.call('potentials.insert', {
+            name: name,
+            university: university,
+            org: org,
+            email: email,
+            phone: phone
+        });
+
+        this.setState({ success: true });
     }
 
     render() {
@@ -53,16 +67,13 @@ export default class Landing extends Component {
             <div>
                 <Menu fixed='top' inverted color='blue'>
                     <Container>
-                        <Menu.Item header
-                                    style={{
-                                        fontFamily: 'Nunito',
-                                        fontSize: '1.2em',
-                                        letterSpacing: '2px'}}>
-                                <Image src={logo} avatar/>
-                                PHLY</Menu.Item>
-                        <Menu.Item position='right'>
-                            <Button onClick={this.handleLogin} inverted>Login</Button>
-                            <Button onClick={this.handleRegister} style={{ marginLeft: '1.5em' }}>Sign Up</Button>
+                        <Menu.Item>
+                                <Image style={{ height: '1.5em', width: '1.5em' }} src='/images/logo.png'/>
+                                 <p style={{
+                                     fontFamily: 'Nunito',
+                                     fontSize: '1.5em',
+                                     marginLeft: '.5em',
+                                     letterSpacing: '2px'}}>PHLY</p>
                         </Menu.Item>
                     </Container>
                 </Menu>
@@ -88,7 +99,7 @@ export default class Landing extends Component {
                                         Phly makes fundraising easier and safer
                                         for student organizations
                                     </p>
-                                    <Button size='big' color='orange'>
+                                    <Button as='a' href='#form' size='big' color='orange'>
                                         Get Started
                                         <Icon name='right arrow'/>
                                     </Button>
@@ -153,7 +164,7 @@ export default class Landing extends Component {
                         </Grid>
                     </Segment>
 
-                    <Segment vertical style={{ padding: '7.5em', backgroundColor: '#F9FFFF' }}>
+                    <Segment id='form' vertical style={{ padding: '7.5em', backgroundColor: '#F9FFFF' }}>
                         <Grid container stackable verticalAlign='middle' columns='equal'>
                             <Grid.Column>
                                 <Header as='h1'
@@ -173,23 +184,20 @@ export default class Landing extends Component {
                                 </p>
                             </Grid.Column>
                             <Grid.Column>
-                                <Form onSubmit={this.handleSubmit}>
-                                    <Form.Field>
-                                      <input placeholder='Name' />
-                                    </Form.Field>
-                                    <Form.Field>
-                                      <input placeholder='University' />
-                                    </Form.Field>
-                                    <Form.Field>
-                                      <input placeholder='Student Organization' />
-                                    </Form.Field>
-                                    <Form.Field>
-                                      <input placeholder='Email' />
-                                    </Form.Field>
-                                    <Form.Field>
-                                      <input placeholder='Phone Number' />
-                                    </Form.Field>
+                                <Form onSubmit={this.handleSubmit} success>
+                                    <Form.Input placeholder='Name' id='name'/>
+                                    <Form.Input placeholder='University' id='university'/>
+                                    <Form.Input placeholder='Student Organization' id='org'/>
+                                    <Form.Input placeholder='Email' id='email'/>
+                                    <Form.Input placeholder='Phone' id='phone'/>
                                     <Button color='orange' type='submit'>Submit</Button>
+                                    { this.state.success ?
+                                        <Message
+                                            success
+                                            header='Form Completed'
+                                            content="Thank you for your interest!"
+                                        />
+                                        : '' }
                                 </Form>
                             </Grid.Column>
                         </Grid>
@@ -199,3 +207,8 @@ export default class Landing extends Component {
         )
     }
 }
+
+// <Menu.Item position='right'>
+//    <Button onClick={this.handleLogin} inverted>Login</Button>
+//    <Button onClick={this.handleRegister} style={{ marginLeft: '1.5em' }}>Sign Up</Button>
+//</Menu.Item>

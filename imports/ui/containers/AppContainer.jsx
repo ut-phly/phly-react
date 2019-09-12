@@ -41,7 +41,7 @@ export default class AppContainer extends Component {
 
         return (
             <div>
-                <MainContainer />
+                <MainContainer history={this.props.history}/>
             </div>
         );
     }

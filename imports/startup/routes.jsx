@@ -4,12 +4,12 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import AppContainer from '../ui/containers/AppContainer.jsx';
 import MainContainer from '../ui/containers/MainContainer.jsx';
 
-import RegisterPage from '../ui/pages/RegisterPage.jsx';
-import LoginPage from '../ui/pages/LoginPage.jsx';
-import Landing from '../ui/pages/Landing.jsx';
+import RegisterPage from '../ui/external/RegisterPage.jsx';
+import LoginPage from '../ui/external/LoginPage.jsx';
+import Landing from '../ui/external/Landing.jsx';
 import AddCampaign from '../ui/pages/AddCampaign.jsx';
 import CampaignPage from '../ui/pages/CampaignPage.jsx';
-import PublicCampaignPage from '../ui/pages/PublicCampaignPage.jsx';
+import PublicCampaignPage from '../ui/external/PublicCampaignPage.jsx';
 
 export const renderRoutes = () => (
     <Router>

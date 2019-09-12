@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import { Campaigns } from '../api/campaigns.js';
 
-import { Segment } from 'semantic-ui-react';
+import { Grid } from 'semantic-ui-react';
 
 export default class Campaign extends Component {
     constructor(props) {
@@ -15,9 +15,9 @@ export default class Campaign extends Component {
     render() {
         console.log(this.props.campaign._id);
         return (
-            <Segment>
-                <Link to={`/home/${this.props.campaign._id}`}>{this.props.campaign.name}</Link>
-            </Segment>
+            <Grid.Row as={ Link } to={`/home/${this.props.campaign._id}`}>
+                <p>{this.props.campaign.name}</p>
+            </Grid.Row>
         )
     }
 }

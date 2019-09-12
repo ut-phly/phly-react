@@ -34,7 +34,7 @@ export default class AddCampaign extends Component {
         let name = document.getElementById('campaign-name').value;
         let username = Meteor.user().username;
         let date = new Date();
-        let owner= Meteor.userId();
+        let owner = this.props.org;
         this.state.campaign = {
             name: name,
             owner: owner,
@@ -42,6 +42,7 @@ export default class AddCampaign extends Component {
             date: date
         };
         Meteor.call('campaigns.insert', this.state.campaign);
+        Meteor.call('organizations.addCampaign', owner, this.state.campaign);
         this.setState(() => ({
           created: true
         }));
@@ -49,7 +50,7 @@ export default class AddCampaign extends Component {
 
     render() {
 
-        if (this.state.created === true) return <Redirect to={`/home/${this.state.campaign._id}`}/>
+        if (this.state.created === true) return <Redirect to='/home'/>
 
         return (
             <Responsive>
