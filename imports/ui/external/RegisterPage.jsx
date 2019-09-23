@@ -10,7 +10,8 @@ import {
     Header,
     Responsive,
     Segment,
-    Form
+    Form,
+    Image
 } from 'semantic-ui-react';
 
 export default class RegisterPage extends Component {
@@ -18,7 +19,8 @@ export default class RegisterPage extends Component {
         super(props);
         this.state = {
             error: '',
-
+            login: false,
+            return: false
         };
         this.handleSubmit = this.handleSubmit.bind(this);
     }
@@ -26,6 +28,12 @@ export default class RegisterPage extends Component {
     handleRegister = () => {
         this.setState(() => ({
             login: true
+        }))
+    }
+
+    handleReturn = () => {
+        this.setState(() => ({
+            return: true
         }))
     }
 
@@ -50,17 +58,20 @@ export default class RegisterPage extends Component {
         const error = this.state.error;
 
         if (this.state.login === true) return <Redirect to='/login'/>
+        if (this.state.return === true) return <Redirect to='/'/>
 
         return (
             <div>
                 <Menu fixed='top' inverted color='blue'>
                     <Container>
-                        <Menu.Item header
-                                    style={{
-                                        fontFamily: 'Nunito',
-                                        fontSize: '1.2em',
-                                        letterSpacing: '2px'}}>
-                                PHLY</Menu.Item>
+                        <Menu.Item onClick={this.handleReturn}>
+                                <Image style={{ height: '1.5em', width: '1.5em' }} src='/images/logo.png'/>
+                                 <p style={{
+                                     fontFamily: 'Nunito',
+                                     fontSize: '1.5em',
+                                     marginLeft: '.5em',
+                                     letterSpacing: '2px'}}>PHLY</p>
+                        </Menu.Item>
                         <Menu.Item position='right'>
                             <Button onClick={this.handleRegister} style={{ marginLeft: '1.5em' }}>Login</Button>
                         </Menu.Item>
@@ -81,21 +92,18 @@ export default class RegisterPage extends Component {
                                 <Form>
                                     <Form.Field>
                                         <input
-                                            className="form-control"
-                                            type="email"
+                                            type="text"
                                             id="register-username"
                                             placeholder="Username"/>
                                     </Form.Field>
                                     <Form.Field>
                                         <input
-                                            className="form-control"
                                             type="email"
                                             id="register-email"
                                             placeholder="Email"/>
                                     </Form.Field>
                                     <Form.Field>
                                         <input
-                                            className="form-control"
                                             type="password"
                                             id="register-password"
                                             placeholder="Password"/>

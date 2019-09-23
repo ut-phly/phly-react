@@ -5,30 +5,46 @@ import SimpleSchema from 'simpl-schema';
 export const Organizations = new Mongo.Collection('organizations');
 
 if (Meteor.isServer) {
-  Meteor.publish('organizations', function organizationPublication() {
-    return Organizations.find();
-  })
+    Meteor.publish('organizations', function orgPublication() {
+        const user = Meteor.userId();
+        return Organizations.find({
+            $or: [
+                { owner: user },
+                { users: user }
+            ]
+        });
+    })
 }
 
 Organizations.schema = new SimpleSchema({
-  name: {type: String},
-  createdAt: {type: Date},
-  owner: {type: String},
-  username: {type: String},
+    name: String,
+    createdAt: Date,
+    owner: String,
+    users: Array,
+    'users.$': String,
+    'campaigns': Array,
+    'campaigns.$': String,
 });
 
-//this will automatically check against the scehma when created
 Organizations.attachSchema(Organizations.schema);
 
 Meteor.methods({
-  'organizations.insert'(organization) {
-    console.log(organization);
-    // add validation that the user is signed in and the schema is correct
-    Organizations.insert({
-        name: organization.name,
-        createdAt: new Date(),
-        owner: campaign.owner,
-        username: campaign.username,
-    });
-  }
-});
+    'organizations.insert'(org) {
+        console.log(org);
+        Organizations.insert({
+            name: org.name,
+            createdAt: new Date(),
+            owner: org.owner,
+            users: [],
+            campaigns: []
+        });
+    },
+
+    'organizations.delete'(id) {
+        Organizations.remove({ _id: id });
+    },
+
+    'organizations.addCampaign'(id, campaign) {
+        Organizations.update({ _id: id }, { $push: { 'campaigns': campaign }});
+    }
+})

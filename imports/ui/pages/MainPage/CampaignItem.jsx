@@ -15,7 +15,12 @@ export default class CampaignItem extends Component {
         <Link to={{
           pathname: `/home/${this.props.campaign._id}`,
           state: {
-            campaignID: this.props.campaign._id
+            camp: this.props.campaign,
+            campaignID: this.props.campaign._id,
+            campaignNAME: this.props.campaign.name,
+            campaignStartDate: this.props.campaign.startDate,
+            campaignEndDate: this.props.campaign.endDate,
+            campaignDes: this.props.campaign.description,
           }
         }}>{this.props.campaign.name}</Link>
       </List.Item>

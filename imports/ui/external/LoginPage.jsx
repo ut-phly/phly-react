@@ -10,7 +10,8 @@ import {
     Header,
     Responsive,
     Segment,
-    Form
+    Form,
+    Image
 } from 'semantic-ui-react';
 
 export default class LoginPage extends Component {
@@ -18,7 +19,8 @@ export default class LoginPage extends Component {
         super(props);
         this.state = {
             error: '',
-            register: false
+            register: false,
+            return: false
         };
     }
 
@@ -30,9 +32,9 @@ export default class LoginPage extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        let email = document.getElementById('login-email').value;
+        let username = document.getElementById('login-username').value;
         let password = document.getElementById('login-password').value;
-        Meteor.loginWithPassword(email, password, (err) => {
+        Meteor.loginWithPassword(username, password, (err) => {
             if (err) {
                 this.setState({
                     error: err.reason
@@ -43,21 +45,30 @@ export default class LoginPage extends Component {
         });
     }
 
+    handleReturn = () => {
+        this.setState(() => ({
+            return: true
+        }))
+    }
+
     render() {
         const error = this.state.error;
 
         if (this.state.register === true) return <Redirect to='/register'/>
+        if (this.state.return === true) return <Redirect to='/'/>
 
         return (
             <div>
                 <Menu fixed='top' inverted color='blue'>
                     <Container>
-                        <Menu.Item header
-                                    style={{
-                                        fontFamily: 'Nunito',
-                                        fontSize: '1.2em',
-                                        letterSpacing: '2px'}}>
-                                PHLY</Menu.Item>
+                        <Menu.Item onClick={this.handleReturn}>
+                                <Image style={{ height: '1.5em', width: '1.5em' }} src='/images/logo.png'/>
+                                 <p style={{
+                                     fontFamily: 'Nunito',
+                                     fontSize: '1.5em',
+                                     marginLeft: '.5em',
+                                     letterSpacing: '2px'}}>PHLY</p>
+                        </Menu.Item>
                         <Menu.Item position='right'>
                             <Button onClick={this.handleRegister} style={{ marginLeft: '1.5em' }}>Sign Up</Button>
                         </Menu.Item>
@@ -78,14 +89,12 @@ export default class LoginPage extends Component {
                                 <Form>
                                     <Form.Field>
                                         <input
-                                            className="form-control"
-                                            type="email"
-                                            id="login-email"
-                                            placeholder="Email"/>
+                                            type="text"
+                                            id="login-username"
+                                            placeholder="Username"/>
                                     </Form.Field>
                                     <Form.Field>
                                         <input
-                                            className="form-control"
                                             type="password"
                                             id="login-password"
                                             placeholder="Password"/>
