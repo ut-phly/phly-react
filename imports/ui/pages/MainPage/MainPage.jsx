@@ -65,7 +65,7 @@ export default class MainPage extends Component {
         var campaigns = [];
         if (this.state.org) {
             var org = this.props.organizations.find(org => org._id === this.state.org);
-            campaigns = org.campaigns;
+            
         }
 
         if (this.state.logout === true) return <Redirect to="/login"/>

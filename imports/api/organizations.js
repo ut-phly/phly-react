@@ -5,23 +5,25 @@ import SimpleSchema from 'simpl-schema';
 export const Organizations = new Mongo.Collection('organizations');
 
 if (Meteor.isServer) {
-  Meteor.publish('organizations', function orgPublication() {
-    return Organizations.find({ owner: Meteor.userId() });
-  })
+    Meteor.publish('organizations', function orgPublication() {
+        const user = Meteor.userId();
+        return Organizations.find({
+            $or: [
+                { owner: user },
+                { users: user }
+            ]
+        });
+    })
 }
 
 Organizations.schema = new SimpleSchema({
-    name: {type: String},
-    createdAt: {type: Date},
-    owner: {type: String},
+    name: String,
+    createdAt: Date,
+    owner: String,
     users: Array,
     'users.$': String,
-    campaigns: Array,
-    'campaigns.$': Object,
-    'campaigns.$.name': String,
-    'campaigns.$.createdAt': Date,
-    'campaigns.$.owner': String, //organization id
-    'campaigns.$.username': String
+    'campaigns': Array,
+    'campaigns.$': String,
 });
 
 Organizations.attachSchema(Organizations.schema);
@@ -43,6 +45,6 @@ Meteor.methods({
     },
 
     'organizations.addCampaign'(id, campaign) {
-        Organizations.update({ _id: id }, { $push: { campaigns: campaign }});
+        Organizations.update({ _id: id }, { $push: { 'campaigns': campaign }});
     }
 })

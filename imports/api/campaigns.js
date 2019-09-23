@@ -2,19 +2,33 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 
+import { Organizations } from './organizations.js';
+
 export const Campaigns = new Mongo.Collection('campaigns');
 
 if (Meteor.isServer) {
-  Meteor.publish('campaigns', function campaignPublication() {
-    return Campaigns.find();
-  })
+    Meteor.publish('campaigns', function campaignPublication() {
+        const user = Meteor.userId();
+        var orgs = Organizations.find({
+            $or: [
+                { owner: user },
+                { users: user }
+            ]
+        });
+        orgs.map((org) => (org._id));
+
+        return Campaigns.find({}, { owner: 0 });
+    });
+
+    Meteor.publish('myCampaigns', function () {
+        return Campaigns.find({ owner: { $in: orgs } });
+    });
 }
 
 Campaigns.schema = new SimpleSchema({
     name: {type: String},
     createdAt: {type: Date},
     owner: {type: String},
-    username: {type: String},
     startDate: {type: Date},
     endDate: {type: Date},
     description: {type: String},
@@ -31,7 +45,6 @@ Meteor.methods({
             name: campaign.name,
             createdAt: new Date(),
             owner: campaign.owner,
-            username: campaign.username,
             startDate: campaign.startDate,
             endDate: campaign.endDate,
             description: campaign.description,
@@ -58,3 +71,8 @@ Meteor.methods({
         Campaigns.remove({ _id: id });
     }
 });
+
+//,
+//function(err, doc) {
+//    Organizations.update({ _id: campaign.owner }, { $push: { 'campaigns': doc._id }});
+//}

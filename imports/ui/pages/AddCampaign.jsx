@@ -32,22 +32,20 @@ export default class AddCampaign extends Component {
     }
 
     handleSubmit(event) {
-      event.preventDefault();
-      const date = new Date();
-      var campaign = {
-        name: this.state.name,
-        createdAt: new Date(),
-        owner: Meteor.userId(),
-        username: Meteor.user().username,
-        startDate: this.state.startDate,
-        endDate: this.state.endDate,
-        description: this.state.description,
-      }
-      Meteor.call('campaigns.insert', campaign);
-      Meteor.call('organizations.addCampaign', owner, this.state.campaign);
-      this.setState(() => ({
-        created: true
-      }));
+        event.preventDefault();
+        const date = new Date();
+        var campaign = {
+            name: this.state.name,
+            createdAt: new Date(),
+            owner: this.props.org,
+            startDate: this.state.startDate,
+            endDate: this.state.endDate,
+            description: this.state.description,
+        }
+        Meteor.call('campaigns.insert', campaign);
+        this.setState(() => ({
+            created: true
+        }));
     }
 
     handleChange(key){
@@ -72,7 +70,7 @@ export default class AddCampaign extends Component {
         if (this.state.created === true) return <Redirect to='/home'/>
 
       return (
-        <form className = "needs-validation" novalidate onSubmit={this.handleSubmit}>
+        <form className = "needs-validation" noValidate onSubmit={this.handleSubmit}>
           <label>
             Name: <br />
             <input type="text" value = {this.state.name} onChange={this.handleChange('name')} />
@@ -83,10 +81,10 @@ export default class AddCampaign extends Component {
             <input type="text" value = {this.state.description} onChange = {this.handleChange('description')} />
           </label>
           <br />
-          <label for="startDate"> Start Date <br /> </label>
+          <label htmlFor="startDate"> Start Date <br /> </label>
           <DayPickerInput onDayChange={this.handleStartDayChange.bind(this)}/>
           <br />
-          <label for="startDate"> End Date <br /> </label>
+          <label htmlFor="endDate"> End Date <br /> </label>
           <DayPickerInput onDayChange={this.handleEndDayChange.bind(this)}/>
           <input type="submit" value="Submit" />
         </form>
