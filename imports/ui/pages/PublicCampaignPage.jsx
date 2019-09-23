@@ -28,12 +28,26 @@ export default class CampaignPage extends Component {
               console.error('Error creating Venmo:', venmoErr);
               return;
             }
-            // Verify browser support before proceeding.
-            if (!venmoInstance.isBrowserSupported()) {
-              console.log('Browser does not support Venmo');
-              return;
-            }
+            //Verify browser support before proceeding.
+            // if (!venmoInstance.isBrowserSupported()) {
+            //   console.log('Browser does not support Venmo');
+            //   return;
+            // }
+            //moved inside Meteor.call
+            function displayVenmoButton(venmoInstance) {
+              debugger;
+              // Assumes that venmoButton is initially display: none.
+              venmoButton.style.display = 'block';
 
+              venmoButton.addEventListener('click', function () {
+                venmoButton.disabled = true;
+
+                venmoInstance.tokenize(function (tokenizeErr, payload) {
+                  venmoButton.removeAttribute('disabled');
+
+                });
+              });
+            }
             displayVenmoButton(venmoInstance);
             if (venmoInstance.hasTokenizationResult()) {
               venmoInstance.tokenize(function (tokenizeErr, payload) {
@@ -46,44 +60,20 @@ export default class CampaignPage extends Component {
               return;
             }
           });
-          function displayVenmoButton(venmoInstance) {
-            // Assumes that venmoButton is initially display: none.
-            venmoButton.style.display = 'block';
-
-            venmoButton.addEventListener('click', function () {
-              venmoButton.disabled = true;
-
-              venmoInstance.tokenize(function (tokenizeErr, payload) {
-                venmoButton.removeAttribute('disabled');
-
-                if (tokenizeErr) {
-                 handleVenmoError(tokenizeErr);
-               } else {
-                 handleVenmoSuccess(payload);
-               }
-
-              });
-            });
-          }
-
-          function handleVenmoError(err) {
-            if (err.code === 'VENMO_CANCELED') {
-              console.log('App is not available or user aborted payment flow');
-            } else if (err.code === 'VENMO_APP_CANCELED') {
-              console.log('User canceled payment flow');
-            } else {
-              console.error('An error occurred:', err.message);
-            }
-          }
-
-
-          function handleVenmoSuccess(payload) {
-            // Send payload.nonce to your server.
-            console.log('Got a payment method nonce:', payload.nonce);
-            // Display the Venmo username in your checkout UI.
-            console.log('Venmo user:', payload.details.username);
-          }
-
+          // function displayVenmoButton(venmoInstance) {
+          //   debugger;
+          //   // Assumes that venmoButton is initially display: none.
+          //   venmoButton.style.display = 'block';
+          //
+          //   venmoButton.addEventListener('click', function () {
+          //     venmoButton.disabled = true;
+          //
+          //     venmoInstance.tokenize(function (tokenizeErr, payload) {
+          //       venmoButton.removeAttribute('disabled');
+          //
+          //     });
+          //   });
+          // }
         });
         braintree.setup(clientToken, "dropin", {
           container: "payment-form", // Injecting into <div id="payment-form"></div>
@@ -92,6 +82,7 @@ export default class CampaignPage extends Component {
             // it'll create new customer first...
             var nonce = response.nonce;
 
+            debugger;
             Meteor.call('btCreateCustomer', function(error, success) {
               if (error) {
                 throw new Meteor.Error('customer-creation-failed');
@@ -103,7 +94,7 @@ export default class CampaignPage extends Component {
                   if (error) {
                     throw new Meteor.Error('transaction-creation-failed');
                   } else {
-                    console.log("iphone");
+                    console.log("this is the iphone");
                     alert('Thank you for your donation!');
                   }
                 });
