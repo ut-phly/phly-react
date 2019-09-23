@@ -23,4 +23,5 @@ less
 jquery
 tracker
 aldeed:collection2@3.0.0
-nathantreid:static-assets
+patrickml:braintree
+http

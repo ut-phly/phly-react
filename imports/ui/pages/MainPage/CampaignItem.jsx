@@ -10,12 +10,6 @@ export default class CampaignItem extends Component {
   }
 
   render () {
-    // return (
-    //   <List.Item href={`/home/${this.props.campaign._id}`}>
-    //     {this.props.campaign.name}
-    //   </List.Item>
-    // );
-    // console.log(this.props.campaign._id);
     return (
       <List.Item>
         <Link to={{
