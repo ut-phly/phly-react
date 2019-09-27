@@ -10,6 +10,7 @@ import Landing from '../ui/external/Landing.jsx';
 import AddCampaign from '../ui/pages/AddCampaign.jsx';
 import CampaignPage from '../ui/pages/CampaignPage.jsx';
 import PublicCampaignPage from '../ui/external/PublicCampaignPage.jsx';
+import Policies from '../ui/external/Policies.jsx';
 
 export const renderRoutes = () => (
     <Router>
@@ -19,6 +20,7 @@ export const renderRoutes = () => (
             <Route path="/register" component={RegisterPage}/>
             <Route path="/home" component={AppContainer}/>
             <Route path="/public/:id" component={PublicCampaignPage}/>
+            <Route path="/policies" component={Policies}/>
         </div>
     </Router>
 );

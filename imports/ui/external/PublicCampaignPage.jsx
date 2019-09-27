@@ -1,15 +1,39 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
+import { Mongo } from 'meteor/mongo';
 import { withHistory, Link } from 'react-router-dom';
 //import '../../api/payments.js';
 import { HTTP } from 'meteor/http';
+import {
+    Button,
+    Form,
+    Responsive,
+    Segment,
+    Grid,
+    Header,
+    Input
+} from 'semantic-ui-react';
 
-//import Campaigns from '../../api/campaigns.js';
+import { Campaigns } from '../../api/campaigns.js';
 
 export default class CampaignPage extends Component {
+    constructor(props) {
+        super(props);
+        Meteor.subscribe('campaigns');
+    }
+
     render() {
 
-      Meteor.call('getClientToken', function(error, clientToken) {
+        let campaign = Campaigns.findOne({ _id: this.props.match.params.id });
+        console.log(Campaigns.find().fetch());
+        let name = "";
+        let description = "";
+        if (campaign) {
+            name = campaign.name;
+            description = campaign.description;
+        }
+
+        Meteor.call('getClientToken', function(error, clientToken) {
           if (error) {
             console.log(error);
           } else {
@@ -39,27 +63,38 @@ export default class CampaignPage extends Component {
               }
             });
           }
-      });
+        });
 
       return (
-          <div>
-            <div className="card mb-3">
-              <h2 className="card-header">Public Campaign Page</h2>
-              <form role="form">
-                <div class="row">
-                  <div class="col-md-6 col-xs-12">
-                    <input
-                      className="form-control"
-                      type="integer"
-                      id="donation_amount"
-                      placeholder="Amount"/>
-                    <div id="payment-form"></div>
-                    <button type="submit" class="btn btn-success">Submit</button>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
+          <Responsive>
+              <Segment style={{ backgroundColor: '#F9FFFF', paddingTop: '6em' }} vertical>
+                  <Grid container centered stackable>
+                      <Grid.Column width={8}>
+                          <Header as='h1'
+                                  color='orange'
+                                  style={{
+                                      fontSize: '2em',
+                                      letterSpacing: '1.5px' }}>
+                              {name}
+                          </Header>
+                          <p>{description}</p>
+                          <Form role="form">
+                            <Form.Field>
+                                <input
+                                  type="integer"
+                                  id="donation_amount"
+                                  placeholder="Amount"/>
+                            </Form.Field>
+                            <Form.Field>
+                                <div id="payment-form"></div>
+                            </Form.Field>
+                            <Button type="submit" color="orange">Submit</Button>
+                            <p>Check out our privacy policy <Link to="/policies">here</Link></p>
+                        </Form>
+                      </Grid.Column>
+                  </Grid>
+              </Segment>
+          </Responsive>
       );
     }
 }

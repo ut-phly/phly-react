@@ -7,13 +7,13 @@ import { Organizations } from '../../api/organizations.js';
 import MainPage from '../pages/MainPage/MainPage.jsx';
 
 export default MainContainer = withTracker(({history}) => {
-    Meteor.subscribe('campaigns');
+    Meteor.subscribe('myCampaigns');
     Meteor.subscribe('organizations');
     const currentUser = Meteor.user();
     console.log(currentUser);
     console.log(Meteor.userId());
-    const campaigns = Campaigns.find({ owner: Meteor.userId() }).fetch();
-    const organizations = Organizations.find({ owner: Meteor.userId() }).fetch();
+    const campaigns = Campaigns.find({}).fetch();
+    const organizations = Organizations.find({}).fetch();
 
     console.log(campaigns);
     console.log(organizations);

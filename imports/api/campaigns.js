@@ -8,6 +8,12 @@ export const Campaigns = new Mongo.Collection('campaigns');
 
 if (Meteor.isServer) {
     Meteor.publish('campaigns', function campaignPublication() {
+        return Campaigns.find({}, { owner: 0 });
+    });
+
+    console.log(Campaigns.find({}, {owner: 0}).fetch());
+
+    Meteor.publish('myCampaigns', function () {
         const user = Meteor.userId();
         var orgs = Organizations.find({
             $or: [
@@ -16,11 +22,6 @@ if (Meteor.isServer) {
             ]
         });
         orgs.map((org) => (org._id));
-
-        return Campaigns.find({}, { owner: 0 });
-    });
-
-    Meteor.publish('myCampaigns', function () {
         return Campaigns.find({ owner: { $in: orgs } });
     });
 }
