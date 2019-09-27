@@ -6,6 +6,11 @@ import { HTTP } from 'meteor/http';
 
 //import Campaigns from '../../api/campaigns.js';
 
+//why venmo button might not show up:
+//no container defined like we did for payment form
+//where does it actually get rendered?
+
+
 export default class CampaignPage extends Component {
   render() {
     Meteor.call('getClientToken', function(error, clientToken) {
@@ -19,6 +24,22 @@ export default class CampaignPage extends Component {
             console.error('Error creating client:', clientErr);
             return;
           }
+
+          braintree.dataCollector.create({
+            client: clientInstance,
+            paypal: true
+          }, function (dataCollectorErr, dataCollectorInstance) {
+            if (dataCollectorErr) {
+              // Handle error in creation of data collector.
+              return;
+            }
+
+            // At this point, you should access the deviceData value and provide it
+            // to your server, e.g. by injecting it into your form as a hidden input.
+            var deviceData = dataCollectorInstance.deviceData;
+            console.log('Got device data:', dataCollectorInstance.deviceData);
+          });
+
           // Create a Venmo component.
           var venmoButton = document.getElementById('venmo-button');
           braintree.venmo.create({
