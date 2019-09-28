@@ -73,10 +73,10 @@ export default class CampaignPage extends Component {
             // Assumes that venmoButton is initially display: none.
             venmoButton.style.display = 'button';
             venmoButton.addEventListener('click', function () {
-              //venmoButton.disabled = true;
+              venmoButton.disabled = true;
 
               venmoInstance.tokenize(function (tokenizeErr, payload) {
-                //venmoButton.removeAttribute('disabled');
+                venmoButton.removeAttribute('disabled');
 
                 if (tokenizeErr) {
                  handleVenmoError(tokenizeErr);
