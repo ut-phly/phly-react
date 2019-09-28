@@ -49,6 +49,8 @@ export default class CampaignPage extends Component {
               console.error('Error creating Venmo:', venmoErr);
               return;
             }
+            console.log(venmoErr);
+            console.log(venmoInstance);
             // Verify browser support before proceeding.
             if (!venmoInstance.isBrowserSupported()) {
               console.log('Browser does not support Venmo');
@@ -69,13 +71,12 @@ export default class CampaignPage extends Component {
           });
           function displayVenmoButton(venmoInstance) {
             // Assumes that venmoButton is initially display: none.
-            venmoButton.style.display = 'block';
-
+            venmoButton.style.display = 'button';
             venmoButton.addEventListener('click', function () {
-              venmoButton.disabled = true;
+              //venmoButton.disabled = true;
 
               venmoInstance.tokenize(function (tokenizeErr, payload) {
-                venmoButton.removeAttribute('disabled');
+                //venmoButton.removeAttribute('disabled');
 
                 if (tokenizeErr) {
                  handleVenmoError(tokenizeErr);
@@ -147,12 +148,14 @@ export default class CampaignPage extends Component {
                       type="integer"
                       id="donation_amount"
                       placeholder="Amount"/>
-                    <div id="venmo-button"></div>
                     <div id="payment-form"></div>
                     <button type="submit" class="btn btn-success">Submit</button>
                   </div>
                 </div>
               </form>
+              <div id="venmo-button">
+                <button>Venmo</button>
+              </div>
             </div>
           </div>
       );
