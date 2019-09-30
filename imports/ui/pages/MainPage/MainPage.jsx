@@ -59,13 +59,12 @@ export default class MainPage extends Component {
             username = this.props.currentUser.username;
         }
 
-        var organizations = this.props.organizations.map((org) => ({ text: org.name, value: org._id, key: org._id }));
+        let organizations = this.props.organizations.map((org) => ({ text: org.name, value: org._id, key: org._id }));
         organizations.push({ text: 'Add New Org', value: 'neworg', key: 'neworg', icon: 'plus'});
 
-        var campaigns = [];
+        let campaigns = [];
         if (this.state.org) {
-            var org = this.props.organizations.find(org => org._id === this.state.org);
-            
+            this.props.campaigns.filter(camp => camp.owner == this.state.org).forEach(camp => campaigns.push(camp));
         }
 
         if (this.state.logout === true) return <Redirect to="/login"/>

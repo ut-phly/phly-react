@@ -8,94 +8,132 @@ import DayPickerInput from 'react-day-picker/DayPickerInput';
 
 import { Campaigns } from '../../api/campaigns.js';
 import {
-    Button
+    Button,
+    Responsive,
+    Header,
+    Segment,
+    Grid,
+    Icon
 } from 'semantic-ui-react';
 
 export default class CampaignPage extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-        deleted: false
+    constructor(props) {
+        super(props);
+        this.state = {
+            deleted: false,
+            editing: false,
+            public: false
+        }
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
 
-  handleSubmit(event) {
-    event.preventDefault();
-    const date = new Date();
-    var campaign = {
-      name: this.state.name,
-      owner: Meteor.userId(),
-      username: Meteor.user().username,
-      startDate: this.state.startDate,
-      endDate: this.state.endDate,
-      description: this.state.description,
+    handleSubmit(event) {
+        event.preventDefault();
+        const date = new Date();
+        var campaign = {
+            name: this.state.name,
+            owner: Meteor.userId(),
+            username: Meteor.user().username,
+            startDate: this.state.startDate,
+            endDate: this.state.endDate,
+            description: this.state.description,
+        }
+        Meteor.call('campaigns.edit', campaign, this.props.match.params.id);
+        this.setState({ editing: false });
     }
-    Meteor.call('campaigns.edit', campaign, this.props.location.state.campaignID);
-  }
 
-  handleDelete = () => {
-      Meteor.call('campaigns.delete', this.props.match.params.id);
-      this.setState({ deleted: true });
-  }
+    handleDelete = () => {
+        Meteor.call('campaigns.delete', this.props.match.params.id);
+        this.setState({ deleted: true });
+    }
 
-  handleChange(key){
-    return function(e){
-      var state = {};
-      state[key] = e.target.value;
-      this.setState(state);
-    }.bind(this);
-  }
+    handlePublic = () => {
+        this.setState({ public: true });
+    }
 
-  handleStartDayChange(day){
-    this.setState({startDate: day});
-  }
+    handleEdit = () => {
+        this.setState({ editing: true });
+    }
 
-  handleEndDayChange(day){
-    this.setState({endDate: day});
-  }
+    handleChange(key){
+        return function(e){
+            var state = {};
+            state[key] = e.target.value;
+            this.setState(state);
+        }.bind(this);
+    }
 
-  render() {
-      if (this.state.deleted === true) return <Redirect to='/home'/>
-      var obj = Campaigns.findOne({ _id: this.props.match.params.id });
-      if(obj != null) {
-          var campName = obj.name;
-          var campDes = obj.description;
-          var campStartDate = obj.startDate;
-          var startString = campStartDate.toLocaleDateString();
-          var campEndDate = obj.endDate;
-          var endString = campEndDate.toLocaleDateString();
-      }
-    return (
-        <div>
-          <div className="card mb-3">
-            <h2 className="card-header">{campName}</h2>
-            <Button floated='right' color='orange' onClick={this.handleDelete}>Delete</Button>
-            <h3> Description: {campDes}</h3>
-            <h3> Start Date: {startString}</h3>
-            <h3> End Date: {endString}</h3>
-            <Link to={{
-              pathname: `/public/${this.props.location.state.campaignID}`,
-              state: {
-                campaignID: this.props.location.state.campaignID
-              }
-            }}>Public Campaign Link</Link>
-          </div>
-          <form className = "needs-validation" novalidate onSubmit={this.handleSubmit}>
-            <label>
-              EDIT name: <br />
-              <input type="text" defaultValue = {campName} onChange={this.handleChange('name')}/>
-              <br /> EDIT Description: <br />
-              <input type="text" defaultValue = {campDes} onChange={this.handleChange('description')}/>
-              <br /> EDIT Start Date: <br />
-              <DayPickerInput placeholder = {campStartDate} onDayChange={this.handleStartDayChange.bind(this)}/>
-              <br /> EDIT End Date: <br />
-              <DayPickerInput placeholder = {campEndDate} onDayChange={this.handleEndDayChange.bind(this)}/>
-              <input type="submit" value="Submit" />
-            </label>
-          </form>
-        </div>
-    );
-  }
+    handleStartDayChange(day){
+        this.setState({startDate: day});
+    }
+
+    handleEndDayChange(day){
+        this.setState({endDate: day});
+    }
+
+    render() {
+        if (this.state.deleted === true) return <Redirect to='/home'/>
+        if (this.state.public === true) return <Redirect to={`/public/${this.props.match.params.id}`}/>
+        var obj = Campaigns.findOne({ _id: this.props.match.params.id });
+        if (obj != null) {
+            var campName = obj.name;
+            var campDes = obj.description;
+            var campStartDate = obj.startDate;
+            var startString = campStartDate.toLocaleDateString();
+            var campEndDate = obj.endDate;
+            var endString = campEndDate.toLocaleDateString();
+        }
+
+        if (this.state.editing === true) {
+            return (
+                <form className = "needs-validation" noValidate onSubmit={this.handleSubmit}>
+                    <label>
+                    EDIT name: <br />
+                    <input type="text" defaultValue = {campName} onChange={this.handleChange('name')}/>
+                    <br /> EDIT Description: <br />
+                    <input type="text" defaultValue = {campDes} onChange={this.handleChange('description')}/>
+                    <br /> EDIT Start Date: <br />
+                    <DayPickerInput value={campStartDate} onDayChange={this.handleStartDayChange.bind(this)}/>
+                    <br /> EDIT End Date: <br />
+                    <DayPickerInput value={campEndDate} onDayChange={this.handleEndDayChange.bind(this)}/>
+                    <input type="submit" value="Submit" />
+                    </label>
+                </form>
+            )
+        }
+
+        return (
+            <div>
+                <Responsive>
+                    <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic clearing>
+                        <Header as='h1'
+                                floated='left'
+                                color='orange'
+                                style={{
+                                      fontSize: '2em',
+                                      letterSpacing: '1.5px',
+                                      margin: 0,
+                                      paddingRight: '.5em' }}>
+                          {campName}
+                        </Header>
+                        <Button floated='right' color='orange' onClick={this.handleDelete}>Delete</Button>
+                        <Button floated='right' icon='external' color='blue' onClick={this.handlePublic}/>
+                        <Button floated='right' icon='edit outline' color='blue' onClick={this.handleEdit}/>
+                    </Segment>
+                    <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic>
+                        <Grid columns={2}>
+                            <Grid.Column>
+                                {campDes}
+                            </Grid.Column>
+                            <Grid.Column>
+                                <Grid.Row>{startString}</Grid.Row>
+                                <Grid.Row>{endString}</Grid.Row>
+                            </Grid.Column>
+                        </Grid>
+                    </Segment>
+                </Responsive>
+            </div>
+        );
+    }
 }

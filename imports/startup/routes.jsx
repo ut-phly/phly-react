@@ -11,6 +11,7 @@ import AddCampaign from '../ui/pages/AddCampaign.jsx';
 import CampaignPage from '../ui/pages/CampaignPage.jsx';
 import PublicCampaignPage from '../ui/external/PublicCampaignPage.jsx';
 import Policies from '../ui/external/Policies.jsx';
+import Terms from '../ui/external/Terms.jsx';
 
 export const renderRoutes = () => (
     <Router>
@@ -21,6 +22,7 @@ export const renderRoutes = () => (
             <Route path="/home" component={AppContainer}/>
             <Route path="/public/:id" component={PublicCampaignPage}/>
             <Route path="/policies" component={Policies}/>
+            <Route path="/tos" component={Terms}/>
         </div>
     </Router>
 );

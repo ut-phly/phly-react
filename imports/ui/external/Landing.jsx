@@ -13,7 +13,8 @@ import {
     Icon,
     Form,
     Image,
-    Message
+    Message,
+    List
 } from 'semantic-ui-react';
 
 export default class Landing extends Component {
@@ -39,18 +40,18 @@ export default class Landing extends Component {
     }
 
     handleSubmit = () => {
-        let name = document.getElementById('name').value;
+        let first = document.getElementById('first').value;
+        let last = document.getElementById('last').value;
         let university = document.getElementById('university').value;
         let org = document.getElementById('org').value;
         let email = document.getElementById('email').value;
-        let phone = document.getElementById('phone').value;
 
         Meteor.call('potentials.insert', {
-            name: name,
+            first: first,
+            last: last,
             university: university,
             org: org,
             email: email,
-            phone: phone
         });
 
         this.setState({ success: true });
@@ -185,11 +186,13 @@ export default class Landing extends Component {
                             </Grid.Column>
                             <Grid.Column>
                                 <Form onSubmit={this.handleSubmit} success>
-                                    <Form.Input placeholder='Name' id='name'/>
+                                    <Form.Group widths='equal'>
+                                        <Form.Input fluid id='first' placeholder='First name' />
+                                        <Form.Input fluid id='last' placeholder='Last name' />
+                                    </Form.Group>
                                     <Form.Input placeholder='University' id='university'/>
                                     <Form.Input placeholder='Student Organization' id='org'/>
                                     <Form.Input placeholder='Email' id='email'/>
-                                    <Form.Input placeholder='Phone' id='phone'/>
                                     <Button color='orange' type='submit'>Submit</Button>
                                     { this.state.success ?
                                         <Message
@@ -201,6 +204,24 @@ export default class Landing extends Component {
                                 </Form>
                             </Grid.Column>
                         </Grid>
+                    </Segment>
+
+                    <Segment inverted color="blue" vertical
+                                style={{ padding: '5em 0em' }}>
+                        <Container textAlign='center'>
+                            <Image centered size='mini' src='/images/logo.png' />
+                            <List horizontal inverted divided link size='small'>
+                              <List.Item as={Link} to="/policies">
+                                Privacy Policy
+                              </List.Item>
+                              <List.Item as='a' href='#'>
+                                Non-Profits
+                              </List.Item>
+                              <List.Item as={Link} to='/tos'>
+                                Terms and Conditions
+                              </List.Item>
+                            </List>
+                        </Container>
                     </Segment>
                 </Responsive>
             </div>

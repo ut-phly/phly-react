@@ -15,8 +15,8 @@ export default class Campaign extends Component {
     render() {
         console.log(this.props.campaign._id);
         return (
-            <Grid.Row as={ Link } to={`/home/${this.props.campaign._id}`}>
-                <p>{this.props.campaign.name}</p>
+            <Grid.Row as={ Link } to={`/home/${this.props.campaign._id}`} style={{ paddingLeft: '1em' }}>
+                <p style={{ color: '#2E5266', fontSize: '1.2em' }}>{this.props.campaign.name}</p>
             </Grid.Row>
         )
     }

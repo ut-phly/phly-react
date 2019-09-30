@@ -1,12 +1,27 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 
+import {
+    Header,
+    Responsive,
+    Segment
+} from 'semantic-ui-react';
+
 export default class Profile extends Component {
     render() {
         return(
-            <div className="card-body">
-                <h3>Profile page</h3>
-            </div>
+            <Responsive>
+                <Segment style={{ backgroundColor: '#F9FFFF'}} vertical clearing>
+                    <Header as='h1'
+                            floated='left'
+                            color='orange'
+                            style={{
+                                  fontSize: '2em',
+                                  letterSpacing: '1.5px' }}>
+                      Profile
+                    </Header>
+                </Segment>
+            </Responsive>
         )
     }
 }

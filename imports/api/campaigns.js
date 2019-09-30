@@ -20,8 +20,10 @@ if (Meteor.isServer) {
                 { owner: user },
                 { users: user }
             ]
-        });
-        orgs.map((org) => (org._id));
+        }).fetch();
+        console.log(orgs);
+        orgs = orgs.map((org) => (org._id));
+        console.log(orgs);
         return Campaigns.find({ owner: { $in: orgs } });
     });
 }

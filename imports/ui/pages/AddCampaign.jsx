@@ -46,6 +46,7 @@ export default class AddCampaign extends Component {
         this.setState(() => ({
             created: true
         }));
+
     }
 
     handleChange(key){

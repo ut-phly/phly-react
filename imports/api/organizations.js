@@ -22,7 +22,7 @@ Organizations.schema = new SimpleSchema({
     owner: String,
     users: Array,
     'users.$': String,
-    'campaigns': Array,
+    campaigns: Array,
     'campaigns.$': String,
 });
 
@@ -45,6 +45,6 @@ Meteor.methods({
     },
 
     'organizations.addCampaign'(id, campaign) {
-        Organizations.update({ _id: id }, { $push: { 'campaigns': campaign }});
+        Organizations.update({ _id: id }, { $push: { campaigns: campaign }});
     }
 })

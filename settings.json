@@ -2,7 +2,8 @@
     "galaxy.meteor.com": {
         "env": {
             "ROOT_URL": "http://www.phly.co",
-            "MONGO_URL": "mongodb+srv://glanconetani:xetorca20@clusterphly-uc0tc.mongodb.net/test?retryWrites=true&w=majority"
+            "MONGO_URL": "mongodb+srv://glanconetani:xetorca20@clusterphly-uc0tc.mongodb.net/test?retryWrites=true&w=majority",
+            "MAIL_URL": "smtp://lucious4:TeamM@c98@smtp.porkbun.com:587"
         }
     }
 }

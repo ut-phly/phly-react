@@ -32,8 +32,6 @@ export default class CampaignList extends Component {
     renderCampaigns() {
         return this.props.campaigns.map((campaign) => (
             <Campaign
-                as={ Link }
-                to={`/home/${campaign._id}`}
                 key={campaign._id}
                 campaign={campaign}/>
         ));
@@ -46,13 +44,14 @@ export default class CampaignList extends Component {
         return (
             <div>
                 <Responsive>
-                    <Segment style={{ backgroundColor: '#F9FFFF'}} vertical clearing>
+                    <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic clearing>
                         <Header as='h1'
                                 floated='left'
                                 color='orange'
                                 style={{
                                       fontSize: '2em',
-                                      letterSpacing: '1.5px' }}>
+                                      letterSpacing: '1.5px',
+                                      margin: 0 }}>
                           Campaigns
                         </Header>
                         <Button onClick={this.handleNew} color='orange' floated='right'>
@@ -60,9 +59,11 @@ export default class CampaignList extends Component {
                             New
                         </Button>
                     </Segment>
-                    <Grid padded>
-                        {this.renderCampaigns()}
-                    </Grid>
+                    <Segment basic style={{ margin: 0 }}>
+                        <Grid padded color='white' style={{ boxShadow: '3px 3px 8px #C0D3DE' }}>
+                            {this.renderCampaigns()}
+                        </Grid>
+                    </Segment>
                 </Responsive>
           </div>
         );

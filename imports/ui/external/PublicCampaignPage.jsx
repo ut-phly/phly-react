@@ -77,10 +77,12 @@ export default class CampaignPage extends Component {
                                       letterSpacing: '1.5px' }}>
                               {name}
                           </Header>
+                          <h3>St. Jude's Children Hospital</h3>
                           <p>{description}</p>
+                          <p>ALL PROCEEDS GOING DIRECTLY TO <a href="https://www.stjude.org/">ST. JUDE’S HOSPITAL</a></p>
                           <Form role="form">
                             <Form.Field>
-                                <input
+                                <Input
                                   type="integer"
                                   id="donation_amount"
                                   placeholder="Amount"/>
@@ -89,7 +91,7 @@ export default class CampaignPage extends Component {
                                 <div id="payment-form"></div>
                             </Form.Field>
                             <Button type="submit" color="orange">Submit</Button>
-                            <p>Check out our privacy policy <Link to="/policies">here</Link></p>
+                            <p>Check out our <Link to="/policies">privacy policy</Link> and <Link to="/tos">terms of service</Link></p>
                         </Form>
                       </Grid.Column>
                   </Grid>
