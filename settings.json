@@ -1,0 +1,8 @@
+{
+    "galaxy.meteor.com": {
+        "env": {
+            "ROOT_URL": "http://www.phly.co",
+            "MONGO_URL": "mongodb+srv://glanconetani:xetorca20@clusterphly-uc0tc.mongodb.net/test?retryWrites=true&w=majority"
+        }
+    }
+}
