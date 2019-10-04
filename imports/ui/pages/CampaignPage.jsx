@@ -13,7 +13,8 @@ import {
     Header,
     Segment,
     Grid,
-    Icon
+    Icon,
+    Form
 } from 'semantic-ui-react';
 
 export default class CampaignPage extends Component {
@@ -87,19 +88,25 @@ export default class CampaignPage extends Component {
 
         if (this.state.editing === true) {
             return (
-                <form className = "needs-validation" noValidate onSubmit={this.handleSubmit}>
-                    <label>
-                    EDIT name: <br />
-                    <input type="text" defaultValue = {campName} onChange={this.handleChange('name')}/>
-                    <br /> EDIT Description: <br />
-                    <input type="text" defaultValue = {campDes} onChange={this.handleChange('description')}/>
-                    <br /> EDIT Start Date: <br />
-                    <DayPickerInput value={campStartDate} onDayChange={this.handleStartDayChange.bind(this)}/>
-                    <br /> EDIT End Date: <br />
-                    <DayPickerInput value={campEndDate} onDayChange={this.handleEndDayChange.bind(this)}/>
-                    <input type="submit" value="Submit" />
-                    </label>
-                </form>
+                <Responsive>
+                    <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic clearing>
+                        <Form noValidate onSubmit={this.handleSubmit}>
+                            <Form.Field>
+                                <input type="text" defaultValue = {campName} onChange={this.handleChange('name')}/>
+                            </Form.Field>
+                            <Form.Field>
+                                <input type="text" defaultValue = {campDes} onChange={this.handleChange('description')}/>
+                            </Form.Field>
+                            <Form.Field>
+                                <DayPickerInput value={campStartDate} onDayChange={this.handleStartDayChange.bind(this)}/>
+                            </Form.Field>
+                            <Form.Field>
+                                <DayPickerInput value={campEndDate} onDayChange={this.handleEndDayChange.bind(this)}/>
+                            </Form.Field>
+                            <Button color='orange' type='submit'>Submit</Button>
+                        </Form>
+                    </Segment>
+                </Responsive>
             )
         }
 
