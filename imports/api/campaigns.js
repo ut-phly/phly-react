@@ -11,8 +11,6 @@ if (Meteor.isServer) {
         return Campaigns.find({}, { owner: 0 });
     });
 
-    console.log(Campaigns.find({}, {owner: 0}).fetch());
-
     Meteor.publish('myCampaigns', function () {
         const user = Meteor.userId();
         var orgs = Organizations.find({
@@ -21,9 +19,7 @@ if (Meteor.isServer) {
                 { users: user }
             ]
         }).fetch();
-        console.log(orgs);
         orgs = orgs.map((org) => (org._id));
-        console.log(orgs);
         return Campaigns.find({ owner: { $in: orgs } });
     });
 }

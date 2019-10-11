@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { withHistory, Link } from 'react-router-dom';
+import { withTracker } from 'meteor/react-meteor-data';
+
 //import '../../api/payments.js';
 import { HTTP } from 'meteor/http';
 import {
@@ -16,21 +18,17 @@ import {
 
 import { Campaigns } from '../../api/campaigns.js';
 
-export default class CampaignPage extends Component {
+class PublicCampaignPage extends Component {
     constructor(props) {
         super(props);
-        Meteor.subscribe('campaigns');
     }
 
     render() {
-
-        let campaign = Campaigns.findOne({ _id: this.props.match.params.id });
-        console.log(Campaigns.find().fetch());
         let name = "";
         let description = "";
-        if (campaign) {
-            name = campaign.name;
-            description = campaign.description;
+        if (this.props.campaign) {
+            name = this.props.campaign.name;
+            description = this.props.campaign.description;
         }
 
         Meteor.call('getClientToken', function(error, clientToken) {
@@ -100,3 +98,11 @@ export default class CampaignPage extends Component {
       );
     }
 }
+
+export default CampaignContainer = withTracker(props => {
+    Meteor.subscribe('campaigns');
+    let campaign = Campaigns.findOne({ _id: props.match.params.id });
+    return {
+        campaign: campaign
+    }
+})(PublicCampaignPage);

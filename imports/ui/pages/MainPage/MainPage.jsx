@@ -20,7 +20,8 @@ import {
     Segment,
     Button,
     Icon,
-    Dropdown
+    Dropdown,
+    Image
 } from 'semantic-ui-react'
 
 export default class MainPage extends Component {
@@ -73,16 +74,11 @@ export default class MainPage extends Component {
             <div>
                 <Menu fixed='left' pointing vertical inverted color='blue'>
                     <Container style={{ paddingTop: '1em' }}>
-                        <Menu.Item>
-                            <Header textAlign='center' as='h1' color='orange'
-                                    style={{
-                                        fontSize: '2em',
-                                        letterSpacing: '1.5px' }}>
-                                {username}
-                            </Header>
-                        </Menu.Item>
+                        <Image style={{ height: '4em', width: '4em', marginBottom: '1em', marginTop: '1em' }} centered src='/images/logo.png'/>
                         <Menu.Item>
                             <Dropdown
+                                as='h3'
+                                style={{ color: '#FF8E56', letterSpacing: '1px' }}
                                 id='dropdown'
                                 fluid
                                 placeholder="My Organizations"
