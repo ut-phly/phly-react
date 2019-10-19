@@ -60,8 +60,10 @@ export default class MainPage extends Component {
             username = this.props.currentUser.username;
         }
 
-        let organizations = this.props.organizations.map((org) => ({ text: org.name, value: org._id, key: org._id }));
-        organizations.push({ text: 'Add New Org', value: 'neworg', key: 'neworg', icon: 'plus'});
+        let organizations = [];
+        this.props.organizations.forEach(function(org) {
+            organizations.push({ text: org.name, value: org._id, key: org._id });
+        });
 
         let campaigns = [];
         if (this.state.org) {
@@ -81,7 +83,7 @@ export default class MainPage extends Component {
                                 style={{ color: '#FF8E56', letterSpacing: '1px' }}
                                 id='dropdown'
                                 fluid
-                                placeholder="My Organizations"
+                                value={this.state.org}
                                 options={organizations}
                                 onChange={this.handleChangeOrg}
                             />
@@ -106,7 +108,10 @@ export default class MainPage extends Component {
                                 exact path="/home"
                                 render={(props) => <CampaignList {...props} campaigns={campaigns}/>}
                             />
-                            <Route path="/home/profile" component={Profile}/>
+                            <Route
+                                path="/home/profile"
+                                render={(props) => <Profile {...props} org={this.state.org}/>}
+                            />
                             <Route
                               path="/home/new"
                               render={(props) => <AddCampaign {...props} history={this.history} currentUser={this.props.currentUser} org={this.state.org}/>}

@@ -49,7 +49,7 @@ export default class RegisterPage extends Component {
                     error: err.reason
                 });
             } else {
-                this.props.history.push('/home');
+                this.props.history.push('/home/neworg');
             }
         });
     }

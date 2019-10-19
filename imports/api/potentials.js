@@ -27,16 +27,37 @@ Meteor.methods({
 
         let text = `Hi ${user.first},
 
-            Thanks for your interest in using Phly to help your student organization fundraise! Our team is hard at work building a great product and we are excited to launch soon. By signing up, you will be the first to hear updates about Phly’s launch. If you have any questions about Phly, please reach out to us at hello@phly.co and we would love to talk with you.
+Thanks for your interest in using Phly to help your student organization fundraise! Our team is hard at work building a great product and we are excited to launch soon. By signing up, you will be the first to hear updates about Phly’s launch. If you have any questions about Phly, please reach out to us at hello@phly.co and we would love to talk with you.
 
-            Best Regards,
+Best Regards,
 
-            The Phly Team
+The Phly Team
             `;
         let subject = "Hi from Phly";
         let from = "hello@phly.co";
         let to = user.email;
 
-        Email.send({ to, from, subject, text });
+        Email.send({
+            to: to,
+            from: from,
+            submit: subject,
+            text: text });
+
+        subject = `New Potential: ${user.first} ${user.last}`;
+        to = from;
+        let receipt = `New potential user:
+
+        Name: ${user.first} ${user.last}
+        University: ${user.university}
+        Organization: ${user.org}
+        Email: ${user.email}
+
+        `;
+
+        Email.send({
+            to: to,
+            from: from,
+            subject: subject,
+            text: receipt });
     }
 })
