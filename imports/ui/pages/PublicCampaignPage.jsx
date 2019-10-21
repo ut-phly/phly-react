@@ -56,7 +56,6 @@ export default class CampaignPage extends Component {
             // }
             //moved inside Meteor.call
             function displayVenmoButton(venmoInstance) {
-              debugger;
               // Assumes that venmoButton is initially display: none.
               venmoButton.style.display = 'block';
 
@@ -138,12 +137,14 @@ export default class CampaignPage extends Component {
                       type="integer"
                       id="donation_amount"
                       placeholder="Amount"/>
-                    <div id="venmo-button"></div>
                     <div id="payment-form"></div>
                     <button type="submit" class="btn btn-success">Submit</button>
                   </div>
                 </div>
               </form>
+              <div id="venmo-button">
+                <button>Venmo</button>
+              </div>
             </div>
           </div>
       );
