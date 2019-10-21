@@ -9,9 +9,11 @@ import {
     Grid,
     Segment,
     Button,
-    Icon,
     Card
 } from 'semantic-ui-react';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 import Campaign from '../../Campaign.jsx';
 import { Campaigns } from '../../../api/campaigns.js';
@@ -66,8 +68,8 @@ export default class CampaignList extends Component {
                           Campaigns
                         </Header>
                         <Button onClick={this.handleNew} color='orange' floated='right'>
-                            <Icon name='plus'/>
-                            New
+                            <FontAwesomeIcon icon={faPlus}/>
+                            {'  New'}
                         </Button>
                     </Segment>
                     <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic>

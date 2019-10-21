@@ -7,9 +7,11 @@ import {
     Header,
     Responsive,
     Segment,
-    Button,
-    Icon
+    Button
 } from 'semantic-ui-react';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 export default class Profile extends Component {
     constructor(props) {
@@ -49,8 +51,8 @@ export default class Profile extends Component {
                       {name}
                     </Header>
                     <Button onClick={this.handleNew} color='orange' floated='right'>
-                        <Icon name='plus'/>
-                        New
+                        <FontAwesomeIcon icon={faPlus}/>
+                        {'  New'}
                     </Button>
                 </Segment>
                 <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic>

@@ -126,7 +126,7 @@ export default class CampaignPage extends Component {
                         </Header>
                         <Button floated='right' color='orange' onClick={this.handleDelete}>Delete</Button>
                         <Button floated='right' icon='external' color='blue' onClick={this.handlePublic}/>
-                        <Button floated='right' icon='edit outline' color='blue' onClick={this.handleEdit}/>
+                        <Button floated='right' icon='edit' color='blue' onClick={this.handleEdit}/>
                     </Segment>
                     <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic>
                         <Grid columns={2}>
