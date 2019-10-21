@@ -21,7 +21,6 @@ Organizations.schema = new SimpleSchema({
     createdAt: Date,
     owner: String,
     users: Array,
-    share: String,
     'users.$': String,
     campaigns: Array,
     'campaigns.$': String,
@@ -31,14 +30,11 @@ Organizations.attachSchema(Organizations.schema);
 
 Meteor.methods({
     'organizations.insert'(org) {
-        let share = new Meteor.Collection.ObjectID();
-        console.log(share);
-        console.log(share._str);
+        console.log(org);
         Organizations.insert({
             name: org.name,
             createdAt: new Date(),
             owner: org.owner,
-            share: share._str,
             users: [],
             campaigns: []
         });
@@ -46,10 +42,6 @@ Meteor.methods({
 
     'organizations.delete'(id) {
         Organizations.remove({ _id: id });
-    },
-
-    'organizations.join'(code, user) {
-        Organizations.update({ share: code }, { $push: { users: user }});
     },
 
     'organizations.addCampaign'(id, campaign) {

@@ -10,8 +10,7 @@ import {
     Responsive,
     Segment,
     Grid,
-    Header,
-    Divider
+    Header
 } from 'semantic-ui-react';
 
 export default class AddOrg extends Component {
@@ -26,7 +25,7 @@ export default class AddOrg extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         let name = document.getElementById('org-name').value;
-        let owner = Meteor.userId();
+        let owner= Meteor.userId();
         this.state.org = {
             name: name,
             owner: owner
@@ -37,56 +36,32 @@ export default class AddOrg extends Component {
         }));
     }
 
-    handleJoin = (e) => {
-        e.preventDefault();
-        let code = document.getElementById('join-code').value;
-        let user = Meteor.userId();
-        Meteor.call('organizations.join', code, user);
-        this.setState(() => ({
-            created: true
-        }));
-    }
-
     render() {
         if (this.state.created === true) return <Redirect to="/home"/>
 
         return (
             <Responsive>
-                <Segment style={{ backgroundColor: '#F9FFFF'}} basic>
-                    <Header as='h1'
-                            color='orange'
-                            style={{
-                                fontSize: '2em',
-                                letterSpacing: '1.5px' }}>
-                        Add New Organization
-                    </Header>
-                </Segment>
-                <Segment style={{ backgroundColor: '#F9FFFF'}} basic>
-                    <Grid columns={2} stackable>
-                        <Grid.Column>
-                            <Form noValidate style={{ padding: '2em' }}>
+                <Segment style={{ backgroundColor: '#F9FFFF'}} vertical>
+                    <Grid container stackable>
+                        <Grid.Column width={8}>
+                            <Header as='h1'
+                                    color='orange'
+                                    style={{
+                                        fontSize: '2em',
+                                        letterSpacing: '1.5px' }}>
+                                Add New Organization
+                            </Header>
+                            <Form>
                                 <Form.Field>
                                     <input
                                         type="text"
                                         id="org-name"
                                         placeholder="Name"/>
                                 </Form.Field>
-                                <Button onClick={this.handleSubmit} color='orange' type='submit'>Create</Button>
-                            </Form>
-                        </Grid.Column>
-                        <Grid.Column>
-                            <Form noValidate style={{ padding: '2em' }}>
-                                <Form.Field>
-                                    <input
-                                        type="text"
-                                        id="join-code"
-                                        placeholder="Join Code"/>
-                                </Form.Field>
-                                <Button onClick={this.handleJoin} color='blue' type='submit'>Join</Button>
+                                <Button onClick={this.handleSubmit} color='orange' type='submit'>Submit</Button>
                             </Form>
                         </Grid.Column>
                     </Grid>
-                    <Divider vertical>Or</Divider>
                 </Segment>
             </Responsive>
         )

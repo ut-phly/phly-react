@@ -7,7 +7,6 @@ import '../imports/api/potentials.js';
 var gateway;
 
 Meteor.startup(() => {
-
     var env;
     var braintree = require('braintree');
   // Pick Braintree environment based on environment defined in Meteor settings.

@@ -9,8 +9,7 @@ import {
     Grid,
     Segment,
     Button,
-    Icon,
-    Card
+    Icon
 } from 'semantic-ui-react';
 
 import Campaign from '../../Campaign.jsx';
@@ -42,16 +41,6 @@ export default class CampaignList extends Component {
 
         if (this.state.new === true) return <Redirect to='/home/new'/>
 
-        let items = [];
-        this.props.campaigns.forEach(function(campaign) {
-            items.push({
-                header: campaign.name,
-                description: campaign.description,
-                href: `/home/${campaign._id}`,
-                link: true
-            });
-        });
-
         return (
             <div>
                 <Responsive>
@@ -70,8 +59,10 @@ export default class CampaignList extends Component {
                             New
                         </Button>
                     </Segment>
-                    <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic>
-                        <Card.Group itemsPerRow={3} items={items} />
+                    <Segment basic style={{ margin: 0 }}>
+                        <Grid padded color='white' style={{ boxShadow: '3px 3px 8px #C0D3DE' }}>
+                            {this.renderCampaigns()}
+                        </Grid>
                     </Segment>
                 </Responsive>
           </div>
