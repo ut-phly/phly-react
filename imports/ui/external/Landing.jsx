@@ -17,6 +17,9 @@ import {
     List
 } from 'semantic-ui-react';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+
 export default class Landing extends Component {
     constructor(props) {
         super(props);
@@ -101,8 +104,8 @@ export default class Landing extends Component {
                                         for student organizations
                                     </p>
                                     <Button as='a' href='#form' size='big' color='orange'>
-                                        Get Started
-                                        <Icon name='right arrow'/>
+                                        {'Get Started   '}
+                                        <FontAwesomeIcon icon={faArrowRight}/>
                                     </Button>
 
                                 </Grid.Column>
