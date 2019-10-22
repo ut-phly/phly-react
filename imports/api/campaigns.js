@@ -31,6 +31,8 @@ Campaigns.schema = new SimpleSchema({
     startDate: {type: Date},
     endDate: {type: Date},
     description: {type: String},
+    nonprofit: {type: String},
+    goalAmount: {type: Number}
 });
 
 //this will automatically check against the scehma when created
@@ -47,6 +49,8 @@ Meteor.methods({
             startDate: campaign.startDate,
             endDate: campaign.endDate,
             description: campaign.description,
+            nonprofit: campaign.nonprofit,
+            goalAmount: campaign.goalAmount
         });
     },
 
