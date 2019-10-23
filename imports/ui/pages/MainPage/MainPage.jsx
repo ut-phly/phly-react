@@ -28,8 +28,7 @@ export default class MainPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            logout: false,
-            org: ''
+            logout: false
         };
     }
 
@@ -46,19 +45,12 @@ export default class MainPage extends Component {
     }
 
     handleChangeOrg = (e, { value }) => {
-        if (value === 'neworg') this.props.history.push('/home/neworg');
-        this.setState({ org: value })
+        Meteor.call('organizations.save', value, this.props.currentUser._id);
     }
-
-    handleSetOrg = (id) => this.setState({ org: id })
 
     render() {
         let user = this.props.currentUser;
-        let username = '';
-
-        if (user) {
-            username = this.props.currentUser.username;
-        }
+        let org = (user) ? user.org : '';
 
         let organizations = [];
         this.props.organizations.forEach(function(org) {
@@ -66,8 +58,8 @@ export default class MainPage extends Component {
         });
 
         let campaigns = [];
-        if (this.state.org) {
-            this.props.campaigns.filter(camp => camp.owner == this.state.org).forEach(camp => campaigns.push(camp));
+        if (org) {
+            this.props.campaigns.filter(camp => camp.owner == org).forEach(camp => campaigns.push(camp));
         }
 
         if (this.state.logout === true) return <Redirect to="/login"/>
@@ -82,8 +74,10 @@ export default class MainPage extends Component {
                                 as='h3'
                                 style={{ color: '#FF8E56', letterSpacing: '1px' }}
                                 id='dropdown'
+                                pointing='left'
                                 fluid
-                                value={this.state.org}
+                                icon=''
+                                value={org}
                                 options={organizations}
                                 onChange={this.handleChangeOrg}
                             />
@@ -110,7 +104,7 @@ export default class MainPage extends Component {
                             />
                             <Route
                                 path="/home/profile"
-                                render={(props) => <Profile {...props} org={this.state.org}/>}
+                                render={(props) => <Profile {...props} org={org} currentUser={this.props.currentUser}/>}
                             />
                             <Route
                               path="/home/new"
@@ -118,7 +112,7 @@ export default class MainPage extends Component {
                             />
                             <Route
                                 path="/home/neworg"
-                                render={(props) => <AddOrg {...props} history={this.history} action={this.handleReset}/>}
+                                render={(props) => <AddOrg {...props} history={this.history}/>}
                             />
                             <Route
                                 path="/home/:id"

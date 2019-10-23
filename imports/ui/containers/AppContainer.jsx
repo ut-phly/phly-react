@@ -25,7 +25,7 @@ export default class AppContainer extends Component {
         };
     }
 
-    componentWillMount(){
+    componentDidMount(){
         if (!this.state.isAuthenticated) {
             this.props.history.push('/login');
         }

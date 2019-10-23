@@ -44,8 +44,13 @@ export default class CampaignList extends Component {
 
         let items = [];
         this.props.campaigns.forEach(function(campaign) {
+            if (campaign.description.length > 100) {
+                campaign.description = campaign.description.substring(0, 99);
+                campaign.description += " ...";
+            }
             items.push({
                 header: campaign.name,
+                meta: 'Non-Profit',
                 description: campaign.description,
                 href: `/home/${campaign._id}`,
                 link: true

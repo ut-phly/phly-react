@@ -54,5 +54,10 @@ Meteor.methods({
 
     'organizations.addCampaign'(id, campaign) {
         Organizations.update({ _id: id }, { $push: { campaigns: campaign }});
+    },
+
+    'organizations.save'(id, user) {
+        console.log("saving user: " + user + ", " + id);
+        Meteor.users.update(user, { $set: { org: id } });
     }
 })

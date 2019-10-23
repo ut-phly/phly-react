@@ -92,16 +92,20 @@ export default class CampaignPage extends Component {
                     <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic clearing>
                         <Form noValidate onSubmit={this.handleSubmit}>
                             <Form.Field>
+                                <label>Campaign Name</label>
                                 <input type="text" defaultValue = {campName} onChange={this.handleChange('name')}/>
                             </Form.Field>
                             <Form.Field>
+                                <label>Description</label>
                                 <input type="text" defaultValue = {campDes} onChange={this.handleChange('description')}/>
                             </Form.Field>
                             <Form.Field>
-                                <DayPickerInput value={campStartDate} onDayChange={this.handleStartDayChange.bind(this)}/>
+                                <label>Start Date</label>
+                                <DayPickerInput defaultValue={campStartDate} onDayChange={this.handleStartDayChange.bind(this)}/>
                             </Form.Field>
                             <Form.Field>
-                                <DayPickerInput value={campEndDate} onDayChange={this.handleEndDayChange.bind(this)}/>
+                                <label>End Date</label>
+                                <DayPickerInput defaultValue={campEndDate} onDayChange={this.handleEndDayChange.bind(this)}/>
                             </Form.Field>
                             <Button color='orange' type='submit'>Submit</Button>
                         </Form>
