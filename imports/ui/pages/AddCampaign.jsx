@@ -12,7 +12,8 @@ import {
     Responsive,
     Segment,
     Grid,
-    Header
+    Header,
+    TextArea
 } from 'semantic-ui-react';
 
 import { Campaigns } from '../../api/campaigns.js';
@@ -78,41 +79,50 @@ export default class AddCampaign extends Component {
 
     render() {
 
-        if (this.state.created === true) return <Redirect to='/home'/>
+      const options = [
+        { key: 'a', text: 'St. Judes Children Hospital', value: 'st_judes' },
+        { key: 'b', text: 'Miracle Network', value: 'miracle_network' },
+        { key: 'c', text: 'Texas Food Bank', value: 'texas_food_bank' },
+      ]
+
+      if (this.state.created === true) return <Redirect to='/home'/>
 
       return (
-        <form className = "needs-validation" noValidate onSubmit={this.handleSubmit}>
-          <label>
-            Name: <br />
-            <input type="text" value = {this.state.name} onChange={this.handleChange('name')} />
-          </label>
-          <br/>
-          <label>
-            Non-Profits:<br/>
-            <select name = "Non-Profits" value = {this.state.nonprofit} onChange = {this.handleChange('nonprofit')}>
-              <option name = "Select">Select your Non-Profit!</option>
-              <option name = "LARA">LARA</option>
-              <option name = "Miracle League">Miracle League</option>
-            </select>
-          </label>
-          <label>
-          <br />
-            Description: <br />
-            <input type="text" value = {this.state.description} onChange = {this.handleChange('description')} />
-          </label>
-          <br />
-          <label htmlFor="startDate"> Start Date <br /> </label>
-          <DayPickerInput onDayChange={this.handleStartDayChange.bind(this)}/>
-          <br />
-          <label htmlFor="endDate"> End Date <br /> </label>
-          <DayPickerInput onDayChange={this.handleEndDayChange.bind(this)}/>
-          <br/>
-          <label>
-            Goal Amount: <br/>
-            <input type="number" value = {this.state.goalAmount} onChange = {this.handleChange('goalAmount')}/>
-          </label>
-          <input type="submit" value="Submit" />
-        </form>
+        <Responsive>
+          <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic clearing>
+            <Header as='h1'
+                    floated='left'
+                    color='orange'
+                    style={{
+                          fontSize: '2em',
+                          letterSpacing: '1.5px',
+                          margin: 0,
+                          paddingRight: '.5em' }}>
+              New Campaign
+            </Header>
+          </Segment>
+          <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic clearing>
+            <Form noValidate onSubmit={this.handleSubmit}>
+              <Form.Group widths="equal">
+                <Form.Input fluid type="text" label="Name" value={this.state.name} onChange={this.handleChange('name')} />
+                <Form.Select fluid label="Non Profit" options={options} value={this.state.nonprofit} onChange={this.handleChange('nonprofit')}/>
+              </Form.Group>
+              <Form.TextArea type="text" label="Description" value={this.state.description} onChange = {this.handleChange('description')} />
+              <Form.Group widths="equal">
+                <Form.Field>
+                  <label htmlFor="startDate">Start Date</label>
+                  <DayPickerInput onDayChange={this.handleStartDayChange.bind(this)}/>
+                </Form.Field>
+                <Form.Field>
+                  <label htmlFor="endDate">End Date</label>
+                  <DayPickerInput onDayChange={this.handleEndDayChange.bind(this)}/>
+                </Form.Field>
+                <Form.Input type="number" label="Goal" value = {this.state.goalAmount} onChange = {this.handleChange('goalAmount')}/>
+              </Form.Group>
+              <Button color='orange' type='submit'>Create</Button>
+            </Form>
+          </Segment>
+        </Responsive>
       );
     }
 }

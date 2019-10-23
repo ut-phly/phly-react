@@ -14,7 +14,8 @@ import {
     Segment,
     Grid,
     Icon,
-    Form
+    Form,
+    TextArea
 } from 'semantic-ui-react';
 
 export default class CampaignPage extends Component {
@@ -105,20 +106,22 @@ export default class CampaignPage extends Component {
                                 <input type="text" defaultValue = {campName} onChange={this.handleChange('name')}/>
                             </Form.Field>
                             <Form.Field>
+                                <label>Goal</label>
                                 <input type="number" defaultValue = {goalAmount} onChange={this.handleChange('goalAmount')}/>
                             </Form.Field>
                             <Form.Field>
-                                <input type="text" defaultValue = {campDes} onChange={this.handleChange('description')}/>
+                                <label>Description</label>
+                                <TextArea type="text" defaultValue = {campDes} onChange={this.handleChange('description')}/>
                             </Form.Field>
                             <Form.Field>
                                 <label>Start Date</label>
-                                <DayPickerInput defaultValue={campStartDate} onDayChange={this.handleStartDayChange.bind(this)}/>
+                                <DayPickerInput value={campStartDate} onDayChange={this.handleStartDayChange.bind(this)}/>
                             </Form.Field>
                             <Form.Field>
                                 <label>End Date</label>
-                                <DayPickerInput defaultValue={campEndDate} onDayChange={this.handleEndDayChange.bind(this)}/>
+                                <DayPickerInput value={campEndDate} onDayChange={this.handleEndDayChange.bind(this)}/>
                             </Form.Field>
-                            <Button color='orange' type='submit'>Submit</Button>
+                            <Button color='orange' type='submit'>Save</Button>
                         </Form>
                     </Segment>
                 </Responsive>
