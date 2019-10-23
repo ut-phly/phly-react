@@ -23,7 +23,12 @@ export default class CampaignPage extends Component {
         this.state = {
             deleted: false,
             editing: false,
-            public: false
+            public: false,
+            name: '',
+            description: '',
+            startDate: new Date(),
+            endDate: new Date(),
+            goalAmount: 0,
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -39,6 +44,8 @@ export default class CampaignPage extends Component {
             startDate: this.state.startDate,
             endDate: this.state.endDate,
             description: this.state.description,
+            nonprofit: this.state.nonprofit,
+            goalAmount: this.state.goalAmount
         }
         Meteor.call('campaigns.edit', campaign, this.props.match.params.id);
         this.setState({ editing: false });
@@ -84,6 +91,8 @@ export default class CampaignPage extends Component {
             var startString = campStartDate.toLocaleDateString();
             var campEndDate = obj.endDate;
             var endString = campEndDate.toLocaleDateString();
+            var nonprofit = obj.nonprofit;
+            var goalAmount = obj.goalAmount;
         }
 
         if (this.state.editing === true) {
@@ -96,7 +105,9 @@ export default class CampaignPage extends Component {
                                 <input type="text" defaultValue = {campName} onChange={this.handleChange('name')}/>
                             </Form.Field>
                             <Form.Field>
-                                <label>Description</label>
+                                <input type="number" defaultValue = {goalAmount} onChange={this.handleChange('goalAmount')}/>
+                            </Form.Field>
+                            <Form.Field>
                                 <input type="text" defaultValue = {campDes} onChange={this.handleChange('description')}/>
                             </Form.Field>
                             <Form.Field>
@@ -135,7 +146,9 @@ export default class CampaignPage extends Component {
                     <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic>
                         <Grid columns={2}>
                             <Grid.Column>
-                                {campDes}
+                                <Grid.Row>{nonprofit}</Grid.Row>
+                                <Grid.Row>{goalAmount}</Grid.Row>
+                                <Grid.Row>{campDes}</Grid.Row>
                             </Grid.Column>
                             <Grid.Column>
                                 <Grid.Row>{startString}</Grid.Row>
