@@ -3,6 +3,7 @@ import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { withHistory, Link } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
+import { Donations } from '../../api/donations.js';
 
 //import '../../api/payments.js';
 import { HTTP } from 'meteor/http';
@@ -21,7 +22,29 @@ import { Campaigns } from '../../api/campaigns.js';
 class PublicCampaignPage extends Component {
     constructor(props) {
         super(props);
+        // this.state = {
+        //   donationAmount: 0,
+        // }
+        // this.handleChangeAmount = this.handleChangeAmount.bind(this);
+        // this.handleSubmit = this.handleSubmit.bind(this);
     }
+
+    // handleSubmit(event) {
+    //   event.preventDefault();
+    //   var transaction = {
+    //     campaign: this.props.campaign,
+    //     amount: this.state.amount
+    //   }
+    //   Meteor.call('transactions.insert', transaction);
+    // }
+    //
+    // handleChangeAmount(key){
+    //   return function(e){
+    //       var state = {};
+    //       state[key] = e.target.value;
+    //       this.setState(state);
+    //   }.bind(this);
+    //}
 
     render() {
         let name = "";
@@ -30,7 +53,7 @@ class PublicCampaignPage extends Component {
             name = this.props.campaign.name;
             description = this.props.campaign.description;
         }
-
+        var self = this;
         Meteor.call('getClientToken', function(error, clientToken) {
           if (error) {
             console.log(error);
@@ -53,6 +76,12 @@ class PublicCampaignPage extends Component {
                       if (error) {
                         throw new Meteor.Error('transaction-creation-failed');
                       } else {
+                        var donation = {
+                          owner: self.props.campaign._id,
+                          nonprofit: self.props.campaign.nonprofit,
+                          amount: donation_amount
+                        }
+                        Meteor.call('donations.insert', donation);
                         alert('Thank you for your donation!');
                       }
                     });
@@ -75,9 +104,9 @@ class PublicCampaignPage extends Component {
                                       letterSpacing: '1.5px' }}>
                               {name}
                           </Header>
-                          <h3>St. Jude's Children Hospital</h3>
+                          <h3>campaign</h3>
                           <p>{description}</p>
-                          <p>ALL PROCEEDS GOING DIRECTLY TO <a href="https://www.stjude.org/">ST. JUDE’S HOSPITAL</a></p>
+                          <p>ALL PROCEEDS GOING DIRECTLY TO NONprofit</p>
                           <Form role="form">
                             <Form.Field>
                                 <Input

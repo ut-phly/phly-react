@@ -120,7 +120,7 @@ export default class MainPage extends Component {
                             />
                             <Route
                                 path="/home/:id"
-                                render={(props) => <CampaignPage {...props} campaigns={this.props.campaigns}/>}
+                                render={(props) => <CampaignPage {...props} campaigns={this.props.campaigns} donations={this.props.donations}/>}
                             />
                         </Switch>
                         : ''
@@ -134,5 +134,6 @@ export default class MainPage extends Component {
 MainPage.propTypes = {
     currentUser: PropTypes.object,
     campaigns: PropTypes.array.isRequired,
-    organizations: PropTypes.array.isRequired
+    organizations: PropTypes.array.isRequired,
+    donations: PropTypes.array.isRequired
 }

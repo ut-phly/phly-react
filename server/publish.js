@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import '../imports/api/campaigns.js';
+import '../imports/api/donations.js';
 
 Meteor.publish('user.custom', function () {
     if (!this.userId) {
