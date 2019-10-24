@@ -18,6 +18,13 @@ import {
     TextArea
 } from 'semantic-ui-react';
 
+var options = [
+  [ 'st_judes', 'St. Judes Children Hospital' ],
+  [ 'miracle_network', 'Miracle Network' ],
+  [ 'texas_food_bank', 'Texas Food Bank' ]
+]
+var np_translation = new Map(options);
+
 export default class CampaignPage extends Component {
     constructor(props) {
         super(props);
@@ -92,7 +99,7 @@ export default class CampaignPage extends Component {
             var startString = campStartDate.toLocaleDateString();
             var campEndDate = obj.endDate;
             var endString = campEndDate.toLocaleDateString();
-            var nonprofit = obj.nonprofit;
+            var nonprofit = np_translation.get(obj.nonprofit);
             var goalAmount = obj.goalAmount;
         }
 
@@ -143,19 +150,34 @@ export default class CampaignPage extends Component {
                           {campName}
                         </Header>
                         <Button floated='right' color='orange' onClick={this.handleDelete}>Delete</Button>
-                        <Button floated='right' icon='external' color='blue' onClick={this.handlePublic}/>
+                        <Button floated='right' content='Share' color='blue' onClick={this.handlePublic}/>
                         <Button floated='right' icon='edit outline' color='blue' onClick={this.handleEdit}/>
                     </Segment>
                     <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic>
                         <Grid columns={2}>
                             <Grid.Column>
-                                <Grid.Row>{nonprofit}</Grid.Row>
-                                <Grid.Row>{goalAmount}</Grid.Row>
-                                <Grid.Row>{campDes}</Grid.Row>
+                                <Grid.Row style={{ margin: '2em' }}>
+                                  <Header sub>Non-Profit</Header>
+                                  <p>{nonprofit}</p>
+                                </Grid.Row>
+                                <Grid.Row style={{ margin: '2em' }}>
+                                  <Header sub>Goal</Header>
+                                  <p>{'$'}{goalAmount}</p>
+                                </Grid.Row>
+                                <Grid.Row style={{ margin: '2em' }}>
+                                  <Header sub>Description</Header>
+                                  <p>{campDes}</p>
+                                </Grid.Row>
                             </Grid.Column>
                             <Grid.Column>
-                                <Grid.Row>{startString}</Grid.Row>
-                                <Grid.Row>{endString}</Grid.Row>
+                                <Grid.Row style={{ margin: '2em' }}>
+                                  <Header sub>Start Date</Header>
+                                  <p>{startString}</p>
+                                </Grid.Row>
+                                <Grid.Row style={{ margin: '2em' }}>
+                                  <Header sub>End Date</Header>
+                                  <p>{endString}</p>
+                                </Grid.Row>
                             </Grid.Column>
                         </Grid>
                     </Segment>

@@ -16,6 +16,13 @@ import {
 import Campaign from '../../Campaign.jsx';
 import { Campaigns } from '../../../api/campaigns.js';
 
+var options = [
+  [ 'st_judes', 'St. Judes Children Hospital' ],
+  [ 'miracle_network', 'Miracle Network' ],
+  [ 'texas_food_bank', 'Texas Food Bank' ]
+]
+var np_translation = new Map(options);
+
 export default class CampaignList extends Component {
     constructor(props) {
         super(props);
@@ -50,7 +57,7 @@ export default class CampaignList extends Component {
             }
             items.push({
                 header: campaign.name,
-                meta: 'Non-Profit',
+                meta: np_translation.get(campaign.nonprofit),
                 description: campaign.description,
                 href: `/home/${campaign._id}`,
                 link: true

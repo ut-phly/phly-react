@@ -25,7 +25,7 @@ export default class RegisterPage extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleRegister = () => {
+    handleLogin = () => {
         this.setState(() => ({
             login: true
         }))
@@ -62,18 +62,19 @@ export default class RegisterPage extends Component {
 
         return (
             <div>
-                <Menu fixed='top' inverted color='blue'>
+                <Menu fixed='top' secondary inverted color='blue'>
                     <Container>
-                        <Menu.Item onClick={this.handleReturn}>
+                        <Menu.Item as={Link} to='/'>
                                 <Image style={{ height: '1.5em', width: '1.5em' }} src='/images/logo.png'/>
                                  <p style={{
                                      fontFamily: 'Nunito',
+                                     fontWeight: 'bold',
                                      fontSize: '1.5em',
                                      marginLeft: '.5em',
                                      letterSpacing: '2px'}}>PHLY</p>
                         </Menu.Item>
                         <Menu.Item position='right'>
-                            <Button onClick={this.handleRegister} style={{ marginLeft: '1.5em' }}>Login</Button>
+                            <Button color='blue' onClick={this.handleLogin}>Login</Button>
                         </Menu.Item>
                     </Container>
                 </Menu>

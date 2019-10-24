@@ -45,7 +45,7 @@ Meteor.methods({
     },
 
     'organizations.delete'(id) {
-        Organizations.remove({ _id: id });
+        Organizations.update({ _id: id }, { $pull: { users: user }});
     },
 
     'organizations.join'(code, user) {

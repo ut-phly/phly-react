@@ -18,6 +18,12 @@ import {
 
 import { Campaigns } from '../../api/campaigns.js';
 
+let options = [
+  { key: 'st_judes', text: 'St. Judes Children Hospital', value: 'st_judes' },
+  { key: 'miracle_network', text: 'Miracle Network', value: 'miracle_network' },
+  { key: 'texas_food_bank', text: 'Texas Food Bank', value: 'texas_food_bank' },
+]
+
 export default class AddCampaign extends Component {
     constructor(props) {
       super(props);
@@ -57,16 +63,14 @@ export default class AddCampaign extends Component {
     }
 
     handleChange(key){
-      return function(e){
+      return function(e) {
         var state = {};
         state[key] = e.target.value;
         this.setState(state);
       }.bind(this);
     }
 
-    handleNonProfitChange(np){
-      this.setState({nonprofit: np})
-    }
+    handleNonProfitChange = (e, { value }) => this.setState({ nonprofit: value });
 
     handleStartDayChange(day){
       this.setState({startDate: day});
@@ -76,14 +80,7 @@ export default class AddCampaign extends Component {
       this.setState({endDate: day});
     }
 
-
     render() {
-
-      const options = [
-        { key: 'a', text: 'St. Judes Children Hospital', value: 'st_judes' },
-        { key: 'b', text: 'Miracle Network', value: 'miracle_network' },
-        { key: 'c', text: 'Texas Food Bank', value: 'texas_food_bank' },
-      ]
 
       if (this.state.created === true) return <Redirect to='/home'/>
 
@@ -105,7 +102,7 @@ export default class AddCampaign extends Component {
             <Form noValidate onSubmit={this.handleSubmit}>
               <Form.Group widths="equal">
                 <Form.Input fluid type="text" label="Name" value={this.state.name} onChange={this.handleChange('name')} />
-                <Form.Select fluid label="Non Profit" options={options} value={this.state.nonprofit} onChange={this.handleChange('nonprofit')}/>
+                <Form.Select fluid label="Non Profit" options={options} onChange={this.handleNonProfitChange}/>
               </Form.Group>
               <Form.TextArea type="text" label="Description" value={this.state.description} onChange = {this.handleChange('description')} />
               <Form.Group widths="equal">

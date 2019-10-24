@@ -67,7 +67,7 @@ class PublicCampaignPage extends Component {
           <Responsive>
               <Segment style={{ backgroundColor: '#F9FFFF', paddingTop: '6em' }} vertical>
                   <Grid container centered stackable>
-                      <Grid.Column width={8}>
+                      <Grid.Column width={8} mobile={15}>
                           <Header as='h1'
                                   color='orange'
                                   style={{

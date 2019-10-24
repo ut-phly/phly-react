@@ -28,7 +28,8 @@ export default class MainPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            logout: false
+            logout: false,
+            page: ''
         };
     }
 
@@ -43,6 +44,8 @@ export default class MainPage extends Component {
             }
         });
     }
+
+    handlePageClick = (e, { name }) => this.setState({ page: name })
 
     handleChangeOrg = (e, { value }) => {
         Meteor.call('organizations.save', value, this.props.currentUser._id);
@@ -66,7 +69,7 @@ export default class MainPage extends Component {
 
         return (
             <div>
-                <Menu fixed='left' pointing vertical inverted color='blue'>
+                <Menu fixed='left' vertical inverted secondary color='blue'>
                     <Container style={{ paddingTop: '1em' }}>
                         <Image style={{ height: '4em', width: '4em', marginBottom: '1em', marginTop: '1em' }} centered src='/images/logo.png'/>
                         <Menu.Item>
@@ -76,21 +79,22 @@ export default class MainPage extends Component {
                                 id='dropdown'
                                 pointing='left'
                                 fluid
-                                icon=''
+                                icon='angle down'
                                 value={org}
                                 options={organizations}
                                 onChange={this.handleChangeOrg}
                             />
                         </Menu.Item>
-                        <Menu.Item as={ Link } name='campaigns' to="/home">
+                        <Menu.Item as={ Link } name='campaigns' to="/home" active={this.state.page === 'campaigns'} onClick={this.handlePageClick}>
                             <Icon name="handshake outline"/>
                             Campaigns
                         </Menu.Item>
-                        <Menu.Item as={ Link } name='profile' to="/home/profile">
+                        <Menu.Item as={ Link } name='profile' to="/home/profile" active={this.state.page === 'profile'}
+                            style={{ marginTop: '.8em' }} onClick={this.handlePageClick}>
                             <Icon name="user circle outline"/>
                             Profile
                         </Menu.Item>
-                        <Menu.Item position='right'>
+                        <Menu.Item>
                             <Button onClick={this.handleLogout}>Logout</Button>
                         </Menu.Item>
                     </Container>
@@ -104,11 +108,11 @@ export default class MainPage extends Component {
                             />
                             <Route
                                 path="/home/profile"
-                                render={(props) => <Profile {...props} org={org} currentUser={this.props.currentUser}/>}
+                                render={(props) => <Profile {...props} orgs={this.props.organizations} currentUser={this.props.currentUser}/>}
                             />
                             <Route
                               path="/home/new"
-                              render={(props) => <AddCampaign {...props} history={this.history} currentUser={this.props.currentUser} org={this.state.org}/>}
+                              render={(props) => <AddCampaign {...props} history={this.history} currentUser={this.props.currentUser} org={org}/>}
                             />
                             <Route
                                 path="/home/neworg"

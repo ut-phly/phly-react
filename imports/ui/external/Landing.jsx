@@ -66,15 +66,20 @@ export default class Landing extends Component {
 
         return(
             <div>
-                <Menu fixed='top' inverted color='blue'>
+                <Menu fixed='top' inverted secondary color='blue'>
                     <Container>
                         <Menu.Item>
                                 <Image style={{ height: '1.5em', width: '1.5em' }} src='/images/logo.png'/>
                                  <p style={{
                                      fontFamily: 'Nunito',
+                                     fontWeight: 'bold',
                                      fontSize: '1.5em',
                                      marginLeft: '.5em',
                                      letterSpacing: '2px'}}>PHLY</p>
+                        </Menu.Item>
+                        <Menu.Item position='right'>
+                            <Button color='blue' onClick={this.handleLogin}>Login</Button>
+                            <Button onClick={this.handleRegister} style={{ marginLeft: '1em' }}>Sign Up</Button>
                         </Menu.Item>
                     </Container>
                 </Menu>
@@ -100,7 +105,7 @@ export default class Landing extends Component {
                                         Phly makes fundraising easier and safer
                                         for student organizations
                                     </p>
-                                    <Button as='a' href='#form' size='big' color='orange'>
+                                    <Button as={Link} to='/register' size='big' color='orange'>
                                         Get Started
                                         <Icon name='right arrow'/>
                                     </Button>

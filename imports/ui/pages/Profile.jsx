@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Redirect } from 'react-router-dom';
 import { Organizations } from '../../api/organizations.js';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import {
     Header,
@@ -9,7 +10,9 @@ import {
     Segment,
     Button,
     Icon,
-    Label
+    Label,
+    Card,
+    Modal
 } from 'semantic-ui-react';
 
 export default class Profile extends Component {
@@ -17,7 +20,6 @@ export default class Profile extends Component {
         super(props);
         this.state = {
             new: false,
-            deleted: false
         };
     }
 
@@ -28,25 +30,57 @@ export default class Profile extends Component {
     }
 
     handleDelete = () => {
-        Meteor.call('organizations.delete', this.props.org);
-        this.setState({ deleted: true });
+        Meteor.call('organizations.delete', this.props.org, this.props.currentUser._id);
     }
 
     render() {
         if (this.state.new === true) return <Redirect to='/home/neworg'/>
-        if (this.state.deleted === true) return <Redirect to='/home'/>
 
         let user = this.props.currentUser;
-        let org = Organizations.findOne({ _id: this.props.org });
-        console.log(org);
-        let shareId = '';
-        let name = '';
-        let admin = false;
-        if (org) {
-            shareId = org.share;
-            name = org.name;
-            if (org.owner === user._id) admin = true;
-        }
+        let username = '';
+        if (user) username = user.username;
+        let self = this;
+
+        let orgs = [];
+        this.props.orgs.forEach(function(org) {
+
+            const ShareModal = () => (
+              <Modal trigger={<Button floated='right'><Icon name='plus'/>Members</Button>} basic size='small'>
+                <Header icon='plus' content='Add Members to your Org' />
+                <Modal.Content>
+                  <p>
+                    Your share code is: {org.share}
+                  </p>
+                </Modal.Content>
+                <Modal.Actions>
+                  <CopyToClipboard text={org.share}>
+                    <Button color='green' inverted>
+                      <Icon name='copy'/> Copy
+                    </Button>
+                  </CopyToClipboard>
+                </Modal.Actions>
+              </Modal>
+            )
+
+            let admin = (user._id === org.owner) ? (
+              <div>
+                <Label floated='left' size='mini' style={{ margin: '.3em' }}><Icon name='star'/>admin</Label>
+                <Button icon='trash' floated='right' onClick={self.handleDelete}/>
+                <ShareModal/>
+              </div>
+            ) : (
+              <Button icon='trash' floated='right' onClick={self.handleDelete}/>
+            );
+            let header = (
+              <Header floated='left' color='blue' style={{ fontSize: '1.5em', margin: '.3em' }}>{org.name}</Header>
+            );
+            orgs.push({
+                fluid: true,
+                header: header,
+                key: org._id,
+                meta: admin
+            });
+        });
 
         return(
             <Responsive>
@@ -57,22 +91,16 @@ export default class Profile extends Component {
                             style={{
                                   fontSize: '2em',
                                   letterSpacing: '1.5px' }}>
-                      {name}
+                      Profile
                     </Header>
-                    { admin ?
-                        <Label icon='star' content='admin' size='mini' horizontal/>
-                        : '' }
                     <Button onClick={this.handleNew} color='orange' floated='right'>
                         <Icon name='plus'/>
                         New
                     </Button>
-                    { admin ? <Button icon='trash alternate outline' onClick={this.handleDelete} floated='right' color='blue'/> : '' }
                 </Segment>
                 <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic>
-                    { this.props.org ?
-                        <p>Share code: {shareId}</p>
-                        : <p>Select an org</p>
-                    }
+                    <p style={{ fontWeight: 'bold' }}>My Organizations</p>
+                    <Card.Group items={orgs}/>
                 </Segment>
             </Responsive>
         )
