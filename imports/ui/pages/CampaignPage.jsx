@@ -7,6 +7,7 @@ import { withHistory, Link, Redirect } from 'react-router-dom';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 
 import { Campaigns } from '../../api/campaigns.js';
+import { Donations } from '../../api/donations.js';
 import {
     Button,
     Responsive,
@@ -84,6 +85,15 @@ export default class CampaignPage extends Component {
         if (this.state.deleted === true) return <Redirect to='/home'/>
         if (this.state.public === true) return <Redirect to={`/public/${this.props.match.params.id}`}/>
         var obj = Campaigns.findOne({ _id: this.props.match.params.id });
+        var donations = Donations.find({owner: this.props.match.params.id}).fetch();
+        console.log(donations);
+        var totalRaised = 0;
+        if(donations){
+          donations.forEach(calculateTotal);
+          function calculateTotal(donation, index){
+            totalRaised += donation.amount;
+          }
+        }
         if (obj != null) {
             var campName = obj.name;
             var campDes = obj.description;

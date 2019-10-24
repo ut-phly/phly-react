@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import '../imports/api/campaigns.js';
 import '../imports/api/organizations.js';
 import '../imports/api/potentials.js';
+import '../imports/api/donations.js';
 
 // Define gateway variable
 var gateway;
