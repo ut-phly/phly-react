@@ -49,9 +49,11 @@ class PublicCampaignPage extends Component {
     render() {
         let name = "";
         let description = "";
+        let nonprofit = "";
         if (this.props.campaign) {
             name = this.props.campaign.name;
             description = this.props.campaign.description;
+            nonprofit = this.props.campaign.nonprofit;
         }
         var self = this;
         Meteor.call('getClientToken', function(error, clientToken) {
@@ -104,9 +106,9 @@ class PublicCampaignPage extends Component {
                                       letterSpacing: '1.5px' }}>
                               {name}
                           </Header>
-                          <h3>campaign</h3>
+                          <h3>{nonprofit}</h3>
                           <p>{description}</p>
-                          <p>ALL PROCEEDS GOING DIRECTLY TO NONprofit</p>
+                          <p>ALL PROCEEDS GOING DIRECTLY TO {nonprofit}</p>
                           <Form role="form">
                             <Form.Field>
                                 <Input
