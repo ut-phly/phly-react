@@ -89,9 +89,13 @@ export default class MainPage extends Component {
                             <Icon name="handshake outline"/>
                             Campaigns
                         </Menu.Item>
+                        <Menu.Item name='organizations' style={{ marginTop: '.5em' }} active={this.state.page === 'organizations'} onClick={this.handlePageClick}>
+                            <Icon name ="users"/>
+                            Organizations
+                        </Menu.Item>
                         <Menu.Item as={ Link } name='profile' to="/home/profile" active={this.state.page === 'profile'}
-                            style={{ marginTop: '.8em' }} onClick={this.handlePageClick}>
-                            <Icon name="user circle outline"/>
+                            style={{ marginTop: '.5em' }} onClick={this.handlePageClick}>
+                            <Icon name="user circle"/>
                             Profile
                         </Menu.Item>
                         <Menu.Item>
