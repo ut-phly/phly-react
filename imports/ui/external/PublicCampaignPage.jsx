@@ -19,41 +19,44 @@ import {
 
 import { Campaigns } from '../../api/campaigns.js';
 
+var options = [
+  [ 'st_judes', 'St. Judes Children Hospital' ],
+  [ 'miracle_network', 'Miracle Network' ],
+  [ 'texas_food_bank', 'Texas Food Bank' ]
+]
+var np_translation = new Map(options);
+
 class PublicCampaignPage extends Component {
     constructor(props) {
         super(props);
-        // this.state = {
-        //   donationAmount: 0,
-        // }
-        // this.handleChangeAmount = this.handleChangeAmount.bind(this);
-        // this.handleSubmit = this.handleSubmit.bind(this);
+        this.state = {
+            description: 'SHOW MORE'
+        }
+
     }
 
-    // handleSubmit(event) {
-    //   event.preventDefault();
-    //   var transaction = {
-    //     campaign: this.props.campaign,
-    //     amount: this.state.amount
-    //   }
-    //   Meteor.call('transactions.insert', transaction);
-    // }
-    //
-    // handleChangeAmount(key){
-    //   return function(e){
-    //       var state = {};
-    //       state[key] = e.target.value;
-    //       this.setState(state);
-    //   }.bind(this);
-    //}
+    handleShowMore = () => {
+        if (this.state.description === 'SHOW MORE')  {
+          this.setState({
+            description: 'SHOW LESS'
+          });
+        } else {
+          this.setState({
+            description: 'SHOW MORE'
+          });
+        }
+    }
 
     render() {
         let name = "";
         let description = "";
         let nonprofit = "";
+        let org = "";
         if (this.props.campaign) {
             name = this.props.campaign.name;
             description = this.props.campaign.description;
-            nonprofit = this.props.campaign.nonprofit;
+            nonprofit = np_translation.get(this.props.campaign.nonprofit);
+            org = this.props.campaign.owner;
         }
         var self = this;
         Meteor.call('getClientToken', function(error, clientToken) {
@@ -62,31 +65,31 @@ class PublicCampaignPage extends Component {
           } else {
             braintree.setup(clientToken, "dropin", {
               container: "payment-form", // Injecting into <div id="payment-form"></div>
+
+              paypal: {
+                style: {
+                  size: 'responsive'
+                }
+              },
+              
+
               onPaymentMethodReceived: function (response) {
                 // When we submit the payment form,
                 // it'll create new customer first...
                 var nonce = response.nonce;
 
-                Meteor.call('btCreateCustomer', function(error, success) {
+                let donation_amount = document.getElementById('donation_amount').value;
+                Meteor.call('createTransaction', nonce, donation_amount, function(error, success) {
                   if (error) {
-                    throw new Meteor.Error('customer-creation-failed');
+                    throw new Meteor.Error('transaction-creation-failed');
                   } else {
-                    // ... and when the customer is successfuly created,
-                    // call method for creating a transaction (finally!)
-                    let donation_amount = document.getElementById('donation_amount').value;
-                    Meteor.call('createTransaction', nonce, donation_amount, function(error, success) {
-                      if (error) {
-                        throw new Meteor.Error('transaction-creation-failed');
-                      } else {
-                        var donation = {
-                          owner: self.props.campaign._id,
-                          nonprofit: self.props.campaign.nonprofit,
-                          amount: donation_amount
-                        }
-                        Meteor.call('donations.insert', donation);
-                        alert('Thank you for your donation!');
-                      }
-                    });
+                    var donation = {
+                      campaign: self.props.campaign._id,
+                      nonprofit: self.props.campaign.nonprofit,
+                      amount: donation_amount
+                    }
+                    Meteor.call('donations.insert', donation);
+                    alert('Thank you for your donation!');
                   }
                 });
               }
@@ -98,23 +101,31 @@ class PublicCampaignPage extends Component {
           <Responsive>
               <Segment style={{ backgroundColor: '#F9FFFF', paddingTop: '6em' }} vertical>
                   <Grid container centered stackable>
-                      <Grid.Column width={8} mobile={15}>
+                      <Grid.Column desktop={8} mobile={15}>
                           <Header as='h1'
                                   color='orange'
                                   style={{
-                                      fontSize: '2em',
+                                      fontSize: '4em',
                                       letterSpacing: '1.5px' }}>
                               {name}
                           </Header>
-                          <h3>{nonprofit}</h3>
-                          <p>{description}</p>
-                          <p>ALL PROCEEDS GOING DIRECTLY TO {nonprofit}</p>
+                          <p style={{ fontSize: '2em' }}>for {nonprofit}</p>
+                          <Button onClick={this.handleShowMore} size="huge">
+                              {this.state.description}
+                          </Button>
+                          { this.state.description === 'SHOW LESS' ?
+                              <p style={{ fontSize: '1.5em' }}>{description}</p>
+                              : ''
+                          }
                           <Form role="form">
                             <Form.Field>
                                 <Input
-                                  type="integer"
+                                  style={{ padding: '1em' }}
+                                  label="$"
+                                  type="number"
                                   id="donation_amount"
-                                  placeholder="Amount"/>
+                                  placeholder="Amount"
+                                  size="massive"/>
                             </Form.Field>
                             <Form.Field>
                                 <div id="payment-form"></div>

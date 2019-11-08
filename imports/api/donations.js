@@ -3,6 +3,7 @@ import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 
 import { Organizations } from './organizations.js';
+import { Campaigns } from './campaigns.js';
 
 export const Donations = new Mongo.Collection('donations');
 
@@ -20,12 +21,16 @@ if (Meteor.isServer) {
             ]
         }).fetch();
         orgs = orgs.map((org) => (org._id));
-        return Donations.find({ owner: { $in: orgs } });
+        var campaigns = Campaigns.find({
+            owner: { $in: orgs }
+        }).fetch();
+        campaigns = campaigns.map((camp) => (camp._id));
+        return Donations.find({ campaign: { $in: campaigns } });
     });
 }
 
 Donations.schema = new SimpleSchema({
-    owner: {type: String},
+    campaign: {type: String},
     nonprofit: {type: String},
     amount: {type: Number}
 });
@@ -38,7 +43,7 @@ Meteor.methods({
     'donations.insert'(donation) {
         // add validation that the user is signed in and the schema is correct
         Donations.insert({
-            owner: donation.owner,
+            campaign: donation.campaign,
             nonprofit: donation.nonprofit,
             amount: donation.amount
         });

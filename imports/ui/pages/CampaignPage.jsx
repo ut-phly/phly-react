@@ -5,6 +5,8 @@ import { Mongo } from 'meteor/mongo';
 
 import { withHistory, Link, Redirect } from 'react-router-dom';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
 
 import { Campaigns } from '../../api/campaigns.js';
 import { Donations } from '../../api/donations.js';
@@ -16,7 +18,9 @@ import {
     Grid,
     Icon,
     Form,
-    TextArea
+    TextArea,
+    Modal,
+    Progress
 } from 'semantic-ui-react';
 
 var options = [
@@ -60,6 +64,7 @@ export default class CampaignPage extends Component {
         this.setState({ editing: false });
     }
 
+
     handleDelete = () => {
         Meteor.call('campaigns.delete', this.props.match.params.id);
         this.setState({ deleted: true });
@@ -69,9 +74,11 @@ export default class CampaignPage extends Component {
         this.setState({ public: true });
     }
 
+/*
     handleEdit = () => {
         this.setState({ editing: true });
     }
+*/
 
     handleChange(key){
         return function(e){
@@ -93,10 +100,10 @@ export default class CampaignPage extends Component {
         if (this.state.deleted === true) return <Redirect to='/home'/>
         if (this.state.public === true) return <Redirect to={`/public/${this.props.match.params.id}`}/>
         var obj = Campaigns.findOne({ _id: this.props.match.params.id });
-        var donations = Donations.find({owner: this.props.match.params.id}).fetch();
+        var donations = Donations.find({campaign: this.props.match.params.id}).fetch();
         console.log(donations);
         var totalRaised = 0;
-        if(donations){
+        if (donations) {
           donations.forEach(calculateTotal);
           function calculateTotal(donation, index){
             totalRaised += donation.amount;
@@ -159,9 +166,21 @@ export default class CampaignPage extends Component {
                                       paddingRight: '.5em' }}>
                           {campName}
                         </Header>
-                        <Button floated='right' color='orange' onClick={this.handleDelete}>Delete</Button>
-                        <Button floated='right' content='Share' color='blue' onClick={this.handlePublic}/>
-                        <Button floated='right' icon='edit outline' color='blue' onClick={this.handleEdit}/>
+                        <Modal trigger={<Button floated='right'><Icon name='external'/>Share</Button>} basic size='small'>
+                          <Header icon='plus' content='Add Members to your Org' />
+                          <Modal.Content>
+                            <p>
+                              Your external link is: <Link to={`/public/${this.props.match.params.id}`}>phly.co/public/{this.props.match.params.id}</Link>
+                            </p>
+                          </Modal.Content>
+                          <Modal.Actions>
+                            <CopyToClipboard text={`phly.co/public/${this.props.match.params.id}`}>
+                              <Button color='green' inverted>
+                                <Icon name='copy'/> Copy
+                              </Button>
+                            </CopyToClipboard>
+                          </Modal.Actions>
+                        </Modal>
                     </Segment>
                     <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic>
                         <Grid columns={2}>
@@ -177,6 +196,11 @@ export default class CampaignPage extends Component {
                                 <Grid.Row style={{ margin: '2em' }}>
                                   <Header sub>Description</Header>
                                   <p>{campDes}</p>
+                                </Grid.Row>
+                                <Grid.Row style={{ margin: '2em' }}>
+                                  <Header sub>Donations</Header>
+                                  <p>Total: ${totalRaised}</p>
+                                  <Progress percent={totalRaised * 100 / goalAmount} progress color='orange'/>
                                 </Grid.Row>
                             </Grid.Column>
                             <Grid.Column>

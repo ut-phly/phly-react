@@ -12,6 +12,7 @@ import Profile from '../../pages/Profile.jsx';
 import AddCampaign from '../AddCampaign.jsx';
 import AddOrg from '../AddOrg.jsx'
 import CampaignList from './CampaignList.jsx';
+import MyOrganizations from '../../pages/Organizations.jsx';
 
 import {
     Header,
@@ -89,7 +90,8 @@ export default class MainPage extends Component {
                             <Icon name="handshake outline"/>
                             Campaigns
                         </Menu.Item>
-                        <Menu.Item name='organizations' style={{ marginTop: '.5em' }} active={this.state.page === 'organizations'} onClick={this.handlePageClick}>
+                        <Menu.Item as={ Link } to="/home/orgs" name='organizations' style={{ marginTop: '.5em' }} active={this.state.page === 'organizations'}
+                            onClick={this.handlePageClick}>
                             <Icon name ="users"/>
                             Organizations
                         </Menu.Item>
@@ -112,7 +114,11 @@ export default class MainPage extends Component {
                             />
                             <Route
                                 path="/home/profile"
-                                render={(props) => <Profile {...props} orgs={this.props.organizations} currentUser={this.props.currentUser}/>}
+                                render={(props) => <Profile {...props} currentUser={this.props.currentUser}/>}
+                            />
+                            <Route
+                                path="/home/orgs"
+                                render={(props) => <MyOrganizations  {...props} orgs={this.props.organizations} currentUser={this.props.currentUser}/>}
                             />
                             <Route
                               path="/home/new"

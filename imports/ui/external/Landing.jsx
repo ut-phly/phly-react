@@ -90,20 +90,19 @@ export default class Landing extends Component {
                             vertical>
                         <Grid container stackable verticalAlign='middle'>
                             <Grid.Row>
-                                <Grid.Column width={12}>
+                                <Grid.Column width={12} style={{ padding: 0 }}>
                                     <Header as='h1'
                                             color='orange'
                                             style={{
                                                 fontSize: '3.5em',
                                                 letterSpacing: '1.5px' }}>
-                                        Fundraise the right way
+                                        The fundraising solution for student orgs
                                     </Header>
                                     <p style={{
                                             fontSize: '1.66em',
                                             color: '#2E5266',
                                             letterSpacing: '.5px'}}>
-                                        Phly makes fundraising easier and safer
-                                        for student organizations
+                                        Phly makes collecting and tracking donations easier, quicker, and safer
                                     </p>
                                     <Button as={Link} to='/register' size='big' color='orange'>
                                         Get Started

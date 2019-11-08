@@ -41,47 +41,6 @@ export default class Profile extends Component {
         if (user) username = user.username;
         let self = this;
 
-        let orgs = [];
-        this.props.orgs.forEach(function(org) {
-
-            const ShareModal = () => (
-              <Modal trigger={<Button floated='right'><Icon name='plus'/>Members</Button>} basic size='small'>
-                <Header icon='plus' content='Add Members to your Org' />
-                <Modal.Content>
-                  <p>
-                    Your share code is: {org.share}
-                  </p>
-                </Modal.Content>
-                <Modal.Actions>
-                  <CopyToClipboard text={org.share}>
-                    <Button color='green' inverted>
-                      <Icon name='copy'/> Copy
-                    </Button>
-                  </CopyToClipboard>
-                </Modal.Actions>
-              </Modal>
-            )
-
-            let admin = (user._id === org.owner) ? (
-              <div>
-                <Label floated='left' size='mini' style={{ margin: '.3em' }}><Icon name='star'/>admin</Label>
-                <Button icon='trash' floated='right' onClick={self.handleDelete}/>
-                <ShareModal/>
-              </div>
-            ) : (
-              <Button icon='trash' floated='right' onClick={self.handleDelete}/>
-            );
-            let header = (
-              <Header floated='left' color='blue' style={{ fontSize: '1.5em', margin: '.3em' }}>{org.name}</Header>
-            );
-            orgs.push({
-                fluid: true,
-                header: header,
-                key: org._id,
-                meta: admin
-            });
-        });
-
         return(
             <Responsive>
                 <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic clearing>
@@ -93,14 +52,10 @@ export default class Profile extends Component {
                                   letterSpacing: '1.5px' }}>
                       Profile
                     </Header>
-                    <Button onClick={this.handleNew} color='orange' floated='right'>
-                        <Icon name='plus'/>
-                        New
-                    </Button>
                 </Segment>
+
                 <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic>
-                    <p style={{ fontWeight: 'bold' }}>My Organizations</p>
-                    <Card.Group items={orgs}/>
+                    <p style={{ fontWeight: 'bold' }}>Hello {username}!</p>
                 </Segment>
             </Responsive>
         )

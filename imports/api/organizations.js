@@ -41,6 +41,8 @@ Meteor.methods({
             share: share._str,
             users: [],
             campaigns: []
+        }, function(err, org_id) {
+          Meteor.users.update(org.owner, { $set: { org: id } });
         });
     },
 

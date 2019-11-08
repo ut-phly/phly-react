@@ -82,7 +82,6 @@ Meteor.methods({
         console.log(err);
       } else {
         // When payment's successful, add "paid" role to current user.
-        Roles.addUsersToRoles(user._id, 'paid', Roles.GLOBAL_GROUP)
       }
     });
   }
