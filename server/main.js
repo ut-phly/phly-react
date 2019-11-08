@@ -9,24 +9,24 @@ import './publish.js';
 var gateway;
 
 Meteor.startup(() => {
-
     var env;
     var braintree = require('braintree');
   // Pick Braintree environment based on environment defined in Meteor settings.
     if (Meteor.settings.public.env === 'Production') {
-        env = Braintree.Environment.Production;
+        gateway = braintree.connect({
+            environment: Braintree.Environment.Production,
+            publicKey:  'xnr8mjjryfspbh6x',
+            privateKey: 'c78e59ef319a33fe6225f7d698d0a77a',
+            merchantId: 'kbgtdmr6tz3y36hr'
+        });
     } else {
-        env = Braintree.Environment.Sandbox;
+        gateway = braintree.connect({
+            environment: Braintree.Environment.Sandbox,
+            publicKey:  '4qpbhj8rxyn4wb9k',
+            privateKey: '4b8926c2bf26ec19a3435edfdbe4139b',
+            merchantId: 's9d9rpjb9wttm9t8'
+        });
     }
-  //console.log(env);
-  // Initialize Braintree connection:
-  //gateway = BrainTreeConnect({
-    gateway = braintree.connect({
-        environment: env,
-        publicKey:  '4qpbhj8rxyn4wb9k',
-        privateKey: '4b8926c2bf26ec19a3435edfdbe4139b',
-        merchantId: 's9d9rpjb9wttm9t8'
-    });
 });
 
 Meteor.methods({

@@ -4,6 +4,7 @@ import SimpleSchema from 'simpl-schema';
 
 import { Organizations } from './organizations.js';
 
+//var qrcode = require('qrcode');
 export const Campaigns = new Mongo.Collection('campaigns');
 
 if (Meteor.isServer) {
@@ -72,7 +73,11 @@ Meteor.methods({
 
     'campaigns.delete'(id) {
         Campaigns.remove({ _id: id });
-    }
+    },
+
+    // 'campaigns.createPublicQR'(url) {
+    //
+    // }
 });
 
 //,

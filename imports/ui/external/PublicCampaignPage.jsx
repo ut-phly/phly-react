@@ -4,6 +4,7 @@ import { Mongo } from 'meteor/mongo';
 import { withHistory, Link } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Donations } from '../../api/donations.js';
+import { Payments } from '../../api/donations.js';
 
 //import '../../api/payments.js';
 import { HTTP } from 'meteor/http';
@@ -29,8 +30,10 @@ var np_translation = new Map(options);
 class PublicCampaignPage extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
-            description: 'SHOW MORE'
+            description: 'SHOW MORE',
+            clientToken: ''
         }
 
     }
@@ -47,6 +50,20 @@ class PublicCampaignPage extends Component {
         }
     }
 
+
+    componentDidMount() {
+      var self = this;
+      Meteor.call('getClientToken', function(error, clientToken) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log(clientToken);
+            self.setState({clientToken: clientToken});
+          }
+      });
+    }
+
+
     render() {
         let name = "";
         let description = "";
@@ -58,11 +75,11 @@ class PublicCampaignPage extends Component {
             nonprofit = np_translation.get(this.props.campaign.nonprofit);
             org = this.props.campaign.owner;
         }
+
+
         var self = this;
         Meteor.call('getClientToken', function(error, clientToken) {
-          if (error) {
-            console.log(error);
-          } else {
+          if (this.state.clientToken) {
             braintree.setup(clientToken, "dropin", {
               container: "payment-form", // Injecting into <div id="payment-form"></div>
 
@@ -71,7 +88,7 @@ class PublicCampaignPage extends Component {
                   size: 'responsive'
                 }
               },
-              
+
 
               onPaymentMethodReceived: function (response) {
                 // When we submit the payment form,
