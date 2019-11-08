@@ -4,6 +4,7 @@ import { Mongo } from 'meteor/mongo';
 import { withHistory, Link } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Donations } from '../../api/donations.js';
+import { Payments } from '../../api/donations.js';
 
 //import '../../api/payments.js';
 import { HTTP } from 'meteor/http';
@@ -22,29 +23,24 @@ import { Campaigns } from '../../api/campaigns.js';
 class PublicCampaignPage extends Component {
     constructor(props) {
         super(props);
-        // this.state = {
-        //   donationAmount: 0,
-        // }
-        // this.handleChangeAmount = this.handleChangeAmount.bind(this);
-        // this.handleSubmit = this.handleSubmit.bind(this);
+
+        this.state = {
+          clientToken: '',
+        };
     }
 
-    // handleSubmit(event) {
-    //   event.preventDefault();
-    //   var transaction = {
-    //     campaign: this.props.campaign,
-    //     amount: this.state.amount
-    //   }
-    //   Meteor.call('transactions.insert', transaction);
-    // }
-    //
-    // handleChangeAmount(key){
-    //   return function(e){
-    //       var state = {};
-    //       state[key] = e.target.value;
-    //       this.setState(state);
-    //   }.bind(this);
-    //}
+    componentDidMount() {
+      var self = this;
+      Meteor.call('getClientToken', function(error, clientToken) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log(clientToken);
+            self.setState({clientToken: clientToken});
+          }
+      });
+    }
+
 
     render() {
         let name = "";
@@ -55,44 +51,44 @@ class PublicCampaignPage extends Component {
             description = this.props.campaign.description;
             nonprofit = this.props.campaign.nonprofit;
         }
-        var self = this;
-        Meteor.call('getClientToken', function(error, clientToken) {
-          if (error) {
-            console.log(error);
-          } else {
-            braintree.setup(clientToken, "dropin", {
-              container: "payment-form", // Injecting into <div id="payment-form"></div>
-              onPaymentMethodReceived: function (response) {
-                // When we submit the payment form,
-                // it'll create new customer first...
-                var nonce = response.nonce;
 
-                Meteor.call('btCreateCustomer', function(error, success) {
-                  if (error) {
-                    throw new Meteor.Error('customer-creation-failed');
-                  } else {
-                    // ... and when the customer is successfuly created,
-                    // call method for creating a transaction (finally!)
-                    let donation_amount = document.getElementById('donation_amount').value;
-                    Meteor.call('createTransaction', nonce, donation_amount, function(error, success) {
-                      if (error) {
-                        throw new Meteor.Error('transaction-creation-failed');
-                      } else {
-                        var donation = {
-                          owner: self.props.campaign._id,
-                          nonprofit: self.props.campaign.nonprofit,
-                          amount: donation_amount
-                        }
-                        Meteor.call('donations.insert', donation);
-                        alert('Thank you for your donation!');
+
+        var self = this;
+        console.log(this.state.clientToken);
+
+        if(this.state.clientToken) {
+          braintree.setup(this.state.clientToken, "dropin", {
+            container: "payment-form", // Injecting into <div id="payment-form"></div>
+            onPaymentMethodReceived: function (response) {
+              // When we submit the payment form,
+              // it'll create new customer first...
+              var nonce = response.nonce;
+
+              Meteor.call('btCreateCustomer', function(error, success) {
+                if (error) {
+                  throw new Meteor.Error('customer-creation-failed');
+                } else {
+                  // ... and when the customer is successfuly created,
+                  // call method for creating a transaction (finally!)
+                  let donation_amount = document.getElementById('donation_amount').value;
+                  Meteor.call('createTransaction', nonce, donation_amount, function(error, success) {
+                    if (error) {
+                      throw new Meteor.Error('transaction-creation-failed');
+                    } else {
+                      var donation = {
+                        owner: self.props.campaign._id,
+                        nonprofit: self.props.campaign.nonprofit,
+                        amount: donation_amount
                       }
-                    });
-                  }
-                });
-              }
-            });
-          }
-        });
+                      Meteor.call('donations.insert', donation);
+                      alert('Thank you for your donation!');
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
 
       return (
           <Responsive>
