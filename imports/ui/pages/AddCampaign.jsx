@@ -43,8 +43,7 @@ export default class AddCampaign extends Component {
     handleSubmit(event) {
         event.preventDefault();
         const date = new Date();
-        console.log(this.props.org);
-        console.log(this.state.nonprofit);
+        const qrCode = "error.svg";
         var campaign = {
             name: this.state.name,
             createdAt: new Date(),
@@ -53,8 +52,10 @@ export default class AddCampaign extends Component {
             endDate: this.state.endDate,
             description: this.state.description,
             nonprofit: this.state.nonprofit,
-            goalAmount: this.state.goalAmount
+            goalAmount: this.state.goalAmount,
+            qrCode: qrCode
         }
+        console.log(campaign);
         Meteor.call('campaigns.insert', campaign);
         this.setState(() => ({
             created: true
