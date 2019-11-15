@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
-
+import { HTTP } from 'meteor/http';
 import { Mongo } from 'meteor/mongo';
 
 import { withHistory, Link, Redirect } from 'react-router-dom';
@@ -8,6 +8,7 @@ import DayPickerInput from 'react-day-picker/DayPickerInput';
 
 import { Campaigns } from '../../api/campaigns.js';
 import { Donations } from '../../api/donations.js';
+
 import {
     Button,
     Responsive,
@@ -25,6 +26,9 @@ var options = [
   [ 'texas_food_bank', 'Texas Food Bank' ]
 ]
 var np_translation = new Map(options);
+var QRCode = require('qrcode.react');
+//var ShortUrl = require('node-url-shortener');
+//import GoogleUrlShortner from 'react-google-url-shortner';
 
 export default class CampaignPage extends Component {
     constructor(props) {
@@ -41,6 +45,47 @@ export default class CampaignPage extends Component {
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.getQRCode = this.getQRCode.bind(this);
+        //this.getShortLink = this.getShortLink.bind(this);
+        this.getURL = this.getURL.bind(this);
+    }
+    // <Grid.Row style={{ margin: '2em' }}>
+    //   <Header sub>Short Link</Header>
+    //   <div>
+    //     <GoogleUrlShortner
+    //       url={this.getURL()}
+    //       GOOGLE_API_KEY="AIzaSyADEsTbdBRbP-rPbxxDNXyuGvuU-4OZpEc"
+    //     />
+    //   </div>
+    // </Grid.Row>
+    getURL(){
+      // var url = ''
+      // var shorturl = ''
+      // if (Meteor.settings.public.env === 'Production'){
+      //   url = "https://www.phly.co/public/7cSJDwC9FZxTDjT9D"
+      // }
+      // else {
+      //   url = `https://www.phly.co/public/${this.props.match.params.id}`;
+      // }
+      //
+      // ShortUrl.short(url, function(err, returl){
+      //       console.log(returl);
+      //       shorturl = returl;
+      // });
+      return("https://www.phly.co/public/7cSJDwC9FZxTDjT9D");
+    }
+
+    getQRCode(){
+      console.log(this.props)
+      console.log(this.props.match.params.id) //how does this work ???
+      var url = ''
+      if (Meteor.settings.public.env === 'Production'){
+        url = "https://www.phly.co/public/7cSJDwC9FZxTDjT9D"
+      }
+      else {
+        url = `https://www.phly.co/public/${this.props.match.params.id}`;
+      }
+      return (<QRCode value={url}/>);
     }
 
     handleSubmit(event) {
@@ -187,6 +232,10 @@ export default class CampaignPage extends Component {
                                 <Grid.Row style={{ margin: '2em' }}>
                                   <Header sub>End Date</Header>
                                   <p>{endString}</p>
+                                </Grid.Row>
+                                <Grid.Row style={{ margin: '2em' }}>
+                                  <Header sub>QR Code</Header>
+                                  <div>{this.getQRCode()}</div>
                                 </Grid.Row>
                             </Grid.Column>
                         </Grid>

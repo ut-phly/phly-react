@@ -1,10 +1,13 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
-
+//call the qr code function in backend and save to another line in the SimpleSchema
+//use the object to display the qr code in the html
 import { Organizations } from './organizations.js';
 
-//var qrcode = require('qrcode');
+var QRCode = require('qrcode-svg');
+//var fs = require('fs');
+
 export const Campaigns = new Mongo.Collection('campaigns');
 
 if (Meteor.isServer) {
@@ -33,7 +36,7 @@ Campaigns.schema = new SimpleSchema({
     endDate: {type: Date},
     description: {type: String},
     nonprofit: {type: String},
-    goalAmount: {type: Number}
+    goalAmount: {type: Number},
 });
 
 //this will automatically check against the scehma when created
@@ -42,17 +45,19 @@ Campaigns.attachSchema(Campaigns.schema);
 Meteor.methods({
 
     'campaigns.insert'(campaign) {
-        // add validation that the user is signed in and the schema is correct
-        Campaigns.insert({
-            name: campaign.name,
-            createdAt: new Date(),
-            owner: campaign.owner,
-            startDate: campaign.startDate,
-            endDate: campaign.endDate,
-            description: campaign.description,
-            nonprofit: campaign.nonprofit,
-            goalAmount: campaign.goalAmount
-        });
+
+        Campaigns.insert(
+          {
+              name: campaign.name,
+              createdAt: new Date(),
+              owner: campaign.owner,
+              startDate: campaign.startDate,
+              endDate: campaign.endDate,
+              description: campaign.description,
+              nonprofit: campaign.nonprofit,
+              goalAmount: campaign.goalAmount,
+          }
+        )
     },
 
     'campaigns.edit'(campaign, id) {
@@ -74,10 +79,6 @@ Meteor.methods({
     'campaigns.delete'(id) {
         Campaigns.remove({ _id: id });
     },
-
-    // 'campaigns.createPublicQR'(url) {
-    //
-    // }
 });
 
 //,
