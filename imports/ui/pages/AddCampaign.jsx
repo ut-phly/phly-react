@@ -114,7 +114,7 @@ export default class AddCampaign extends Component {
                   <label htmlFor="endDate">End Date</label>
                   <DayPickerInput onDayChange={this.handleEndDayChange.bind(this)}/>
                 </Form.Field>
-                <Form.Input type="number" label="Goal" value = {this.state.goalAmount} onChange = {this.handleChange('goalAmount')}/>
+                <Form.Input type="number" label="Goal" value = {this.state.goalAmount} Label="$" onChange = {this.handleChange('goalAmount')}/>
               </Form.Group>
               <Button color='orange' type='submit'>Create</Button>
             </Form>

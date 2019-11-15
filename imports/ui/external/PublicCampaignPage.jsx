@@ -32,24 +32,10 @@ class PublicCampaignPage extends Component {
         super(props);
 
         this.state = {
-            description: 'SHOW MORE',
             clientToken: ''
         }
 
     }
-
-    handleShowMore = () => {
-        if (this.state.description === 'SHOW MORE')  {
-          this.setState({
-            description: 'SHOW LESS'
-          });
-        } else {
-          this.setState({
-            description: 'SHOW MORE'
-          });
-        }
-    }
-
 
     componentDidMount() {
       var self = this;
@@ -57,12 +43,10 @@ class PublicCampaignPage extends Component {
           if (error) {
             console.log(error);
           } else {
-            console.log(clientToken);
             self.setState({clientToken: clientToken});
           }
       });
     }
-
 
     render() {
         let name = "";
@@ -78,41 +62,40 @@ class PublicCampaignPage extends Component {
 
 
         var self = this;
-        Meteor.call('getClientToken', function(error, clientToken) {
-          if (this.state.clientToken) {
-            braintree.setup(clientToken, "dropin", {
-              container: "payment-form", // Injecting into <div id="payment-form"></div>
 
-              paypal: {
-                style: {
-                  size: 'responsive'
-                }
-              },
+        if (this.state.clientToken) {
+          braintree.setup(this.state.clientToken, "dropin", {
+            container: "payment-form", // Injecting into <div id="payment-form"></div>
 
-
-              onPaymentMethodReceived: function (response) {
-                // When we submit the payment form,
-                // it'll create new customer first...
-                var nonce = response.nonce;
-
-                let donation_amount = document.getElementById('donation_amount').value;
-                Meteor.call('createTransaction', nonce, donation_amount, function(error, success) {
-                  if (error) {
-                    throw new Meteor.Error('transaction-creation-failed');
-                  } else {
-                    var donation = {
-                      campaign: self.props.campaign._id,
-                      nonprofit: self.props.campaign.nonprofit,
-                      amount: donation_amount
-                    }
-                    Meteor.call('donations.insert', donation);
-                    alert('Thank you for your donation!');
-                  }
-                });
+            paypal: {
+              style: {
+                size: 'responsive'
               }
-            });
-          }
-        });
+            },
+
+
+            onPaymentMethodReceived: function (response) {
+              // When we submit the payment form,
+              // it'll create new customer first...
+              var nonce = response.nonce;
+
+              let donation_amount = document.getElementById('donation_amount').value;
+              Meteor.call('createTransaction', nonce, donation_amount, function(error, success) {
+                if (error) {
+                  throw new Meteor.Error('transaction-creation-failed');
+                } else {
+                  var donation = {
+                    campaign: self.props.campaign._id,
+                    nonprofit: self.props.campaign.nonprofit,
+                    amount: donation_amount
+                  }
+                  Meteor.call('donations.insert', donation);
+                  alert('Thank you for your donation!');
+                }
+              });
+            }
+          });
+        }
 
       return (
           <Responsive>
@@ -122,22 +105,16 @@ class PublicCampaignPage extends Component {
                           <Header as='h1'
                                   color='orange'
                                   style={{
-                                      fontSize: '4em',
+                                      fontSize: '6em',
                                       letterSpacing: '1.5px' }}>
                               {name}
                           </Header>
-                          <p style={{ fontSize: '2em' }}>for {nonprofit}</p>
-                          <Button onClick={this.handleShowMore} size="huge">
-                              {this.state.description}
-                          </Button>
-                          { this.state.description === 'SHOW LESS' ?
-                              <p style={{ fontSize: '1.5em' }}>{description}</p>
-                              : ''
-                          }
+                          <p style={{ fontSize: '3em' }}>for {nonprofit}</p>
+                          <p style={{ fontSize: '1.5em' }}>{description}</p>
                           <Form role="form">
                             <Form.Field>
                                 <Input
-                                  style={{ padding: '1em' }}
+                                  style={{ paddingTop: '1em', paddingBottom: '1em' }}
                                   label="$"
                                   type="number"
                                   id="donation_amount"
@@ -147,7 +124,7 @@ class PublicCampaignPage extends Component {
                             <Form.Field>
                                 <div id="payment-form"></div>
                             </Form.Field>
-                            <Button type="submit" color="orange">Submit</Button>
+                            <Button type="submit" color="orange" size="massive">Submit</Button>
                             <p>Check out our <Link to="/policies">privacy policy</Link> and <Link to="/tos">terms of service</Link></p>
                         </Form>
                       </Grid.Column>

@@ -166,8 +166,8 @@ export default class CampaignPage extends Component {
                                       paddingRight: '.5em' }}>
                           {campName}
                         </Header>
-                        <Modal trigger={<Button floated='right'><Icon name='external'/>Share</Button>} basic size='small'>
-                          <Header icon='plus' content='Add Members to your Org' />
+                        <Modal trigger={<Button floated='right'><Icon name='external'/>Share</Button>} size='small'>
+                          <Header icon='plus' content='Share your campaign'/>
                           <Modal.Content>
                             <p>
                               Your external link is: <Link to={`/public/${this.props.match.params.id}`}>phly.co/public/{this.props.match.params.id}</Link>
