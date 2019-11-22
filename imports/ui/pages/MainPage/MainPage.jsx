@@ -100,9 +100,6 @@ export default class MainPage extends Component {
                             <Icon name="user circle"/>
                             Profile
                         </Menu.Item>
-                        <Menu.Item>
-                            <Button onClick={this.handleLogout}>Logout</Button>
-                        </Menu.Item>
                     </Container>
                 </Menu>
                 <Segment style={{ padding: '3em', paddingLeft: '18em', backgroundColor: '#F9FFFF'}} vertical>

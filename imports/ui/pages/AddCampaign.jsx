@@ -103,7 +103,7 @@ export default class AddCampaign extends Component {
             <Form noValidate onSubmit={this.handleSubmit}>
               <Form.Group widths="equal">
                 <Form.Input fluid type="text" label="Name" value={this.state.name} onChange={this.handleChange('name')} />
-                <Form.Select fluid label="Non Profit" options={options} onChange={this.handleNonProfitChange}/>
+                <Form.Select fluid label="Non Profit" search options={options} onChange={this.handleNonProfitChange}/>
               </Form.Group>
               <Form.TextArea type="text" label="Description" value={this.state.description} onChange = {this.handleChange('description')} />
               <Form.Group widths="equal">

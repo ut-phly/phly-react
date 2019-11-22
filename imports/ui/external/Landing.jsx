@@ -78,8 +78,8 @@ export default class Landing extends Component {
                                      letterSpacing: '2px'}}>PHLY</p>
                         </Menu.Item>
                         <Menu.Item position='right'>
-                            {/*<Button color='blue' onClick={this.handleLogin}>Login</Button>*/}
-                            {/* <Button onClick={this.handleRegister} style={{ marginLeft: '1em' }}>Sign Up</Button>*/}
+                            <Button color='blue' onClick={this.handleLogin}>Login</Button>
+                            <Button onClick={this.handleRegister} style={{ marginLeft: '1em' }}>Sign Up</Button>
                         </Menu.Item>
                     </Container>
                 </Menu>
@@ -104,7 +104,7 @@ export default class Landing extends Component {
                                             letterSpacing: '.5px'}}>
                                         Phly makes collecting and tracking donations easier, quicker, and safer
                                     </p>
-                                    <Button as={Link} to='#form' size='big' color='orange'>
+                                    <Button as={Link} to='/register' size='big' color='orange'>
                                         Get Started
                                         <Icon name='right arrow'/>
                                     </Button>

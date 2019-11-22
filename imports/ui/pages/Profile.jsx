@@ -20,6 +20,7 @@ export default class Profile extends Component {
         super(props);
         this.state = {
             new: false,
+            logout: false
         };
     }
 
@@ -33,8 +34,21 @@ export default class Profile extends Component {
         Meteor.call('organizations.delete', this.props.org, this.props.currentUser._id);
     }
 
+    handleLogout = () => {
+        Meteor.logout( (err) => {
+            if (err) {
+                console.log( err.reason );
+            } else {
+                this.setState(() => ({
+                    logout: true
+                }));
+            }
+        });
+    }
+
     render() {
         if (this.state.new === true) return <Redirect to='/home/neworg'/>
+        if (this.state.logout === true) return <Redirect to='/login'/>
 
         let user = this.props.currentUser;
         let username = '';
@@ -52,6 +66,9 @@ export default class Profile extends Component {
                                   letterSpacing: '1.5px' }}>
                       Profile
                     </Header>
+                    <Button onClick={this.handleLogout} color='orange' floated='right'>
+                        Logout
+                    </Button>
                 </Segment>
 
                 <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic>

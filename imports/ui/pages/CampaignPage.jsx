@@ -80,7 +80,6 @@ export default class CampaignPage extends Component {
     }
 
     getQRCode(){
-      console.log(this.props)
       console.log(this.props.match.params.id) //how does this work ???
       var url = ''
       if (Meteor.settings.public.env === 'Production'){
@@ -217,6 +216,7 @@ export default class CampaignPage extends Component {
                             <p>
                               Your external link is: <Link to={`/public/${this.props.match.params.id}`}>phly.co/public/{this.props.match.params.id}</Link>
                             </p>
+                            <div>{this.getQRCode()}</div>
                           </Modal.Content>
                           <Modal.Actions>
                             <CopyToClipboard text={`phly.co/public/${this.props.match.params.id}`}>

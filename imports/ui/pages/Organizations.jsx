@@ -45,7 +45,7 @@ export default class MyOrganizations extends Component {
         this.props.orgs.forEach(function(org) {
 
             const ShareModal = () => (
-              <Modal trigger={<Button floated='right'><Icon name='plus'/>Members</Button>} basic size='small'>
+              <Modal trigger={<Button floated='right'><Icon name='plus'/>Members</Button>} size='small'>
                 <Header icon='plus' content='Add Members to your Org' />
                 <Modal.Content>
                   <p>
