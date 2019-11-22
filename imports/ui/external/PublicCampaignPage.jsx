@@ -30,12 +30,13 @@ class PublicCampaignPage extends Component {
     }
 
     componentDidMount() {
+      console.log(Meteor.isProduction);
+      console.log(Meteor.settings.public.env);
       var self = this;
       Meteor.call('getClientToken', function(error, clientToken) {
           if (error) {
             console.log(error);
           } else {
-            console.log(clientToken);
             self.setState({clientToken: clientToken});
           }
       });
@@ -54,7 +55,6 @@ class PublicCampaignPage extends Component {
 
 
         var self = this;
-        console.log(this.state.clientToken);
 
         if(this.state.clientToken) {
           braintree.setup(this.state.clientToken, "dropin", {
