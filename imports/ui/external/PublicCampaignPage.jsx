@@ -38,6 +38,8 @@ class PublicCampaignPage extends Component {
     }
 
     componentDidMount() {
+      console.log(Meteor.isProduction);
+      console.log(Meteor.settings.public.env);
       var self = this;
       Meteor.call('getClientToken', function(error, clientToken) {
           if (error) {

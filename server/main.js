@@ -12,19 +12,20 @@ Meteor.startup(() => {
     var env;
     var braintree = require('braintree');
   // Pick Braintree environment based on environment defined in Meteor settings.
-    if (Meteor.settings.public.env === 'Production') {
+
+    if (Meteor.isProduction) {
         gateway = braintree.connect({
-            environment: Braintree.Environment.Production,
+            environment: braintree.Environment.Production,
             publicKey:  'xnr8mjjryfspbh6x',
             privateKey: 'c78e59ef319a33fe6225f7d698d0a77a',
             merchantId: 'kbgtdmr6tz3y36hr'
         });
     } else {
         gateway = braintree.connect({
-            environment: Braintree.Environment.Sandbox,
-            publicKey:  '4qpbhj8rxyn4wb9k',
-            privateKey: '4b8926c2bf26ec19a3435edfdbe4139b',
-            merchantId: 's9d9rpjb9wttm9t8'
+            environment: braintree.Environment.Sandbox,
+            publicKey:  'gpm8ssqkj3y3g4ch',
+            privateKey: 'afefdfcd3f37f5d3dc29fcc3ba1a366d',
+            merchantId: '579rgwgrbnrzpfr2'
         });
     }
 });
@@ -79,6 +80,7 @@ Meteor.methods({
       }
     }, function (err, success) {
       if (err) {
+        console.log("THERE IS AN ERROR WITH THE TRANSACTION")
         console.log(err);
       } else {
         // When payment's successful, add "paid" role to current user.
