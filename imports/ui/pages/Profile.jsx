@@ -52,7 +52,10 @@ export default class Profile extends Component {
 
         let user = this.props.currentUser;
         let username = '';
-        if (user) username = user.username;
+        if (user) {
+          if (user.profile.name) username = user.profile.name;
+          else username = user.username;
+        }
         let self = this;
 
         return(

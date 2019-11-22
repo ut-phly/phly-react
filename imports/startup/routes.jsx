@@ -24,7 +24,7 @@ export const renderRoutes = () => (
             <Route path="/register" component={RegisterPage}/>
             <Route path="/home" component={AppContainer}/>
             <Route path="/public/:id" component={CampaignContainer}/>
-            <Route path="/marketplace" component={MarketplaceContainer}/>
+            <Route path="/campaigns" component={MarketplaceContainer}/>
             <Route path="/policies" component={Policies}/>
             <Route path="/tos" component={Terms}/>
         </div>

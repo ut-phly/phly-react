@@ -6,6 +6,7 @@ import DayPickerInput from 'react-day-picker/DayPickerInput';
 import 'react-day-picker/lib/style.css';
 import { withRouter } from 'react-router-dom';
 
+
 import {
     Button,
     Form,
@@ -13,7 +14,8 @@ import {
     Segment,
     Grid,
     Header,
-    TextArea
+    TextArea,
+    Input
 } from 'semantic-ui-react';
 
 import { Campaigns } from '../../api/campaigns.js';
@@ -115,7 +117,10 @@ export default class AddCampaign extends Component {
                   <label htmlFor="endDate">End Date</label>
                   <DayPickerInput onDayChange={this.handleEndDayChange.bind(this)}/>
                 </Form.Field>
-                <Form.Input type="number" label="Goal" value = {this.state.goalAmount} Label="$" onChange = {this.handleChange('goalAmount')}/>
+                <Form.Field>
+                  <label>Goal</label>
+                  <Input type="number" label="$" value = {this.state.goalAmount} onChange = {this.handleChange('goalAmount')}/>
+                </Form.Field>
               </Form.Group>
               <Button color='orange' type='submit'>Create</Button>
             </Form>

@@ -11,7 +11,8 @@ import {
     Responsive,
     Segment,
     Form,
-    Image
+    Image,
+    Message
 } from 'semantic-ui-react';
 
 export default class LoginPage extends Component {
@@ -92,7 +93,7 @@ export default class LoginPage extends Component {
                                         <input
                                             type="text"
                                             id="login-username"
-                                            placeholder="Username"/>
+                                            placeholder="Email or Username"/>
                                     </Form.Field>
                                     <Form.Field>
                                         <input
@@ -101,6 +102,7 @@ export default class LoginPage extends Component {
                                             placeholder="Password"/>
                                     </Form.Field>
                                     <Button onClick={this.handleSubmit} color='orange' type='submit'>Submit</Button>
+                                    { this.state.error ? <Message negative>{this.state.error}</Message> : '' }
                                 </Form>
                             </Grid.Column>
                         </Grid>

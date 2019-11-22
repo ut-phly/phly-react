@@ -11,7 +11,8 @@ import {
     Responsive,
     Segment,
     Form,
-    Image
+    Image,
+    Message
 } from 'semantic-ui-react';
 
 export default class RegisterPage extends Component {
@@ -39,11 +40,11 @@ export default class RegisterPage extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        let username = document.getElementById('register-username').value;
+        let name = document.getElementById('register-username').value;
         let email = document.getElementById('register-email').value;
         let password = document.getElementById('register-password').value;
         this.setState({ error: "test" });
-        Accounts.createUser({email: email, username: username, password: password}, (err) => {
+        Accounts.createUser({email: email, profile: { name: name }, username: name.trim(), password: password,}, (err) => {
             if (err) {
                 this.setState({
                     error: err.reason
@@ -95,7 +96,7 @@ export default class RegisterPage extends Component {
                                         <input
                                             type="text"
                                             id="register-username"
-                                            placeholder="Username"/>
+                                            placeholder="Name"/>
                                     </Form.Field>
                                     <Form.Field>
                                         <input
@@ -110,6 +111,7 @@ export default class RegisterPage extends Component {
                                             placeholder="Password"/>
                                     </Form.Field>
                                     <Button onClick={this.handleSubmit} color='orange' type='submit'>Submit</Button>
+                                    { this.state.error ? <Message negative>{this.state.error}</Message> : '' }
                                 </Form>
                             </Grid.Column>
                         </Grid>
