@@ -78,6 +78,7 @@ export default class Landing extends Component {
                                      letterSpacing: '2px'}}>PHLY</p>
                         </Menu.Item>
                         <Menu.Item position='right'>
+                            <Button color='blue' as={Link} to='/campaigns' size='big'>Campaigns</Button>
                             <Button color='blue' onClick={this.handleLogin}>Login</Button>
                             <Button onClick={this.handleRegister} style={{ marginLeft: '1em' }}>Sign Up</Button>
                         </Menu.Item>
@@ -108,7 +109,6 @@ export default class Landing extends Component {
                                         Get Started
                                         <Icon name='right arrow'/>
                                     </Button>
-
                                 </Grid.Column>
                             </Grid.Row>
                         </Grid>

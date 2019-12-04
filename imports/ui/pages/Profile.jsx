@@ -35,13 +35,14 @@ export default class Profile extends Component {
     }
 
     handleLogout = () => {
+        this.setState(() => ({
+            logout: true
+        }));
         Meteor.logout( (err) => {
             if (err) {
                 console.log( err.reason );
             } else {
-                this.setState(() => ({
-                    logout: true
-                }));
+
             }
         });
     }
@@ -53,7 +54,7 @@ export default class Profile extends Component {
         let user = this.props.currentUser;
         let username = '';
         if (user) {
-          if (user.profile.name) username = user.profile.name;
+          if (user.profile) username = user.profile.first + ' ' + user.profile.last;
           else username = user.username;
         }
         let self = this;

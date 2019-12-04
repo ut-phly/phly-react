@@ -40,15 +40,17 @@ export default class RegisterPage extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        let name = document.getElementById('register-username').value;
+        let first = document.getElementById('register-first').value;
+        let last = document.getElementById('register-last').value;
         let email = document.getElementById('register-email').value;
         let password = document.getElementById('register-password').value;
         this.setState({ error: "test" });
-        Accounts.createUser({email: email, profile: { name: name }, username: name.trim(), password: password,}, (err) => {
+        Accounts.createUser({email: email, profile: { first: first, last: last }, username: name.trim(), password: password,}, (err) => {
             if (err) {
                 this.setState({
                     error: err.reason
                 });
+                console.log(err.reason);
             } else {
                 this.props.history.push('/home/neworg');
             }
@@ -92,12 +94,18 @@ export default class RegisterPage extends Component {
                                     Register
                                 </Header>
                                 <Form>
-                                    <Form.Field>
-                                        <input
+                                    <Form.Group widths="equal">
+                                        <Form.Input fluid
                                             type="text"
-                                            id="register-username"
-                                            placeholder="Name"/>
-                                    </Form.Field>
+                                            id="register-first"
+                                            placeholder="First"
+                                        />
+                                      <Form.Input fluid
+                                              type="text"
+                                              id="register-last"
+                                              placeholder="Last"
+                                        />
+                                    </Form.Group>
                                     <Form.Field>
                                         <input
                                             type="email"

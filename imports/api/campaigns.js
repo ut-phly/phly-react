@@ -6,7 +6,6 @@ import SimpleSchema from 'simpl-schema';
 import { Organizations } from './organizations.js';
 
 var QRCode = require('qrcode-svg');
-//var fs = require('fs');
 
 export const Campaigns = new Mongo.Collection('campaigns');
 

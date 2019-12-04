@@ -40,6 +40,7 @@ export default class LoginPage extends Component {
                 this.setState({
                     error: err.reason
                 });
+                console.log(err.reason);
             } else {
                 this.props.history.push('/home');
             }
@@ -93,7 +94,7 @@ export default class LoginPage extends Component {
                                         <input
                                             type="text"
                                             id="login-username"
-                                            placeholder="Email or Username"/>
+                                            placeholder="Email"/>
                                     </Form.Field>
                                     <Form.Field>
                                         <input

@@ -65,15 +65,15 @@ Meteor.methods({
     });
   },
   createTransaction: function(nonceFromTheClient, donation_amount) {
-    var user = Meteor.user();
 
     // Let's create transaction.
     gateway.transaction.sale({
       amount: donation_amount,
       paymentMethodNonce: nonceFromTheClient, // Generated nonce passed from client
-      customer: {
+
+      /*customer: {
         id: user.customerId
-      },
+      },*/
       options: {
         submitForSettlement: true, // Payment is submitted for settlement immediatelly
         storeInVaultOnSuccess: true // Store customer in Braintree's Vault
