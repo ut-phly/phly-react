@@ -17,7 +17,7 @@ import {
     Header,
     Input,
     Message,
-    Progress
+    Progress,
 } from 'semantic-ui-react';
 
 import { Campaigns } from '../../api/campaigns.js';
@@ -133,7 +133,7 @@ class PublicCampaignPage extends Component {
                               {name}
                           </Header>
                           <p style={{ fontSize: '3em' }}>for {nonprofit}</p>
-                          <Progress percent={totalRaised * 100 / goalAmount} progress color='orange'/>
+                          <Progress percent={totalRaised * 100 / goalAmount} label={`$${totalRaised}`} color='orange'/>
                           <p style={{ fontSize: '1.5em' }}>{description}</p>
                           { !this.state.done ?
                             <Form role="form">
