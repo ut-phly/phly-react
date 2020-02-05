@@ -17,7 +17,7 @@ import {
     Header,
     Input,
     Message,
-    Progress
+    Progress,
 } from 'semantic-ui-react';
 
 import { Campaigns } from '../../api/campaigns.js';
