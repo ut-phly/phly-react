@@ -20,9 +20,10 @@ import {
     Icon,
     Form,
     TextArea,
-    Modal,
-    Progress
+    Modal
 } from 'semantic-ui-react';
+
+import { Progress } from 'reactstrap';
 
 var options = [
   [ 'st_judes', 'St. Judes Children Hospital' ],
@@ -88,7 +89,7 @@ export default class CampaignPage extends Component {
       else {
         url = `https://www.phly.co/public/${this.props.match.params.id}`;
       }
-      return (<QRCode value={url}/>);
+      return (<QRCode value={url} renderAs='canvas'/>);
     }
 
     handleSubmit(event) {
@@ -196,6 +197,8 @@ export default class CampaignPage extends Component {
             )
         }
 
+        let percent = totalRaised * 100 / goalAmount;
+
         return (
             <div>
                 <Responsive>
@@ -230,35 +233,49 @@ export default class CampaignPage extends Component {
                     <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic>
                         <Grid columns={2}>
                             <Grid.Column>
-                                <Grid.Row style={{ margin: '2em' }}>
+                                <Grid.Row className="mt-5 ml-3">
                                   <Header sub>Non-Profit</Header>
+                                </Grid.Row>
+                                <Grid.Row className="ml-3">
                                   <p>{nonprofit}</p>
                                 </Grid.Row>
-                                <Grid.Row style={{ margin: '2em' }}>
+                                <Grid.Row className="mt-5 ml-3">
                                   <Header sub>Goal</Header>
+                                </Grid.Row>
+                                <Grid.Row className="ml-3">
                                   <p>{'$'}{goalAmount}</p>
                                 </Grid.Row>
-                                <Grid.Row style={{ margin: '2em' }}>
+                                <Grid.Row className="mt-5 ml-3">
                                   <Header sub>Description</Header>
+                                </Grid.Row>
+                                <Grid.Row className="ml-3">
                                   <p>{campDes}</p>
                                 </Grid.Row>
-                                <Grid.Row style={{ margin: '2em' }}>
+                                <Grid.Row className="mt-5 ml-3">
                                   <Header sub>Donations</Header>
-                                  <p>Total: ${totalRaised}</p>
-                                  <Progress percent={totalRaised * 100 / goalAmount} progress color='orange'/>
                                 </Grid.Row>
+                                <Grid.Row className="ml-3">
+                                  <p>Total: ${totalRaised}</p>
+                                </Grid.Row>
+                                
                             </Grid.Column>
                             <Grid.Column>
-                                <Grid.Row style={{ margin: '2em' }}>
+                                <Grid.Row className="mt-5 ml-3">
                                   <Header sub>Start Date</Header>
+                                </Grid.Row>
+                                <Grid.Row className="ml-3">
                                   <p>{startString}</p>
                                 </Grid.Row>
-                                <Grid.Row style={{ margin: '2em' }}>
+                                <Grid.Row className="mt-5 ml-3">
                                   <Header sub>End Date</Header>
+                                </Grid.Row>
+                                <Grid.Row className="ml-3">
                                   <p>{endString}</p>
                                 </Grid.Row>
-                                <Grid.Row style={{ margin: '2em' }}>
+                                <Grid.Row className="mt-5 ml-3">
                                   <Header sub>QR Code</Header>
+                                </Grid.Row>
+                                <Grid.Row className="ml-3">
                                   <div>{this.getQRCode()}</div>
                                 </Grid.Row>
                             </Grid.Column>

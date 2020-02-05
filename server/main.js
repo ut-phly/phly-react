@@ -15,55 +15,43 @@ Meteor.startup(() => {
 
     if (Meteor.isProduction) {
         gateway = braintree.connect({
-            environment: braintree.Environment.Production,
-            publicKey:  'xnr8mjjryfspbh6x',
-            privateKey: 'c78e59ef319a33fe6225f7d698d0a77a',
-            merchantId: 'kbgtdmr6tz3y36hr'
+            environment:  braintree.Environment.Production,
+            merchantId:   'kbgtdmr6tz3y36hr',
+            publicKey:    '3cdj78frnf6mk7qw',
+            privateKey:   '93641e2bea82f47e45d1b66fcda8c33d'
         });
     } else {
         gateway = braintree.connect({
-            environment: braintree.Environment.Sandbox,
-            publicKey:  'gpm8ssqkj3y3g4ch',
-            privateKey: 'afefdfcd3f37f5d3dc29fcc3ba1a366d',
-            merchantId: '579rgwgrbnrzpfr2'
+            environment:  braintree.Environment.Sandbox,
+            merchantId:   '3wy8txzn8txdcppk',
+            publicKey:    'mqvthtfyjbs2chw6',
+            privateKey:   '1ff396c3113380a124ef3861106eebc8'
         });
     }
 });
 
 Meteor.methods({
-  'getClientToken'(clientId) {
+  'getClientToken'(customerId) {
     var generateToken = Meteor.wrapAsync(gateway.clientToken.generate, gateway.clientToken);
-    var options = {};
 
-    if (clientId) {
-      options.clientId = clientId;
-    }
-
-    var response = generateToken(options);
+    var response = generateToken();
     return response.clientToken;
   },
-  btCreateCustomer: function(){
-    var user = Meteor.user();
 
-    var customerData = {
-      email: user.emails[0].address
-    };
+  btCreateCustomer: function() {
 
     // Calling the Braintree API to create our customer!
-    gateway.customer.create(customerData, function(error, response){
+    gateway.customer.create({}, function(error, response){
       if (error){
         console.log(error);
       } else {
         // If customer is successfuly created on Braintree servers,
         // we will now add customer ID to our User
-        Meteor.users.update(user._id, {
-          $set: {
-            customerId: response.customer.id
-          }
-        });
+        return response.customer.id;
       }
     });
   },
+
   createTransaction: function(nonceFromTheClient, donation_amount) {
 
     // Let's create transaction.

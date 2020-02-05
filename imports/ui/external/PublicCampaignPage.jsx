@@ -42,21 +42,17 @@ class PublicCampaignPage extends Component {
     }
 
     componentDidMount() {
-      console.log(Meteor.isProduction);
-      console.log(Meteor.settings.public.env);
+      //console.log(Meteor.isProduction);
+      //console.log(Meteor.settings.public.env);
       var self = this;
+
+      /*
       Meteor.call('getClientToken', function(error, clientToken) {
           if (error) {
             console.log(error);
           } else {
             braintree.setup(clientToken, "dropin", {
               container: "payment-form", // Injecting into <div id="payment-form"></div>
-
-              paypal: {
-                style: {
-                  size: 'responsive'
-                }
-              },
 
 
               onPaymentMethodReceived: function (response) {
@@ -90,6 +86,72 @@ class PublicCampaignPage extends Component {
             });
           }
       });
+      */
+
+      var form = document.querySelector('#dropin-form');
+      //new implementation
+      var dropin = require('braintree-web-drop-in');
+
+      Meteor.call('getClientToken', function(error, clientToken) {
+          if (error) {
+            console.log(error);
+          } else {
+
+            dropin.create({
+              authorization: clientToken,
+              container: '#payment-container',
+              dataCollector: {
+                paypal: true
+              },
+              venmo: {},
+              paypal: {
+                flow: 'vault',
+              }
+            }, function (err, instance) {
+              console.log("Made it here");
+              if (err) {
+                console.log(err);
+                return;
+              }
+
+
+              form.addEventListener('submit', function() {
+                instance.requestPaymentMethod(function(err, payload) {
+                  if (err) {
+                    console.log(err);
+                    return;
+                  }
+
+                  let donation_amount = document.getElementById('new-donation-am').value;
+                  let donor = document.getElementById('donor').value;
+                  donation_amount = parseFloat(donation_amount);
+                  if (donation_amount && donor) {
+                    donation_amount += .31;
+
+                    Meteor.call('createTransaction', payload.nonce, donation_amount, function(error, success) {
+                      if (error) {
+                        self.setState({ error: "Transaction creation failed" });
+                      } else {
+                        var donation = {
+                          donor: donor,
+                          campaign: self.props.campaign._id,
+                          nonprofit: self.props.campaign.nonprofit,
+                          amount: donation_amount - .31
+                        }
+                        Meteor.call('donations.insert', donation);
+                        self.setState({ done: true, error: '' })
+                      }
+                    });
+                  } else {
+                    self.setState({ error: "Please fill in all fields" });
+                  }
+
+                })
+              })
+            })
+          }
+        });
+
     }
 
     handleNewDonation = () => {
@@ -124,7 +186,7 @@ class PublicCampaignPage extends Component {
           <Responsive>
               <Segment style={{ backgroundColor: '#F9FFFF', paddingTop: '6em' }} vertical>
                   <Grid container centered stackable>
-                      <Grid.Column desktop={8} mobile={15}>
+                      <Grid.Column desktop={8} mobile={16}>
                           <Header as='h1'
                                   color='orange'
                                   style={{
@@ -133,36 +195,56 @@ class PublicCampaignPage extends Component {
                               {name}
                           </Header>
                           <p style={{ fontSize: '3em' }}>for {nonprofit}</p>
-                          <Progress percent={totalRaised * 100 / goalAmount} progress color='orange'/>
+                          <Progress percent={totalRaised * 100 / goalAmount} label={`$${totalRaised}`} color='orange'/>
                           <p style={{ fontSize: '1.5em' }}>{description}</p>
+
                           { !this.state.done ?
-                            <Form role="form">
+                            <Form id="dropin-form">
+                              <Form.Field>
+                                <Input
+                                  style={{ paddingTop: '1em' }}
+                                  type="text"
+                                  id="donor"
+                                  placeholder="Name"
+                                  size="massive"/>
+                              </Form.Field>
                               <Form.Field>
                                   <Input
                                     style={{ paddingTop: '1em', paddingBottom: '1em' }}
                                     label="$"
                                     type="number"
-                                    id="donation_amount"
+                                    id="new-donation-am"
                                     placeholder="00.00"
                                     size="massive"
                                     min="0.01" step="0.01"/>
                               </Form.Field>
                               <Form.Field>
-                                  <div id="payment-form"></div>
+                                  <div id="payment-container"></div>
                               </Form.Field>
+                              <p style={{ color: "gray" }}><i>Phly adds an additional flat .31 cent platform fee to your donation tp help us maintain our platform and offer our service to student organizations for free</i></p>
                               <Button type="submit" color="orange" size="massive">Submit</Button>
-                              <p>Check out our <Link to="/policies">privacy policy</Link> and <Link to="/tos">terms of service</Link></p>
+                              <p style={{ color: "gray" }}>Check out our <Link to="/policies">privacy policy</Link> and <Link to="/tos">terms of service</Link></p>
                             </Form>
                             :
-                            <Message positive>
-                                <Header>Thank you for your donation!</Header>
-                                <p>Refresh to donate again</p>
-                            </Message>
+                            <div>
+                              <Message positive>
+                                  <Header>Thank you for your donation!</Header>
+                                  <p>Refresh to donate again</p>
+                              </Message>
+                              <Message positive>
+                                  <Header>Check us out!</Header>
+                                  <p>Phly makes fundraising easier and safer for student organizations on
+                                      college campuses. Want to start fundraising a better way? Join for free today at <Link to='/'>www.phly.co</Link></p>
+                              </Message>
+                            </div>
+
                           }
 
                           { this.state.error ?
                             <Message negative>{this.state.error}</Message> : ""
                           }
+
+
 
                       </Grid.Column>
                   </Grid>

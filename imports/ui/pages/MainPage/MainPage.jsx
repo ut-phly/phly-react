@@ -23,7 +23,7 @@ import {
     Icon,
     Dropdown,
     Image
-} from 'semantic-ui-react'
+} from 'semantic-ui-react';
 
 export default class MainPage extends Component {
     constructor(props) {
@@ -76,7 +76,7 @@ export default class MainPage extends Component {
                         <Menu.Item>
                             <Dropdown
                                 as='h3'
-                                style={{ color: '#FF8E56', letterSpacing: '1px' }}
+                                style={{ color: '#FFFFFF', letterSpacing: '1px' }}
                                 id='dropdown'
                                 pointing='left'
                                 fluid

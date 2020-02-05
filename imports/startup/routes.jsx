@@ -6,7 +6,7 @@ import MainContainer from '../ui/containers/MainContainer.jsx';
 
 import RegisterPage from '../ui/external/RegisterPage.jsx';
 import LoginPage from '../ui/external/LoginPage.jsx';
-import Landing from '../ui/external/Landing.jsx';
+import Landing from '../ui/external/Landing2.jsx';
 import AddCampaign from '../ui/pages/AddCampaign.jsx';
 import CampaignPage from '../ui/pages/CampaignPage.jsx';
 import CampaignContainer from '../ui/external/PublicCampaignPage.jsx';
