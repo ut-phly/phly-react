@@ -22,13 +22,6 @@ import {
 
 import { Campaigns } from '../../api/campaigns.js';
 
-var options = [
-  [ 'st_judes', 'St. Judes Children Hospital' ],
-  [ 'miracle_network', 'Miracle Network' ],
-  [ 'texas_food_bank', 'Texas Food Bank' ]
-]
-var np_translation = new Map(options);
-
 class PublicCampaignPage extends Component {
     constructor(props) {
         super(props);
@@ -169,7 +162,7 @@ class PublicCampaignPage extends Component {
         if (this.props.campaign) {
             name = this.props.campaign.name;
             description = this.props.campaign.description;
-            nonprofit = np_translation.get(this.props.campaign.nonprofit);
+            nonprofit = this.props.campaign.nonprofit;
             org = this.props.campaign.owner;
             goalAmount = this.props.campaign.goalAmount;
         }

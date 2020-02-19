@@ -20,12 +20,6 @@ import {
 
 import { Campaigns } from '../../api/campaigns.js';
 
-let options = [
-  { key: 'st_judes', text: 'St. Judes Children Hospital', value: 'st_judes' },
-  { key: 'miracle_network', text: 'Miracle Network', value: 'miracle_network' },
-  { key: 'texas_food_bank', text: 'Texas Food Bank', value: 'texas_food_bank' },
-]
-
 export default class AddCampaign extends Component {
     constructor(props) {
       super(props);
@@ -72,8 +66,6 @@ export default class AddCampaign extends Component {
         this.setState(state);
       }.bind(this);
     }
-
-    handleNonProfitChange = (e, { value }) => this.setState({ nonprofit: value });
 
     handleStartDayChange(day){
       this.setState({startDate: day});

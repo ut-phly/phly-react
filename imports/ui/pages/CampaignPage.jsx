@@ -25,12 +25,6 @@ import {
 
 import { Progress } from 'reactstrap';
 
-var options = [
-  [ 'st_judes', 'St. Judes Children Hospital' ],
-  [ 'miracle_network', 'Miracle Network' ],
-  [ 'texas_food_bank', 'Texas Food Bank' ]
-]
-var np_translation = new Map(options);
 var QRCode = require('qrcode.react');
 //var ShortUrl = require('node-url-shortener');
 //import GoogleUrlShortner from 'react-google-url-shortner';
@@ -161,7 +155,7 @@ export default class CampaignPage extends Component {
             var startString = campStartDate.toLocaleDateString();
             var campEndDate = obj.endDate;
             var endString = campEndDate.toLocaleDateString();
-            var nonprofit = np_translation.get(obj.nonprofit);
+            var nonprofit = obj.nonprofit;
             var goalAmount = obj.goalAmount;
         }
 
@@ -257,7 +251,7 @@ export default class CampaignPage extends Component {
                                 <Grid.Row className="ml-3">
                                   <p>Total: ${totalRaised}</p>
                                 </Grid.Row>
-                                
+
                             </Grid.Column>
                             <Grid.Column>
                                 <Grid.Row className="mt-5 ml-3">
