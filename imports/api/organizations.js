@@ -32,8 +32,7 @@ Organizations.attachSchema(Organizations.schema);
 Meteor.methods({
     'organizations.insert'(org) {
         let share = new Meteor.Collection.ObjectID();
-        console.log(share);
-        console.log(share._str);
+
         Organizations.insert({
             name: org.name,
             createdAt: new Date(),

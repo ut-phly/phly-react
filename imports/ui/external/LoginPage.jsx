@@ -2,114 +2,125 @@ import React, { Component } from 'react';
 import { withHistory, Link, Redirect } from 'react-router-dom';
 import { createContainer } from 'meteor/react-meteor-data';
 
+import Navigation from '../components/Navigation.jsx';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import {
-    Menu,
-    Container,
-    Button,
-    Grid,
-    Header,
-    Responsive,
-    Segment,
-    Form,
-    Image,
-    Message
-} from 'semantic-ui-react';
+  faEnvelope,
+  faLock
+} from '@fortawesome/free-solid-svg-icons';
+
+import {
+  Container,
+  Col, Row,
+  Card,
+  CardBody,
+  Form,
+  FormGroup,
+  Input,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  Button
+} from 'reactstrap';
 
 export default class LoginPage extends Component {
     constructor(props) {
-        super(props);
-        this.state = {
-            error: '',
-            register: false,
-            return: false
-        };
+      super(props);
+      this.state = {
+          email: "",
+          password: "",
+          error: ""
+      }
     }
 
-    handleRegister = () => {
-        this.setState(() => ({
-            register: true
-        }))
-    }
+    onChange = e => {
+      this.setState({ [e.target.id]: e.target.value });
+    };
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-        let username = document.getElementById('login-username').value;
-        let password = document.getElementById('login-password').value;
-        Meteor.loginWithPassword(username, password, (err) => {
-            if (err) {
-                this.setState({
-                    error: err.reason
-                });
-                console.log(err.reason);
-            } else {
-                this.props.history.push('/home');
-            }
-        });
-    }
+    handleSubmit = e => {
+      e.preventDefault();
 
-    handleReturn = () => {
-        this.setState(() => ({
-            return: true
-        }))
+      const user = {
+        email: this.state.email,
+        password: this.state.password
+      }
+      Meteor.loginWithPassword(user.email, user.password, (err) => {
+          if (err) {
+              this.setState({
+                  error: err.reason
+              });
+              console.log(err.reason);
+          } else {
+              this.props.history.push('/home');
+          }
+      });
     }
 
     render() {
         const error = this.state.error;
 
-        if (this.state.register === true) return <Redirect to='/register'/>
-        if (this.state.return === true) return <Redirect to='/'/>
-
         return (
-            <div>
-                <Menu fixed='top' inverted secondary color='blue'>
-                    <Container>
-                        <Menu.Item as={Link} to='/'>
-                                <Image style={{ height: '1.5em', width: '1.5em' }} src='/images/logo.png'/>
-                                 <p style={{
-                                     fontFamily: 'Nunito',
-                                     fontWeight: 'bold',
-                                     fontSize: '1.5em',
-                                     marginLeft: '.5em',
-                                     letterSpacing: '2px'}}>PHLY</p>
-                        </Menu.Item>
-                        <Menu.Item position='right'>
-                            <Button onClick={this.handleRegister} style={{ marginLeft: '1em' }}>Sign Up</Button>
-                        </Menu.Item>
-                    </Container>
-                </Menu>
-
-                <Responsive>
-                    <Segment style={{ padding: '8em', paddingTop: '12em', backgroundColor: '#F9FFFF'}} vertical>
-                        <Grid container stackable  centered verticalAlign='middle'>
-                            <Grid.Column width={8}>
-                                <Header as='h1'
-                                        color='orange'
-                                        style={{
-                                            fontSize: '3.5em',
-                                            letterSpacing: '1.5px' }}>
-                                    Login
-                                </Header>
-                                <Form>
-                                    <Form.Field>
-                                        <input
-                                            type="text"
-                                            id="login-username"
-                                            placeholder="Email"/>
-                                    </Form.Field>
-                                    <Form.Field>
-                                        <input
-                                            type="password"
-                                            id="login-password"
-                                            placeholder="Password"/>
-                                    </Form.Field>
-                                    <Button onClick={this.handleSubmit} color='orange' type='submit'>Submit</Button>
-                                    { this.state.error ? <Message negative>{this.state.error}</Message> : '' }
-                                </Form>
-                            </Grid.Column>
-                        </Grid>
-                    </Segment>
-                </Responsive>
-            </div>
+          <div>
+            <Navigation transparent/>
+            <main>
+              <section className="section bg-gradient-primary section-shaped section-lg section-bg">
+                <Container className="py-lg-md">
+                  <Row className="justify-content-center row-grid">
+                    <Col lg="6">
+                      <Card className="bg-white shadow border-0">
+                        <CardBody className="px-lg-5 py-lg-5">
+                          <p className="display-3 text-center">Login</p>
+                          <div className="text-center mb-3">
+                            <small>Don't have an account? Sign up <Link to="/register">here</Link>.</small>
+                          </div>
+                          <div className="text-center mb-3">
+                            {
+                              error ?
+                                <small>{error}</small>
+                              : ""
+                            }
+                          </div>
+                          <Form role="form" onSubmit={this.handleSubmit}>
+                            <FormGroup>
+                              <InputGroup className="input-group-alternative mb-3">
+                                <InputGroupAddon addonType="prepend">
+                                  <InputGroupText>
+                                    <FontAwesomeIcon icon={faEnvelope}/>
+                                  </InputGroupText>
+                                </InputGroupAddon>
+                                <Input id="email" placeholder="Email" type="email" onChange={this.onChange}/>
+                              </InputGroup>
+                            </FormGroup>
+                            <FormGroup>
+                              <InputGroup className="input-group-alternative mb-3">
+                                <InputGroupAddon addonType="prepend">
+                                  <InputGroupText>
+                                    <FontAwesomeIcon icon={faLock}/>
+                                  </InputGroupText>
+                                </InputGroupAddon>
+                                <Input id="password" placeholder="Password" type="password" onChange={this.onChange}/>
+                              </InputGroup>
+                            </FormGroup>
+                            <div className="text-center">
+                              <Button
+                                className="mt-4"
+                                color="default"
+                                type="submit"
+                              >
+                                Login
+                              </Button>
+                            </div>
+                          </Form>
+                        </CardBody>
+                      </Card>
+                    </Col>
+                  </Row>
+                </Container>
+              </section>
+            </main>
+          </div>
         );
     }
 }

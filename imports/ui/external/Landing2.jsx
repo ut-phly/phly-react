@@ -1,7 +1,10 @@
 import React from 'react';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
+import Navigation from '../components/Navigation.jsx';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import {
   faAddressCard,
   faUsers,
@@ -61,49 +64,7 @@ class Landing extends React.Component {
   render() {
     return (
       <div>
-        <header className="header-global">
-          <Navbar
-            className="navbar-main navbar-nav headroom"
-            expand="lg"
-            id="navbar-main"
-          >
-            <Container>
-              <NavbarBrand className="mr-lg-5" href="http://www.phly.co/">
-                <img
-                  alt="..."
-                  src="/images/phly-color.png"
-                  className="mr-2"
-                />
-                phly.co
-              </NavbarBrand>
-              <Nav className="navbar-nav-hover align-items-lg-center" navbar>
-                <NavItem>
-                  <NavLink href="https://www.phly.co/campaigns">
-                    <span className="nav-link-inner--text">Campaigns</span>
-                  </NavLink>
-                </NavItem>
-              </Nav>
-              <Nav className="align-items-lg-center ml-lg-auto" navbar>
-                <NavItem>
-                  <NavLink href="https://www.phly.co/login">
-                    <span className="nav-link-inner--text">Login</span>
-                  </NavLink>
-                </NavItem>
-                <NavItem className="d-none d-lg-block ml-lg-4">
-                  <Button
-                    className="btn-secondary"
-                    color="secondary"
-                    href="https://www.phly.co/register"
-                  >
-                    <span className="nav-link-inner--text ml-1">
-                      Sign up
-                    </span>
-                  </Button>
-                </NavItem>
-              </Nav>
-            </Container>
-          </Navbar>
-        </header>
+        <Navigation />
         <main>
           <div className="position-relative">
             <section className="section section-lg section-shaped pb-100">
@@ -120,7 +81,8 @@ class Landing extends React.Component {
                         <Button
                           className="btn-icon mb-3 mb-sm-0"
                           color="secondary"
-                          href="https://www.phly.co/register"
+                          tag={Link}
+                          to="/register"
                         >
                           <span className="btn-inner--text">Get Started</span>
                           <span className="btn-inner--icon mr-1">

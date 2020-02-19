@@ -13,8 +13,6 @@ export default MainContainer = withTracker(({history}) => {
     Meteor.subscribe('organizations');
     Meteor.subscribe('user.custom');
     const currentUser = Meteor.user();
-    //console.log(currentUser);
-    //console.log(Meteor.userId());
     const campaigns = Campaigns.find({}).fetch();
     const organizations = Organizations.find({}).fetch();
     const donations = Donations.find({}).fetch();
