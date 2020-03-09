@@ -4,23 +4,33 @@ import { Mongo } from 'meteor/mongo';
 import { withHistory, Link } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Donations } from '../../api/donations.js';
-import { Payments } from '../../api/donations.js';
 
-//import '../../api/payments.js';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { HTTP } from 'meteor/http';
+
 import {
-    Button,
-    Form,
-    Responsive,
-    Segment,
-    Grid,
-    Header,
-    Input,
-    Message,
-    Progress,
-} from 'semantic-ui-react';
+  Container,
+  Row, Col,
+  Progress,
+  Card,
+  CardBody,
+  Form,
+  FormGroup,
+  InputGroup,
+  Input,
+  InputGroupText,
+  InputGroupAddon,
+  Button
+} from 'reactstrap';
+
+import {
+  faDollarSign,
+  faUserCircle
+} from '@fortawesome/free-solid-svg-icons';
 
 import { Campaigns } from '../../api/campaigns.js';
+import { Organizations } from '../../api/organizations.js';
 
 class PublicCampaignPage extends Component {
     constructor(props) {
@@ -35,51 +45,8 @@ class PublicCampaignPage extends Component {
     }
 
     componentDidMount() {
-      //console.log(Meteor.isProduction);
-      //console.log(Meteor.settings.public.env);
+
       var self = this;
-
-      /*
-      Meteor.call('getClientToken', function(error, clientToken) {
-          if (error) {
-            console.log(error);
-          } else {
-            braintree.setup(clientToken, "dropin", {
-              container: "payment-form", // Injecting into <div id="payment-form"></div>
-
-
-              onPaymentMethodReceived: function (response) {
-                // When we submit the payment form,
-                // it'll create new customer first...
-                var nonce = response.nonce;
-
-                let donation_amount = document.getElementById('donation_amount').value;
-                donation_amount = parseFloat(donation_amount);
-                if (donation_amount) {
-                  donation_amount += .31;
-                  console.log(donation_amount);
-                  Meteor.call('createTransaction', nonce, donation_amount, function(error, success) {
-                    if (error) {
-                      throw new Meteor.Error('transaction-creation-failed');
-                    } else {
-                      var donation = {
-                        campaign: self.props.campaign._id,
-                        nonprofit: self.props.campaign.nonprofit,
-                        amount: donation_amount
-                      }
-                      Meteor.call('donations.insert', donation);
-                      self.setState({ done: true, error: '' })
-                    }
-                  });
-                } else {
-                  self.setState({ error: "Donation amount is invalid" });
-                }
-
-              }
-            });
-          }
-      });
-      */
 
       var form = document.querySelector('#dropin-form');
       //new implementation
@@ -115,7 +82,7 @@ class PublicCampaignPage extends Component {
                     return;
                   }
 
-                  let donation_amount = document.getElementById('new-donation-am').value;
+                  let donation_amount = document.getElementById('donation-am').value;
                   let donor = document.getElementById('donor').value;
                   donation_amount = parseFloat(donation_amount);
                   if (donation_amount && donor) {
@@ -163,8 +130,11 @@ class PublicCampaignPage extends Component {
             name = this.props.campaign.name;
             description = this.props.campaign.description;
             nonprofit = this.props.campaign.nonprofit;
-            org = this.props.campaign.owner;
             goalAmount = this.props.campaign.goalAmount;
+        }
+
+        if (this.props.org) {
+          org = this.props.org.name;
         }
 
         var totalRaised = 0;
@@ -176,6 +146,79 @@ class PublicCampaignPage extends Component {
         }
 
       return (
+        <div>
+          <section className="section bg-gradient-primary section-shaped section-lg section-bg">
+            <Container fluid>
+              <Row className="mx-5 justify-content-center row-grid">
+                <Col xs="12">
+                  <Card className="bg-white shadow border-0 p-4 mb-5">
+                    <CardBody>
+                      <h1 className="display-1">{name}</h1>
+                      <h2>for {nonprofit}</h2>
+                      <h2>by {org}</h2>
+                      <p className="lead">{description}</p>
+                      <Row className="mt-3">
+                        <Col xs="11">
+                          <Progress
+                            max="100"
+                            className="mt-2"
+                            value={`${Math.round(totalRaised * 100 / goalAmount)}`}
+                            barClassName="bg-danger"
+                          />
+                        </Col>
+                        <Col xs="1">
+                          <h3 className="float-right">${totalRaised}</h3>
+                        </Col>
+                      </Row>
+                      { !this.state.done ?
+                      <Form id="dropin-form">
+                        <FormGroup className="mb-3">
+                          <label
+                            className="form-control-label"
+                            htmlFor="input-donor"
+                          >
+                            Name
+                          </label>
+                          <InputGroup className="input-group-alternative" size="lg">
+                            <InputGroupAddon addonType="prepend">
+                              <InputGroupText>
+                                <FontAwesomeIcon icon={faUserCircle}/>
+                              </InputGroupText>
+                            </InputGroupAddon>
+                            <Input placeholder="Enter your name" type="text" id="donor"/>
+                          </InputGroup>
+                        </FormGroup>
+                        <FormGroup>
+                          <label
+                            className="form-control-label"
+                            htmlFor="input-donation-am"
+                          >
+                            Donation
+                          </label>
+                          <InputGroup className="input-group-alternative" size="lg">
+                            <InputGroupAddon addonType="prepend">
+                              <InputGroupText>
+                                <FontAwesomeIcon icon={faDollarSign}/>
+                              </InputGroupText>
+                            </InputGroupAddon>
+                            <Input placeholder="00.00" type="number" id="donation-am"/>
+                          </InputGroup>
+                        </FormGroup>
+                        <FormGroup>
+                          <div id="payment-container"></div>
+                        </FormGroup>
+                        <p><i>Phly adds an additional flat .31 cent platform fee to your donation to help us maintain our platform and offer our service to student organizations for free</i></p>
+                        <Button type="submit" size="lg" color="primary">Submit</Button>
+                      </Form>
+                      : ""
+                    }
+                    </CardBody>
+                  </Card>
+                </Col>
+              </Row>
+            </Container>
+          </section>
+        {/*
           <Responsive>
               <Segment style={{ backgroundColor: '#F9FFFF', paddingTop: '6em' }} vertical>
                   <Grid container centered stackable>
@@ -188,7 +231,21 @@ class PublicCampaignPage extends Component {
                               {name}
                           </Header>
                           <p style={{ fontSize: '3em' }}>for {nonprofit}</p>
-                          <Progress percent={totalRaised * 100 / goalAmount} label={`$${totalRaised}`} color='orange'/>
+                          <Container fluid>
+                            <Row>
+                              <Col xs="11">
+                                <Progress
+                                  max="100"
+                                  className="mt-2"
+                                  value={`${Math.round(totalRaised * 100 / goalAmount)}`}
+                                  barClassName="bg-danger"
+                                />
+                              </Col>
+                              <Col xs="1">
+                                <h3 className="float-right">${totalRaised}</h3>
+                              </Col>
+                            </Row>
+                          </Container>
                           <p style={{ fontSize: '1.5em' }}>{description}</p>
 
                           { !this.state.done ?
@@ -198,7 +255,7 @@ class PublicCampaignPage extends Component {
                                   style={{ paddingTop: '1em' }}
                                   type="text"
                                   id="donor"
-                                  placeholder="Name"
+                                  placeholder="Enter your name"
                                   size="massive"/>
                               </Form.Field>
                               <Form.Field>
@@ -214,7 +271,7 @@ class PublicCampaignPage extends Component {
                               <Form.Field>
                                   <div id="payment-container"></div>
                               </Form.Field>
-                              <p style={{ color: "gray" }}><i>Phly adds an additional flat .31 cent platform fee to your donation tp help us maintain our platform and offer our service to student organizations for free</i></p>
+                              <p style={{ color: "gray" }}><i>Phly adds an additional flat .31 cent platform fee to your donation to help us maintain our platform and offer our service to student organizations for free</i></p>
                               <Button type="submit" color="orange" size="massive">Submit</Button>
                               <p style={{ color: "gray" }}>Check out our <Link to="/policies">privacy policy</Link> and <Link to="/tos">terms of service</Link></p>
                             </Form>
@@ -243,6 +300,8 @@ class PublicCampaignPage extends Component {
                   </Grid>
               </Segment>
           </Responsive>
+        */}
+        </div>
       );
     }
 }
@@ -250,10 +309,13 @@ class PublicCampaignPage extends Component {
 export default CampaignContainer = withTracker(props => {
     Meteor.subscribe('campaigns');
     Meteor.subscribe('donations');
+    Meteor.subscribe('organizations');
     let campaign = Campaigns.findOne({ _id: props.match.params.id });
     let donations = Donations.find({campaign: props.match.params.id}).fetch();
+    let org = (campaign) ? Organizations.findOne({ _id: campaign.owner }) : {};
     return {
         campaign: campaign,
-        donations: donations
+        donations: donations,
+        org: org
     }
 })(PublicCampaignPage);

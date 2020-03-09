@@ -39,7 +39,8 @@ export default class RegisterPage extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        name: "",
+        first: "",
+        last: "",
         email: "",
         password: "",
         password2: "",
@@ -61,7 +62,8 @@ export default class RegisterPage extends Component {
       if (this.state.password === this.state.password2) {
         const user = {
           profile: {
-            name: this.state.name
+            first: this.state.first,
+            last: this.state.last
           },
           email: this.state.email,
           password: this.state.password
@@ -101,11 +103,11 @@ export default class RegisterPage extends Component {
         e.preventDefault();
 
         let owner = Meteor.userId();
-        this.state.org = {
+        let org = {
             name: this.state.org,
             owner: owner
         };
-        Meteor.call('organizations.insert', this.state.org, (err) => {
+        Meteor.call('organizations.insert', org, (err) => {
           if (err) {
             this.setState({
               error: err
@@ -149,16 +151,32 @@ export default class RegisterPage extends Component {
                               }
                             </div>
                             <Form role="form" onSubmit={this.handleSubmit}>
-                              <FormGroup>
-                                <InputGroup className="input-group-alternative mb-3">
-                                  <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>
-                                      <FontAwesomeIcon icon={faUserCircle}/>
-                                    </InputGroupText>
-                                  </InputGroupAddon>
-                                  <Input id="name" placeholder="Name" type="text" onChange={this.onChange}/>
-                                </InputGroup>
-                              </FormGroup>
+                              <Row>
+                                <Col lg="6">
+                                  <FormGroup>
+                                    <InputGroup className="input-group-alternative mb-3">
+                                      <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>
+                                          <FontAwesomeIcon icon={faUserCircle}/>
+                                        </InputGroupText>
+                                      </InputGroupAddon>
+                                      <Input id="first" placeholder="First Name" type="text" onChange={this.onChange}/>
+                                    </InputGroup>
+                                  </FormGroup>
+                                </Col>
+                                <Col lg="6">
+                                  <FormGroup>
+                                    <InputGroup className="input-group-alternative mb-3">
+                                      <InputGroupAddon addonType="prepend">
+                                        <InputGroupText>
+                                          <FontAwesomeIcon icon={faUserCircle}/>
+                                        </InputGroupText>
+                                      </InputGroupAddon>
+                                      <Input id="last" placeholder="Last Name" type="text" onChange={this.onChange}/>
+                                    </InputGroup>
+                                  </FormGroup>
+                                </Col>
+                              </Row>
                               <FormGroup>
                                 <InputGroup className="input-group-alternative mb-3">
                                   <InputGroupAddon addonType="prepend">

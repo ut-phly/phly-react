@@ -287,7 +287,7 @@ class Landing extends React.Component {
                     </div>
                     <h3>Easy to use dashboard</h3>
                     <p className="lead">
-                      View all of you fundraising
+                      View all of your fundraising
                       campaigns and goals in one place.
                     </p>
                   </div>

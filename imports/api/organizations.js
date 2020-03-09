@@ -5,7 +5,7 @@ import SimpleSchema from 'simpl-schema';
 export const Organizations = new Mongo.Collection('organizations');
 
 if (Meteor.isServer) {
-    Meteor.publish('organizations', function orgPublication() {
+    Meteor.publish('myOrganizations', function orgPublication() {
         const user = Meteor.userId();
         return Organizations.find({
             $or: [
@@ -13,7 +13,20 @@ if (Meteor.isServer) {
                 { users: user }
             ]
         });
-    })
+    });
+
+    Meteor.publish('organizations', function orgPublication() {
+      return Organizations.find({},
+        {
+          fields: {
+            owner: 0,
+            users: 0,
+            share: 0,
+            campaigns: 0
+          }
+        }
+      );
+    });
 }
 
 Organizations.schema = new SimpleSchema({
@@ -41,7 +54,11 @@ Meteor.methods({
             users: [],
             campaigns: []
         }, function(err, org_id) {
-          Meteor.users.update(org.owner, { $set: { org: id } });
+          if (err) {
+            console.log(err);
+          } else {
+            Meteor.users.update(org.owner, { $set: { org: org_id } });
+          }
         });
     },
 

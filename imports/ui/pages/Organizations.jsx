@@ -4,105 +4,131 @@ import { Redirect } from 'react-router-dom';
 import { Organizations } from '../../api/organizations.js';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import {
-    Header,
-    Responsive,
-    Segment,
-    Button,
-    Icon,
-    Label,
-    Card,
-    Modal
-} from 'semantic-ui-react';
+  Container,
+  Row, Col,
+  Card,
+  CardHeader,
+  Table,
+  Badge,
+  Button,
+  UncontrolledTooltip
+} from 'reactstrap';
+
+import {
+  faCopy
+} from '@fortawesome/free-solid-svg-icons';
 
 export default class MyOrganizations extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            new: false,
-        };
-    }
-
-    handleNew = () => {
-        this.setState(() => ({
-            new: true
-        }))
-    }
+    state = {};
 
     handleDelete = () => {
         Meteor.call('organizations.delete', this.props.org, this.props.currentUser._id);
     }
 
-    render() {
-        if (this.state.new === true) return <Redirect to='/home/neworg'/>
+    getOrganizations = (organizations, user) => {
+      return organizations.map((org) => {
+        let admin = (user._id === org.owner) ? true : false;
+        let members = 1 + org.users.length;
+        return (
+          <tr key={org._id}>
+            <th>{org.name}</th>
+            <td>{
+                admin ?
+                <Badge color="" className="badge-dot mr-4">
+                  <i className="bg-success" />
+                  Admin
+                </Badge> :
+                <Badge color="" className="badge-dot mr-4">
+                  <i className="bg-warning"/>
+                  Member
+                </Badge>
+              }
+            </td>
+            <td>{members}</td>
+            <td>{ admin ? org.share : "Contact admin"}</td>
+            <td className="text-right">
+              { admin ?
+                <div>
+                  <CopyToClipboard
+                    text={org.share}
+                    onCopy={() => this.setState({ copiedText: org.share })}
+                  >
+                    <Button
+                      className="btn-icon btn-2"
+                      color="primary"
+                      id={`tt${org._id}`}
+                      type="button"
+                    >
+                      <span className="btn-inner--icon">
+                        <FontAwesomeIcon icon={faCopy}/>
+                      </span>
+                    </Button>
+                  </CopyToClipboard>
+                  <UncontrolledTooltip
+                    delay={0}
+                    trigger="hover focus"
+                    target={`tt${org._id}`}
+                  >
+                    {this.state.copiedText === org.share
+                      ? "Copied"
+                      : "Copy To Clipboard"}
+                  </UncontrolledTooltip>
+                </div> :
+                ""
+              }
 
-        let user = this.props.currentUser;
+            </td>
+          </tr>
+        );
+      });
+    }
+
+    render() {
+
+        const { orgs, user } = this.props;
+
         let username = '';
         if (user) username = user.username;
         let self = this;
 
-        let orgs = [];
-        this.props.orgs.forEach(function(org) {
-
-            const ShareModal = () => (
-              <Modal trigger={<Button floated='right'><Icon name='plus'/>Members</Button>} size='small'>
-                <Header icon='plus' content='Add Members to your Org' />
-                <Modal.Content>
-                  <p>
-                    Your share code is: {org.share}
-                  </p>
-                </Modal.Content>
-                <Modal.Actions>
-                  <CopyToClipboard text={org.share}>
-                    <Button color='green' inverted>
-                      <Icon name='copy'/> Copy
-                    </Button>
-                  </CopyToClipboard>
-                </Modal.Actions>
-              </Modal>
-            )
-
-            let admin = (user._id === org.owner) ? (
-              <div>
-                <Label floated='left' size='mini' style={{ margin: '.3em' }}><Icon name='star'/>admin</Label>
-                <Button icon='trash' floated='right' onClick={self.handleDelete}/>
-                <ShareModal/>
-              </div>
-            ) : (
-              <Button icon='trash' floated='right' onClick={self.handleDelete}/>
-            );
-            let header = (
-              <Header floated='left' color='blue' style={{ fontSize: '1.5em', margin: '.3em' }}>{org.name}</Header>
-            );
-            orgs.push({
-                fluid: true,
-                header: header,
-                key: org._id,
-                meta: admin
-            });
-        });
-
         return(
-            <Responsive>
-                <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic clearing>
-                    <Header as='h1'
-                            floated='left'
-                            color='orange'
-                            style={{
-                                  fontSize: '2em',
-                                  letterSpacing: '1.5px' }}>
-                      My Organizations
-                    </Header>
-                    <Button onClick={this.handleNew} color='orange' floated='right'>
-                        <Icon name='plus'/>
-                        New
-                    </Button>
-                </Segment>
-                <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic>
-                    <p style={{ fontWeight: 'bold' }}>My Organizations</p>
-                    <Card.Group items={orgs}/>
-                </Segment>
-            </Responsive>
+          <div>
+            <div className="header bg-gradient-primary py-8">
+              <Container fluid>
+                <div className="header-body">
+                </div>
+              </Container>
+            </div>
+            <Container className="mt--7" fluid>
+              {/* Table */}
+              <Row>
+                <div className="col">
+                  <Card className="shadow">
+                    <CardHeader className="border-0">
+                      <h2 className="mb-0 font-weight-bold">My Organizations</h2>
+                    </CardHeader>
+                    <Table className="align-items-center table-flush" responsive>
+                      <thead className="thead-light">
+                        <tr>
+                          <th scope="col">Name</th>
+                          <th scope="col">Status</th>
+                          <th scope="col">Members</th>
+                          <th scope="col">Join Code</th>
+                          <th scope="col"/>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {this.getOrganizations(orgs, user)}
+                      </tbody>
+                    </Table>
+                  </Card>
+                </div>
+              </Row>
+            </Container>
+          </div>
         )
     }
 }

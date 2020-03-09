@@ -9,8 +9,8 @@ import MainPage from '../pages/MainPage/MainPage.jsx';
 
 export default MainContainer = withTracker(({history}) => {
     Meteor.subscribe('myCampaigns');
-    Meteor.subscribe('donations');
-    Meteor.subscribe('organizations');
+    Meteor.subscribe('myDonations');
+    Meteor.subscribe('myOrganizations');
     Meteor.subscribe('user.custom');
     const currentUser = Meteor.user();
     const campaigns = Campaigns.find({}).fetch();

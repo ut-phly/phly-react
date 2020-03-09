@@ -5,15 +5,12 @@ import { Organizations } from '../../api/organizations.js';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import {
-    Header,
-    Responsive,
-    Segment,
-    Button,
-    Icon,
-    Label,
+    Container,
+    Row, Col,
     Card,
-    Modal
-} from 'semantic-ui-react';
+    CardHeader,
+    Button
+} from 'reactstrap';
 
 export default class Profile extends Component {
     constructor(props) {
@@ -54,31 +51,43 @@ export default class Profile extends Component {
         let user = this.props.currentUser;
         let username = '';
         if (user) {
-          if (user.profile) username = user.profile.first + ' ' + user.profile.last;
+          if (user.profile) username = user.profile.first;
           else username = user.username;
         }
         let self = this;
 
         return(
-            <Responsive>
-                <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic clearing>
-                    <Header as='h1'
-                            floated='left'
-                            color='orange'
-                            style={{
-                                  fontSize: '2em',
-                                  letterSpacing: '1.5px' }}>
-                      Profile
-                    </Header>
-                    <Button onClick={this.handleLogout} color='orange' floated='right'>
-                        Logout
-                    </Button>
-                </Segment>
-
-                <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic>
-                    <p style={{ fontWeight: 'bold' }}>Hello {username}!</p>
-                </Segment>
-            </Responsive>
+          <div>
+            <div className="header bg-gradient-primary py-8">
+              <Container fluid>
+                <div className="header-body">
+                  <Row>
+                    <Col>
+                      <Card className="card-stats mb-4 mb-xl-0 shadow">
+                        <CardHeader>
+                          <Row className="align-items-center">
+                            <Col xs="8">
+                              <div className="col">
+                                <h2 className="mb-0 font-weight-bold">Hello {username}!</h2>
+                              </div>
+                            </Col>
+                            <Col className="text-right" xs="4">
+                              <Button
+                                color="primary"
+                                onClick={this.handleLogout}
+                              >
+                                Logout
+                              </Button>
+                            </Col>
+                          </Row>
+                        </CardHeader>
+                      </Card>
+                    </Col>
+                  </Row>
+                </div>
+              </Container>
+            </div>
+          </div>
         )
     }
 }

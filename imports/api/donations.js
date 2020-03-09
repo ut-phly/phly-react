@@ -30,6 +30,7 @@ if (Meteor.isServer) {
 }
 
 Donations.schema = new SimpleSchema({
+    createdAt: {type: Date},
     donor: {type: String},
     campaign: {type: String},
     nonprofit: {type: String},
@@ -44,6 +45,7 @@ Meteor.methods({
     'donations.insert'(donation) {
         // add validation that the user is signed in and the schema is correct
         Donations.insert({
+            createdAt: new Date(),
             donor: donation.donor,
             campaign: donation.campaign,
             nonprofit: donation.nonprofit,

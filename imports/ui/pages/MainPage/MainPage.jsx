@@ -4,33 +4,23 @@ import { withHistory, Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
-import { Campaigns } from '../../../api/campaigns.js';
+import routes from './routes.js';
 
-
+import Sidebar from '../../components/Sidebar.jsx';
+import AdminNavbar from '../../components/AdminNavbar.jsx';
 import CampaignPage from '../../pages/CampaignPage.jsx';
 import Profile from '../../pages/Profile.jsx';
 import AddCampaign from '../AddCampaign.jsx';
 import AddOrg from '../AddOrg.jsx'
-import CampaignList from './CampaignList.jsx';
+import Campaigns from '../Campaigns.jsx';
 import MyOrganizations from '../../pages/Organizations.jsx';
 
-import {
-    Header,
-    Container,
-    Menu,
-    Segment,
-    Button,
-    Icon,
-    Dropdown,
-    Image
-} from 'semantic-ui-react';
 
 export default class MainPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
             logout: false,
-            page: ''
         };
     }
 
@@ -46,10 +36,9 @@ export default class MainPage extends Component {
         });
     }
 
-    handlePageClick = (e, { name }) => this.setState({ page: name })
-
-    handleChangeOrg = (e, { value }) => {
-        Meteor.call('organizations.save', value, this.props.currentUser._id);
+    handleChangeOrg = (key) => {
+      console.log(key);
+      Meteor.call('organizations.save', key, this.props.currentUser._id);
     }
 
     render() {
@@ -61,78 +50,64 @@ export default class MainPage extends Component {
             organizations.push({ text: org.name, value: org._id, key: org._id });
         });
 
+        let current = (org) ? organizations.find(o => o.key === org).text : '';
+
         let campaigns = [];
+        let donations = [];
         if (org) {
             this.props.campaigns.filter(camp => camp.owner == org).forEach(camp => campaigns.push(camp));
+            this.props.donations.filter((don) => campaigns.some(camp => camp._id == don.campaign)).forEach(don => donations.push(don));
         }
 
         if (this.state.logout === true) return <Redirect to="/login"/>
 
         return (
             <div>
-                <Menu fixed='left' vertical inverted secondary color='blue'>
-                    <Container style={{ paddingTop: '1em' }}>
-                        <Image style={{ height: '4em', width: '4em', marginBottom: '1em', marginTop: '1em' }} centered src='/images/logo.png'/>
-                        <Menu.Item>
-                            <Dropdown
-                                as='h3'
-                                style={{ color: '#FFFFFF', letterSpacing: '1px' }}
-                                id='dropdown'
-                                pointing='left'
-                                fluid
-                                icon='angle down'
-                                value={org}
-                                options={organizations}
-                                onChange={this.handleChangeOrg}
-                            />
-                        </Menu.Item>
-                        <Menu.Item as={ Link } name='campaigns' to="/home" active={this.state.page === 'campaigns'} onClick={this.handlePageClick}>
-                            <Icon name="handshake outline"/>
-                            Campaigns
-                        </Menu.Item>
-                        <Menu.Item as={ Link } to="/home/orgs" name='organizations' style={{ marginTop: '.5em' }} active={this.state.page === 'organizations'}
-                            onClick={this.handlePageClick}>
-                            <Icon name ="users"/>
-                            Organizations
-                        </Menu.Item>
-                        <Menu.Item as={ Link } name='profile' to="/home/profile" active={this.state.page === 'profile'}
-                            style={{ marginTop: '.5em' }} onClick={this.handlePageClick}>
-                            <Icon name="user circle"/>
-                            Profile
-                        </Menu.Item>
-                    </Container>
-                </Menu>
-                <Segment style={{ padding: '3em', paddingLeft: '18em', backgroundColor: '#F9FFFF'}} vertical>
-                    { user ?
-                        <Switch>
-                            <Route
-                                exact path="/home"
-                                render={(props) => <CampaignList {...props} campaigns={campaigns}/>}
-                            />
-                            <Route
-                                path="/home/profile"
-                                render={(props) => <Profile {...props} currentUser={this.props.currentUser}/>}
-                            />
-                            <Route
-                                path="/home/orgs"
-                                render={(props) => <MyOrganizations  {...props} orgs={this.props.organizations} currentUser={this.props.currentUser}/>}
-                            />
-                            <Route
-                              path="/home/new"
-                              render={(props) => <AddCampaign {...props} history={this.history} currentUser={this.props.currentUser} org={org}/>}
-                            />
-                            <Route
-                                path="/home/neworg"
-                                render={(props) => <AddOrg {...props} history={this.history}/>}
-                            />
-                            <Route
-                                path="/home/:id"
-                                render={(props) => <CampaignPage {...props} campaigns={this.props.campaigns} donations={this.props.donations}/>}
-                            />
-                        </Switch>
-                        : ''
-                    }
-                </Segment>
+              <Sidebar
+                routes={routes}
+                logo={{
+                  innerLink: "/home",
+                  imgSrc: "/images/phly-color.png",
+                  imgAlt: "..."
+                }}
+              />
+
+              <div className="main-content" ref="mainContent">
+                <AdminNavbar
+                  current={current}
+                  orgs={organizations}
+                  handleChange={this.handleChangeOrg}
+                />
+                { user ?
+                    <Switch>
+                        <Route
+                            exact path="/home"
+                            render={(props) => <Campaigns {...props} campaigns={campaigns} donations={donations}/>}
+                        />
+                        <Route
+                            path="/home/profile"
+                            render={(props) => <Profile {...props} currentUser={this.props.currentUser}/>}
+                        />
+                        <Route
+                            path="/home/orgs"
+                            render={(props) => <MyOrganizations  {...props} orgs={this.props.organizations} user={this.props.currentUser}/>}
+                        />
+                        <Route
+                          path="/home/new"
+                          render={(props) => <AddCampaign {...props} history={this.history} currentUser={this.props.currentUser} org={org}/>}
+                        />
+                        <Route
+                            path="/home/neworg"
+                            render={(props) => <AddOrg {...props} history={this.history}/>}
+                        />
+                        <Route
+                            path="/home/:id"
+                            render={(props) => <CampaignPage {...props} campaigns={campaigns} donations={donations}/>}
+                        />
+                    </Switch>
+                    : ''
+                }
+              </div>
             </div>
         );
     }

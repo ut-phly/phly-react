@@ -7,23 +7,32 @@ import { withHistory, Link, Redirect } from 'react-router-dom';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { Campaigns } from '../../api/campaigns.js';
 import { Donations } from '../../api/donations.js';
 
 import {
-    Button,
-    Responsive,
-    Header,
-    Segment,
-    Grid,
-    Icon,
-    Form,
-    TextArea,
-    Modal
-} from 'semantic-ui-react';
+  Progress,
+  Container,
+  Col,
+  Row,
+  Card,
+  CardBody,
+  CardTitle,
+  CardHeader,
+  Button,
+  Table,
+  Modal
+} from 'reactstrap';
 
-import { Progress } from 'reactstrap';
+import {
+  faDollarSign,
+  faDonate,
+  faGlassCheers,
+  faHeart,
+  faCopy
+} from '@fortawesome/free-solid-svg-icons';
 
 var QRCode = require('qrcode.react');
 //var ShortUrl = require('node-url-shortener');
@@ -41,52 +50,17 @@ export default class CampaignPage extends Component {
             startDate: new Date(),
             endDate: new Date(),
             goalAmount: 0,
+            share: false
         }
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.getQRCode = this.getQRCode.bind(this);
-        //this.getShortLink = this.getShortLink.bind(this);
-        this.getURL = this.getURL.bind(this);
-    }
-    // <Grid.Row style={{ margin: '2em' }}>
-    //   <Header sub>Short Link</Header>
-    //   <div>
-    //     <GoogleUrlShortner
-    //       url={this.getURL()}
-    //       GOOGLE_API_KEY="AIzaSyADEsTbdBRbP-rPbxxDNXyuGvuU-4OZpEc"
-    //     />
-    //   </div>
-    // </Grid.Row>
-    getURL(){
-      // var url = ''
-      // var shorturl = ''
-      // if (Meteor.settings.public.env === 'Production'){
-      //   url = "https://www.phly.co/public/7cSJDwC9FZxTDjT9D"
-      // }
-      // else {
-      //   url = `https://www.phly.co/public/${this.props.match.params.id}`;
-      // }
-      //
-      // ShortUrl.short(url, function(err, returl){
-      //       console.log(returl);
-      //       shorturl = returl;
-      // });
-      return("https://www.phly.co/public/7cSJDwC9FZxTDjT9D");
+
     }
 
-    getQRCode(){
-      console.log(this.props.match.params.id) //how does this work ???
-      var url = ''
-      if (Meteor.settings.public.env === 'Production'){
-        url = "https://www.phly.co/public/7cSJDwC9FZxTDjT9D"
-      }
-      else {
-        url = `https://www.phly.co/public/${this.props.match.params.id}`;
-      }
+    getQRCode = () => {
+      var url = `https://www.phly.co/public/${this.props.match.params.id}`;
       return (<QRCode value={url} renderAs='canvas'/>);
     }
 
-    handleSubmit(event) {
+    handleSubmit = (event) => {
         event.preventDefault();
         const date = new Date();
         var campaign = {
@@ -119,7 +93,7 @@ export default class CampaignPage extends Component {
     }
 */
 
-    handleChange(key){
+    handleChange = (key) => {
         return function(e){
             var state = {};
             state[key] = e.target.value;
@@ -127,25 +101,44 @@ export default class CampaignPage extends Component {
         }.bind(this);
     }
 
-    handleStartDayChange(day){
+    handleStartDayChange = (day) => {
         this.setState({startDate: day});
     }
 
-    handleEndDayChange(day){
+    handleEndDayChange = (day) => {
         this.setState({endDate: day});
+    }
+
+    getDonations = (donations) => {
+      return donations.map((don) => {
+        return (
+          <tr key={don._id}>
+            <td>{don.donor}</td>
+            <td>${Math.round(don.amount * 100) / 100}</td>
+          </tr>
+        )
+      })
+    }
+
+    toggleModal = () => {
+      this.setState({ share: !this.state.share });
     }
 
     render() {
         if (this.state.deleted === true) return <Redirect to='/home'/>
-        if (this.state.public === true) return <Redirect to={`/public/${this.props.match.params.id}`}/>
+
         var obj = Campaigns.findOne({ _id: this.props.match.params.id });
         var donations = Donations.find({campaign: this.props.match.params.id}).fetch();
-        console.log(donations);
-        var totalRaised = 0;
+
+        let totalRaised = 0;
+        let totalDonations = 0;
+        let lastDonation = {};
         if (donations) {
           donations.forEach(calculateTotal);
           function calculateTotal(donation, index){
             totalRaised += donation.amount;
+            totalDonations++;
+            lastDonation = donation;
           }
         }
         if (obj != null) {
@@ -161,40 +154,305 @@ export default class CampaignPage extends Component {
 
         if (this.state.editing === true) {
             return (
-                <Responsive>
-                    <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic clearing>
-                        <Form noValidate onSubmit={this.handleSubmit}>
-                            <Form.Field>
-                                <label>Campaign Name</label>
-                                <input type="text" defaultValue = {campName} onChange={this.handleChange('name')}/>
-                            </Form.Field>
-                            <Form.Field>
-                                <label>Goal</label>
-                                <input type="number" defaultValue = {goalAmount} onChange={this.handleChange('goalAmount')}/>
-                            </Form.Field>
-                            <Form.Field>
-                                <label>Description</label>
-                                <TextArea type="text" defaultValue = {campDes} onChange={this.handleChange('description')}/>
-                            </Form.Field>
-                            <Form.Field>
-                                <label>Start Date</label>
-                                <DayPickerInput value={campStartDate} onDayChange={this.handleStartDayChange.bind(this)}/>
-                            </Form.Field>
-                            <Form.Field>
-                                <label>End Date</label>
-                                <DayPickerInput value={campEndDate} onDayChange={this.handleEndDayChange.bind(this)}/>
-                            </Form.Field>
-                            <Button color='orange' type='submit'>Save</Button>
-                        </Form>
-                    </Segment>
-                </Responsive>
+                <div>
+                </div>
             )
         }
 
-        let percent = totalRaised * 100 / goalAmount;
+        let percent = Math.round(totalRaised * 100 / goalAmount);
 
         return (
             <div>
+              <div className="header bg-gradient-primary py-8">
+                <Container fluid>
+                  <div className="header-body">
+                    <Row>
+                      <Col col="6" xl="3">
+                        <Card className="card-stats mb-4 mb-xl-0 shadow">
+                          <CardBody>
+                            <Row>
+                              <div className="col">
+                                <CardTitle
+                                  tag="h5"
+                                  className="text-uppercase text-muted mb-0"
+                                >
+                                  Total Raised
+                                </CardTitle>
+                                <span className="h2 font-weight-bold mb-0">
+                                  ${totalRaised}
+                                </span>
+                              </div>
+                              <Col className="col-auto">
+                                <div className="icon icon-shape bg-primary text-white rounded-circle shadow">
+                                  <FontAwesomeIcon icon={faDollarSign}/>
+                                </div>
+                              </Col>
+                            </Row>
+                            <p className="mt-3 mb-0 text-muted text-sm">
+                              <span className="text-nowrap">Since {startString}</span>
+                            </p>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                      <Col col="6" xl="3">
+                        <Card className="card-stats mb-4 mb-xl-0 shadow">
+                          <CardBody>
+                            <Row>
+                              <div className="col">
+                                <CardTitle
+                                  tag="h5"
+                                  className="text-uppercase text-muted mb-0"
+                                >
+                                  Donations
+                                </CardTitle>
+                                <span className="h2 font-weight-bold mb-0">
+                                  {totalDonations}
+                                </span>
+                              </div>
+                              <Col className="col-auto">
+                                <div className="icon icon-shape bg-secondary text-white rounded-circle shadow">
+                                  <FontAwesomeIcon icon={faDonate}/>
+                                </div>
+                              </Col>
+                            </Row>
+                            <p className="mt-3 mb-0 text-muted text-sm">
+                              <span className="text-nowrap">Since {startString}</span>
+                            </p>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                      <Col col="6" xl="3">
+                        <Card className="card-stats mb-4 mb-xl-0 shadow">
+                          <CardBody>
+                            <Row>
+                              <div className="col">
+                                <CardTitle
+                                  tag="h5"
+                                  className="text-uppercase text-muted mb-0"
+                                >
+                                  Last Donation
+                                </CardTitle>
+                                <span className="h2 font-weight-bold mb-0">
+                                  { lastDonation.amount ? `$${Math.round(lastDonation.amount * 100) / 100}` : "--" }
+                                </span>
+                              </div>
+                              <Col className="col-auto">
+                                <div className="icon icon-shape bg-default text-white rounded-circle shadow">
+                                  <FontAwesomeIcon icon={faGlassCheers}/>
+                                </div>
+                              </Col>
+                            </Row>
+                            <p className="mt-3 mb-0 text-muted text-sm">
+                              <span className="text-nowrap">{ lastDonation.donor ? `from ${lastDonation.donor}` : "Make your first campaign!"}</span>
+                            </p>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                      <Col col="6" xl="3">
+                        <Card className="card-stats mb-4 mb-xl-0 shadow">
+                          <CardBody>
+                            <Row>
+                              <div className="col">
+                                <CardTitle
+                                  tag="h5"
+                                  className="text-uppercase text-muted mb-0"
+                                >
+                                  Progress
+                                </CardTitle>
+                                <span className="h2 font-weight-bold mb-0">
+                                  {percent}%
+                                </span>
+                              </div>
+                              <Col className="col-auto">
+                                <div className="icon icon-shape bg-primary text-white rounded-circle shadow">
+                                  <FontAwesomeIcon icon={faHeart}/>
+                                </div>
+                              </Col>
+                            </Row>
+                            <p className="mt-3 mb-0 text-muted text-sm">
+                              <span className="text-nowrap">of goal raised</span>
+                            </p>
+                          </CardBody>
+                        </Card>
+                      </Col>
+                    </Row>
+                  </div>
+                </Container>
+              </div>
+              <Container className="mt--7 mb-5" fluid>
+                <Row className="mt-3">
+                  <Col md="8">
+                    <Card className="shadow">
+                      <CardHeader className="border-0">
+                        <Row className="align-items-center">
+                          <Col xs="8">
+                            <div className="col">
+                              <h6 className="text-uppercase text-light ls-1 mb-1">
+                                Overview
+                              </h6>
+                              <h2 className="mb-0 font-weight-bold">{campName}</h2>
+                            </div>
+                          </Col>
+                          <Col className="text-right" xs="4">
+                            <Button
+                              color="primary"
+                              onClick={() => this.toggleModal()}
+                            >
+                              Share
+                            </Button>
+
+                            <Modal
+                              className="modal-dialog-centered"
+                              isOpen={this.state.share}
+                              toggle={() => this.toggleModal()}
+                            >
+                              <div className="modal-header">
+                                <h5 className="modal-title" id="shareModalLabel">
+                                  Share your campaign
+                                </h5>
+                                <button
+                                  aria-label="Close"
+                                  className="close"
+                                  data-dismiss="modal"
+                                  type="button"
+                                  onClick={() => this.toggleModal()}
+                                >
+                                  <span aria-hidden={true}>×</span>
+                                </button>
+                              </div>
+                              <div className="modal-body">
+                                <Container fluid>
+                                  <Row>
+                                    <Col className="text-center">
+                                      <p>Download QR code or link and share</p>
+                                      <div>
+                                        {this.getQRCode()}
+                                      </div>
+                                      <a
+                                        className="mt-3 mr-3"
+                                        href={`https://www.phly.co/public/${this.props.match.params.id}`}
+                                      >
+                                        {`https://www.phly.co/public/${this.props.match.params.id}`}
+                                      </a>
+                                      <CopyToClipboard
+                                        text={`https://www.phly.co/public/${this.props.match.params.id}`}
+                                      >
+                                        <Button
+                                          className="btn-icon btn-2"
+                                          color="primary"
+                                          type="button"
+                                        >
+                                          <span className="btn-inner--icon">
+                                            <FontAwesomeIcon icon={faCopy}/>
+                                          </span>
+                                        </Button>
+                                      </CopyToClipboard>
+                                    </Col>
+                                  </Row>
+                                </Container>
+                              </div>
+                            </Modal>
+
+                          </Col>
+                        </Row>
+                      </CardHeader>
+                      <CardBody className="mb-3">
+                        <Row>
+                          <Col>
+                            <div className="col">
+                              <h6 className="text-uppercase text-light ls-1 mb-1">
+                                Description
+                              </h6>
+                              <p>{campDes}</p>
+                            </div>
+                          </Col>
+                        </Row>
+                        <Row className="mt-4">
+                          <Col>
+                            <div className="col">
+                              <h6 className="text-uppercase text-light ls-1 mb-1">
+                                Nonprofit
+                              </h6>
+                              <h4>{nonprofit}</h4>
+                            </div>
+                          </Col>
+                        </Row>
+                        <Row className="mt-4">
+                          <Col xs="6">
+                            <div className="col">
+                              <h6 className="text-uppercase text-light ls-1 mb-1">
+                                Start Date
+                              </h6>
+                              <h4>{startString}</h4>
+                            </div>
+                          </Col>
+                          <Col xs="6">
+                            <div className="col">
+                              <h6 className="text-uppercase text-light ls-1 mb-1">
+                                End Date
+                              </h6>
+                              <h4>{endString}</h4>
+                            </div>
+                          </Col>
+                        </Row>
+                      </CardBody>
+                    </Card>
+                  </Col>
+                  <Col md="4">
+                    <Card className="shadow">
+                      <CardHeader className="border-0">
+                        <Row className="align-items-center">
+                          <Col xs="8">
+                            <div className="col">
+                              <h6 className="text-uppercase text-light ls-1 mb-1">
+                                Goal
+                              </h6>
+                              <h2 className="mb-0 font-weight-bold">${goalAmount}</h2>
+                            </div>
+                          </Col>
+                        </Row>
+                      </CardHeader>
+                      <CardBody className="mb-3">
+                        <Row>
+                          <Col>
+                            <div className="col">
+                              <h6 className="text-uppercase text-light ls-1 mb-1">
+                                Progress
+                              </h6>
+                              <Row>
+                                <Col xs="10">
+                                  <Progress
+                                    max="100"
+                                    className="mt-2"
+                                    value={`${percent}`}
+                                    barClassName="bg-danger"
+                                  />
+                                </Col>
+                                <Col xs="2">
+                                  <p className="float-right">{percent}%</p>
+                                </Col>
+                              </Row>
+                            </div>
+                          </Col>
+                        </Row>
+                      </CardBody>
+                      <Table className="align-items-center table-flush" responsive>
+                        <thead className="thead-light">
+                          <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Donation</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {this.getDonations(donations)}
+                        </tbody>
+                      </Table>
+                    </Card>
+                  </Col>
+                </Row>
+              </Container>
+
+            {/*
                 <Responsive>
                     <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic clearing>
                         <Header as='h1'
@@ -276,7 +534,8 @@ export default class CampaignPage extends Component {
                         </Grid>
                     </Segment>
                 </Responsive>
-            </div>
+            */}
+          </div>
         );
     }
 }

@@ -38,7 +38,7 @@ export default class Navigation extends React.Component {
               </NavbarBrand>
               <Nav className="navbar-nav-hover align-items-lg-center" navbar>
                 <NavItem>
-                  <NavLink href="https://www.phly.co/campaigns">
+                  <NavLink tag={Link} to="/campaigns">
                     <span className="nav-link-inner--text">Campaigns</span>
                   </NavLink>
                 </NavItem>

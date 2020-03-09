@@ -2,23 +2,21 @@ import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { withHistory, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import DayPickerInput from 'react-day-picker/DayPickerInput';
-import 'react-day-picker/lib/style.css';
+import ReactDatetime from 'react-datetime';
 import { withRouter } from 'react-router-dom';
 
-
 import {
-    Button,
-    Form,
-    Responsive,
-    Segment,
-    Grid,
-    Header,
-    TextArea,
-    Input
-} from 'semantic-ui-react';
-
-import { Campaigns } from '../../api/campaigns.js';
+  Container,
+  Col, Row,
+  Card,
+  CardBody,
+  CardHeader,
+  Form,
+  FormGroup,
+  Input,
+  InputGroup,
+  Button
+} from 'reactstrap';
 
 export default class AddCampaign extends Component {
     constructor(props) {
@@ -32,34 +30,32 @@ export default class AddCampaign extends Component {
         nonprofit: '',
         created: false
       };
-      this.handleChange = this.handleChange.bind(this);
-      this.handleSubmit = this.handleSubmit.bind(this);
+
     }
 
-    handleSubmit(event) {
+    handleSubmit = (event) => {
         event.preventDefault();
-        const date = new Date();
-        const qrCode = "error.svg";
         var campaign = {
             name: this.state.name,
             createdAt: new Date(),
             owner: this.props.org,
-            startDate: this.state.startDate,
-            endDate: this.state.endDate,
+            startDate: this.state.startDate.toDate(),
+            endDate: this.state.endDate.toDate(),
             description: this.state.description,
             nonprofit: this.state.nonprofit,
             goalAmount: this.state.goalAmount,
-            qrCode: qrCode
         }
         console.log(campaign);
-        Meteor.call('campaigns.insert', campaign);
-        this.setState(() => ({
-            created: true
-        }));
-
+        Meteor.call('campaigns.insert', campaign, (err) => {
+          if (err) {
+            console.log(err)
+          } else {
+            this.setState({ created: true });
+          }
+        });
     }
 
-    handleChange(key){
+    handleChange = (key) => {
       return function(e) {
         var state = {};
         state[key] = e.target.value;
@@ -67,12 +63,12 @@ export default class AddCampaign extends Component {
       }.bind(this);
     }
 
-    handleStartDayChange(day){
-      this.setState({startDate: day});
+    handleStartDayChange = (date) => {
+      this.setState({startDate: date});
     }
 
-    handleEndDayChange(day){
-      this.setState({endDate: day});
+    handleEndDayChange = (date) => {
+      this.setState({endDate: date});
     }
 
     render() {
@@ -80,6 +76,162 @@ export default class AddCampaign extends Component {
       if (this.state.created === true) return <Redirect to='/home'/>
 
       return (
+        <div>
+          <div className="header bg-gradient-primary py-8">
+            <Container fluid>
+              <div className="header-body">
+              </div>
+            </Container>
+          </div>
+          <Container className="mt--7" fluid>
+            <Row className="justify-content-center row-grid">
+              <Col lg="8">
+                <Card className="bg-white shadow border-0 mb-5">
+                  <CardHeader className="border-0">
+                    <Row className="align-items-center">
+                      <Col xs="8">
+                        <h2 className="mx-3 mb-0 font-weight-bold">New Campaign</h2>
+                      </Col>
+                    </Row>
+                  </CardHeader>
+                  <CardBody className="px-lg-5 py-lg-5">
+                    <Form onSubmit={this.handleSubmit}>
+                      <Row>
+                        <Col lg="8">
+                          <FormGroup>
+                            <label
+                              className="form-control-label"
+                              htmlFor="input-name"
+                            >
+                              Campaign Name
+                            </label>
+                            <Input
+                              className="form-control-alternative"
+                              id="input-name"
+                              placeholder="Name"
+                              type="text"
+                              onChange={this.handleChange("name")}
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col lg="6">
+                          <FormGroup>
+                            <label
+                              className="form-control-label"
+                              htmlFor="input-np"
+                            >
+                              Nonprofit
+                            </label>
+                            <Input
+                              className="form-control-alternative"
+                              id="input-np"
+                              placeholder="Nonprofit"
+                              type="text"
+                              onChange={this.handleChange("nonprofit")}
+                            />
+                          </FormGroup>
+                        </Col>
+                        <Col lg="6">
+                          <FormGroup>
+                            <label
+                              className="form-control-label"
+                              htmlFor="input-goal"
+                            >
+                              Goal
+                            </label>
+                            <Input
+                              className="form-control-alternative"
+                              id="input-goal"
+                              placeholder="Goal"
+                              type="number"
+                              onChange={this.handleChange("goalAmount")}
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col lg="6">
+                          <FormGroup>
+                            <label
+                              className="form-control-label"
+                              htmlFor="input-np"
+                            >
+                              Start Date
+                            </label>
+                            <InputGroup className="input-group-alternative">
+                              <ReactDatetime
+                                inputProps={{
+                                  placeholder: "Start Date"
+                                }}
+                                timeFormat={false}
+                                id="input-start"
+                                onChange={this.handleStartDayChange}
+                              />
+                            </InputGroup>
+                          </FormGroup>
+                        </Col>
+                        <Col lg="6">
+                          <label
+                            className="form-control-label"
+                            htmlFor="input-np"
+                          >
+                            End Date
+                          </label>
+                          <FormGroup>
+                            <InputGroup className="input-group-alternative">
+                              <ReactDatetime
+                                inputProps={{
+                                  placeholder: "End Date"
+                                }}
+                                timeFormat={false}
+                                id="input-end"
+                                onChange={this.handleEndDayChange}
+                              />
+                            </InputGroup>
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col>
+                          <FormGroup>
+                            <label
+                              className="form-control-label"
+                              htmlFor="input-description"
+                            >
+                              Description
+                            </label>
+                            <Input
+                              className="form-control-alternative"
+                              id="input-description"
+                              placeholder="Description"
+                              rows="5"
+                              type="textarea"
+                              onChange={this.handleChange("description")}
+                            />
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                      <Row>
+                        <Col className="text-right">
+                          <FormGroup>
+                            <Button
+                              color="primary"
+                              type="submit"
+                            >
+                              Create
+                            </Button>
+                          </FormGroup>
+                        </Col>
+                      </Row>
+                    </Form>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </Container>
+        {/*
         <Responsive>
           <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic clearing>
             <Header as='h1'
@@ -118,6 +270,8 @@ export default class AddCampaign extends Component {
             </Form>
           </Segment>
         </Responsive>
+        */}
+        </div>
       );
     }
 }
