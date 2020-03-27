@@ -32,10 +32,12 @@ Meteor.startup(() => {
 
 Meteor.methods({
   'getClientToken'(customerId) {
+    console.log("Making client token");
     var generateToken = Meteor.wrapAsync(gateway.clientToken.generate, gateway.clientToken);
 
     var response = generateToken();
     return response.clientToken;
+    console.log("Made client token");
   },
 
   btCreateCustomer: function() {
@@ -53,7 +55,7 @@ Meteor.methods({
   },
 
   createTransaction: function(nonceFromTheClient, donation_amount) {
-
+    console.log("Making transaction");
     // Let's create transaction.
     gateway.transaction.sale({
       amount: donation_amount,
@@ -71,7 +73,7 @@ Meteor.methods({
         console.log("THERE IS AN ERROR WITH THE TRANSACTION")
         console.log(err);
       } else {
-        // When payment's successful, add "paid" role to current user.
+        console.log("Created Transaction");
       }
     });
   }

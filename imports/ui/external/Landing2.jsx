@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Navigation from '../components/Navigation.jsx';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import ReactTypingEffect from 'react-typing-effect';
 
 import {
   faAddressCard,
@@ -19,7 +20,8 @@ import {
   faMousePointer,
   faUserEdit,
   faHeart,
-  faArrowRight
+  faArrowRight,
+  faChartLine
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -37,17 +39,20 @@ import {
   TabPane
 } from 'reactstrap';
 
+let taglines = ["collect payments", "track progress", "manage members", "host fundraisers", "make a difference"];
+
 class Landing extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      tabs: 0
+      tabs: 0,
+      tagline: 0
     }
   }
 
   componentDidMount() {
-    this.interval = setInterval(() => this.setState({ tabs: (this.state.tabs + 1) % 3}), 20000);
+    this.interval = setInterval(() => this.setState({ tabs: (this.state.tabs + 1) % 3, tagline: (this.state.tagline + 1) % 5}), 20000);
   }
 
   componentWillUnmount() {
@@ -71,11 +76,18 @@ class Landing extends React.Component {
               <Container className="py-lg-md d-flex">
                 <div className="col px-0">
                   <Row className="justify-content-center">
-                    <Col lg="10" className="text-center">
-                      <h1 className="display-1">The best fundraising solution for student organizations</h1>
+                    <Col lg="11" className="text-center">
+                      <h1 className="display-1 mb-0">We help clubs and communites</h1>
+                      <ReactTypingEffect
+                        className="h1 inline font-weight-bold font-size-xxl"
+                        text={taglines}
+                        speed={100}
+                        eraseDelay={5000}
+                        typingDelay={100}
+                      />
                       <p className="display-4 px-5 py-4">
-                        Create and share campaigns instantly,<br/>
-                        collect and track donations effortlessly.
+                        Collect and track all payments for your<br/>
+                        club or community in one place.
                       </p>
                       <div className="btn-wrapper">
                         <Button
@@ -157,7 +169,7 @@ class Landing extends React.Component {
                             onClick={e => this.toggleTab(e, 2)}
                             role="tab"
                           >
-                              Donations
+                              Payments
                           </NavLink>
                         </NavItem>
                       </Nav>
@@ -210,18 +222,18 @@ class Landing extends React.Component {
                               </Col>
                               <Col className="text-center">
                                 <div className="icon-lg icon-shape icon-shape-secondary rounded-circle mb-3">
-                                  <FontAwesomeIcon icon={faHandHoldingHeart}/>
+                                  <FontAwesomeIcon icon={faShareSquare}/>
                                 </div>
-                                <p className="lead landing">Choose a non-profit to recieve donations</p>
+                                <p className="lead landing">Share your campaign with QR code, link, or social media post</p>
                               </Col>
                               <Col className="col-1 text-center text-default">
                                 <FontAwesomeIcon className="icon display-3" icon={faChevronRight}/>
                               </Col>
                               <Col className="text-center">
                                 <div className="icon-lg icon-shape icon-shape-secondary rounded-circle mb-3">
-                                  <FontAwesomeIcon icon={faShareSquare}/>
+                                  <FontAwesomeIcon icon={faChartLine}/>
                                 </div>
-                                <p className="lead landing">Share your campaign with QR code, link, or social media post</p>
+                                <p className="lead landing">Track the progress of your campaign</p>
                               </Col>
                             </Row>
                           </CardBody>
@@ -244,7 +256,7 @@ class Landing extends React.Component {
                                 <div className="icon-lg icon-shape icon-shape-secondary rounded-circle mb-3">
                                   <FontAwesomeIcon icon={faCreditCard}/>
                                 </div>
-                                <p className="lead landing">Enter donation amount and choose payment method</p>
+                                <p className="lead landing">Enter amount and choose payment method</p>
                               </Col>
                               <Col className="col-1 text-center text-default">
                                 <FontAwesomeIcon className="icon display-3" icon={faChevronRight}/>
@@ -253,7 +265,7 @@ class Landing extends React.Component {
                                 <div className="icon-shape icon-lg icon-shape-secondary rounded-circle mb-3">
                                   <FontAwesomeIcon icon={faMoneyBillAlt}/>
                                 </div>
-                                <p className="lead landing">Donate!</p>
+                                <p className="lead landing">Pay!</p>
                               </Col>
                             </Row>
                           </CardBody>
@@ -335,7 +347,7 @@ class Landing extends React.Component {
                     <div className="icon icon-md icon-shape icon-shape-secondary shadow rounded-circle mb-4">
                       <FontAwesomeIcon icon={faHeart}/>
                     </div>
-                    <h3>Streamlined donation process</h3>
+                    <h3>Streamlined payment process</h3>
                     <p className="lead">
                       With Venmo, PayPal, and Credit Card
                       payment options, your donors can

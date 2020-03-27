@@ -52,7 +52,7 @@ export default class Campaign extends Component {
               </Col>
               <Col md="2">
                 <span className="h3 font-weight-bold mb-3">
-                  {`${camp.endDate.getMonth()}/${camp.endDate.getDate()}/${camp.endDate.getFullYear()}`}
+                  {`${camp.endDate.toLocaleDateString()}`}
                 </span>
               </Col>
               <Col md="2">
@@ -138,7 +138,7 @@ export default class Campaign extends Component {
                             tag="h5"
                             className="text-uppercase text-muted mb-0"
                           >
-                            Donations
+                            Payments
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
                             {totalDonations}
@@ -165,7 +165,7 @@ export default class Campaign extends Component {
                             tag="h5"
                             className="text-uppercase text-muted mb-0"
                           >
-                            Last Donation
+                            Last Payment
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
                             { lastDonation.amount ? `$${Math.round(lastDonation.amount * 100) / 100}` : "--" }

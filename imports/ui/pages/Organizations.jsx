@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { Organizations } from '../../api/organizations.js';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
@@ -108,7 +108,22 @@ export default class MyOrganizations extends Component {
                 <div className="col">
                   <Card className="shadow">
                     <CardHeader className="border-0">
-                      <h2 className="mb-0 font-weight-bold">My Organizations</h2>
+                      <Row className="align-items-center">
+                        <Col xs="8">
+                          <h2 className="mb-0 font-weight-bold">My Organizations</h2>
+                        </Col>
+                        <Col xs="4">
+                          <Button
+                            className="btn-secondary float-right"
+                            color="secondary"
+                            tag={Link} to="/home/neworg"
+                          >
+                            <span className="nav-link-inner--text ml-1">
+                              New Org
+                            </span>
+                          </Button>
+                        </Col>
+                      </Row>
                     </CardHeader>
                     <Table className="align-items-center table-flush" responsive>
                       <thead className="thead-light">

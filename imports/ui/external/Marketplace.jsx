@@ -11,7 +11,10 @@ import {
   Card,
   CardHeader,
   CardBody,
-  Progress
+  Progress,
+  Nav,
+  NavItem,
+  NavLink
 } from 'reactstrap';
 
 import {
@@ -84,15 +87,63 @@ class Marketplace extends Component {
             <div>
               <Navigation transparent/>
                 <main>
-                  <section className="section bg-gradient-primary section-shaped section-lg section-bg">
+                  <section className="section bg-gradient-primary section-shaped section-lg">
                     <Container className="py-lg-md d-flex">
                       <div className="col px-0">
                         <Row>
                           {this.renderCampaigns(campaigns, organizations, donations)}
                         </Row>
+                        <Row></Row>
                       </div>
                     </Container>
                   </section>
+                  <footer className="footer bg-white">
+                    <Container>
+                      <hr />
+                      <Row className=" align-items-center justify-content-md-between">
+                        <Col md="6">
+                          <div className=" copyright">
+
+                            © {new Date().getFullYear()}{" "}
+                            <a
+                              href="https://www.phly.co"
+                            >
+                              Phly
+                            </a>
+                            .
+                          </div>
+                        </Col>
+                        <Col md="6">
+                          <Nav className=" nav-footer justify-content-end">
+                          <NavItem>
+                            <NavLink
+                              href="https://www.phly.co"
+                              target="_blank"
+                            >
+                              Phly
+                            </NavLink>
+                          </NavItem>
+                          <NavItem>
+                            <NavLink
+                              href="https://www.phly.co"
+                              target="_blank"
+                            >
+                              About Us
+                            </NavLink>
+                          </NavItem>
+                          <NavItem>
+                            <NavLink
+                              href="https://www.phly.co/tos"
+                              target="_blank"
+                            >
+                              Terms of Service
+                            </NavLink>
+                          </NavItem>
+                        </Nav>
+                        </Col>
+                      </Row>
+                    </Container>
+                  </footer>
                 </main>
               {/*
                 <Menu fixed='top' inverted color='blue'>

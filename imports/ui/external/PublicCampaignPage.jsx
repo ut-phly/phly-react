@@ -8,6 +8,7 @@ import { Donations } from '../../api/donations.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { HTTP } from 'meteor/http';
+import Navigation from '../components/Navigation.jsx';
 
 import {
   Container,
@@ -21,12 +22,14 @@ import {
   Input,
   InputGroupText,
   InputGroupAddon,
-  Button
+  Button,
+  Alert
 } from 'reactstrap';
 
 import {
   faDollarSign,
-  faUserCircle
+  faUserCircle,
+  faThumbsUp
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Campaigns } from '../../api/campaigns.js';
@@ -37,7 +40,6 @@ class PublicCampaignPage extends Component {
         super(props);
 
         this.state = {
-            clientToken: '',
             done: false,
             error: ''
         }
@@ -67,18 +69,18 @@ class PublicCampaignPage extends Component {
               paypal: {
                 flow: 'vault',
               }
-            }, function (err, instance) {
-              console.log("Made it here");
-              if (err) {
-                console.log(err);
+            }, function (createErr, instance) {
+              if (createErr) {
+                console.log(createErr);
                 return;
               }
 
 
-              form.addEventListener('submit', function() {
-                instance.requestPaymentMethod(function(err, payload) {
-                  if (err) {
-                    console.log(err);
+              form.addEventListener('submit', function(event) {
+                event.preventDefault();
+                instance.requestPaymentMethod(function(requestPaymentMethodErr, payload) {
+                  if (requestPaymentMethodErr) {
+                    console.log(requestPaymentMethodErr);
                     return;
                   }
 
@@ -86,17 +88,19 @@ class PublicCampaignPage extends Component {
                   let donor = document.getElementById('donor').value;
                   donation_amount = parseFloat(donation_amount);
                   if (donation_amount && donor) {
-                    donation_amount += .31;
+                    let platform_fee = (self.props.campaign.fee) ? .31 : 0;
+                    donation_amount += platform_fee;
 
-                    Meteor.call('createTransaction', payload.nonce, donation_amount, function(error, success) {
-                      if (error) {
+                    Meteor.call('createTransaction', payload.nonce, donation_amount, function(transactionError, success) {
+                      if (transactionError) {
+                        console.log(transactionError);
                         self.setState({ error: "Transaction creation failed" });
                       } else {
                         var donation = {
                           donor: donor,
                           campaign: self.props.campaign._id,
                           nonprofit: self.props.campaign.nonprofit,
-                          amount: donation_amount - .31
+                          amount: donation_amount - platform_fee
                         }
                         Meteor.call('donations.insert', donation);
                         self.setState({ done: true, error: '' })
@@ -112,12 +116,6 @@ class PublicCampaignPage extends Component {
           }
         });
 
-    }
-
-    handleNewDonation = () => {
-      this.setState({
-        done: false
-      })
     }
 
     render() {
@@ -147,6 +145,7 @@ class PublicCampaignPage extends Component {
 
       return (
         <div>
+          <Navigation transparent/>
           <section className="section bg-gradient-primary section-shaped section-lg section-bg">
             <Container fluid>
               <Row className="mx-5 justify-content-center row-grid">
@@ -207,10 +206,18 @@ class PublicCampaignPage extends Component {
                         <FormGroup>
                           <div id="payment-container"></div>
                         </FormGroup>
-                        <p><i>Phly adds an additional flat .31 cent platform fee to your donation to help us maintain our platform and offer our service to student organizations for free</i></p>
+                        <p><i>In light of COVID-19 Phly is waiving all fees.</i></p>
                         <Button type="submit" size="lg" color="primary">Submit</Button>
                       </Form>
-                      : ""
+                      :
+                      <Alert color="success" className="mt-4">
+                        <span className="alert-inner--icon">
+                          <FontAwesomeIcon icon={faThumbsUp}/>
+                        </span>{" "}
+                        <span className="alert-inner--text">
+                          <strong>Thank you for your donation!</strong> Refresh to donate again.
+                        </span>
+                      </Alert>
                     }
                     </CardBody>
                   </Card>

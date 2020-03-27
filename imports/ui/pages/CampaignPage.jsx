@@ -203,7 +203,7 @@ export default class CampaignPage extends Component {
                                   tag="h5"
                                   className="text-uppercase text-muted mb-0"
                                 >
-                                  Donations
+                                  Payments
                                 </CardTitle>
                                 <span className="h2 font-weight-bold mb-0">
                                   {totalDonations}
@@ -230,7 +230,7 @@ export default class CampaignPage extends Component {
                                   tag="h5"
                                   className="text-uppercase text-muted mb-0"
                                 >
-                                  Last Donation
+                                  Last Payment
                                 </CardTitle>
                                 <span className="h2 font-weight-bold mb-0">
                                   { lastDonation.amount ? `$${Math.round(lastDonation.amount * 100) / 100}` : "--" }
@@ -440,7 +440,7 @@ export default class CampaignPage extends Component {
                         <thead className="thead-light">
                           <tr>
                             <th scope="col">Name</th>
-                            <th scope="col">Donation</th>
+                            <th scope="col">Payment</th>
                           </tr>
                         </thead>
                         <tbody>
