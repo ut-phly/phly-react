@@ -15,14 +15,15 @@ import {
 export default class Navigation extends React.Component {
 
   render() {
-    const { transparent } = this.props;
+    const { transparent, mobile } = this.props;
 
     return (
       <div>
         <header className="header-global">
           <Navbar
             className={classnames("navbar-main navbar-nav headroom", {
-              'navbar-transparent': transparent
+              'navbar-transparent': transparent,
+              'px-4': mobile
             })}
             expand="lg"
             id="navbar-main"
@@ -53,7 +54,7 @@ export default class Navigation extends React.Component {
                   <Button
                     className="btn-secondary"
                     color="secondary"
-                    tag={Link} to="/register"
+                    tag={Link} to="/getstarted"
                   >
                     <span className="nav-link-inner--text ml-1">
                       Sign up

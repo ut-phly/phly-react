@@ -76,7 +76,7 @@ export default class RegisterPage extends Component {
                 });
                 console.log(err.reason);
             } else {
-                this.setState({ success: true });
+                this.setState({ success: true, error: "" });
             }
         });
       } else {
@@ -88,10 +88,10 @@ export default class RegisterPage extends Component {
         e.preventDefault();
 
         let user = Meteor.userId();
-        Meteor.call('organizations.join', this.state.join, user, (err) => {
-          if (err) {
+        Meteor.call('organizations.join', this.state.join, user, (error) => {
+          if (error) {
             this.setState({
-              error: err
+              error: error.reason
             });
           } else {
             this.props.history.push("/home");

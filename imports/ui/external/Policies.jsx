@@ -26,7 +26,7 @@ export default class Policies extends Component {
                                         letterSpacing: '1.5px' }}>
                                 Privacy Notice
                             </Header>
-                            <p>This privacy notice discloses the privacy practices for (<a href="https://www.phly.co/">https://www.phly.co/</a>). This privacy notice applies solely to information collected by this website. It will notify you of the following:</p>
+                            <p>This privacy notice discloses the privacy practices for <a href="https://www.phly.co/">www.phly.co/</a>. This privacy notice applies solely to information collected by this website. It will notify you of the following:</p>
                             <ol>
                             <li>What personally identifiable information is collected from you through the website, how it is used and with whom it may be shared.</li>
                             <li>What choices are available to you regarding the use of your data.</li>

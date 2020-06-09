@@ -2,3 +2,4 @@ node_modules/
 client/lib/themes/
 package-lock.json
 package.json
+.secret/
