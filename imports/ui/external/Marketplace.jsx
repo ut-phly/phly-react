@@ -36,7 +36,7 @@ class Marketplace extends Component {
           if (don.campaign == camp._id) totalRaised += don.amount;
         })
         return (
-          <Col lg="4" xs="6" className="my-4" key={i} tag={Link} to={`/public/${camp._id}`}>
+          <Col lg="4" xs="12" className="my-4" key={i} tag={Link} to={`/public/${camp._id}`}>
             <Card className="shadow">
               <CardHeader className="h3 font-weight-bold mb-0">
                 {camp.name}
@@ -85,7 +85,7 @@ class Marketplace extends Component {
 
         return (
             <div>
-              <Navigation transparent/>
+              <Navigation transparent mobile/>
                 <main>
                   <section className="section bg-gradient-primary section-shaped section-lg">
                     <Container className="py-lg-md d-flex">

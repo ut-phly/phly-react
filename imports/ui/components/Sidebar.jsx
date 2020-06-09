@@ -17,6 +17,7 @@
 */
 /*eslint-disable*/
 import React from "react";
+import { Meteor } from "meteor/meteor";
 import { NavLink as NavLinkRRD, Link } from "react-router-dom";
 // nodejs library to set properties for components
 import { PropTypes } from "prop-types";
@@ -41,6 +42,7 @@ import {
   InputGroupText,
   InputGroup,
   Media,
+  Modal,
   NavbarBrand,
   Navbar,
   NavItem,
@@ -53,11 +55,25 @@ import {
   Col
 } from "reactstrap";
 
+import {
+  faEnvelope,
+  faUser,
+  faCheckCircle,
+  faInfoCircle
+} from '@fortawesome/free-solid-svg-icons';
+
 var ps;
 
 class Sidebar extends React.Component {
   state = {
-    collapseOpen: false
+    collapseOpen: false,
+    contact: false,
+    form: {
+      name: "",
+      email: "",
+      message: ""
+    },
+    submitted: false
   };
   constructor(props) {
     super(props);
@@ -79,6 +95,34 @@ class Sidebar extends React.Component {
       collapseOpen: false
     });
   };
+
+  toggleModal = () => {
+    this.setState({ contact: !this.state.contact });
+  }
+
+  handleLogout = () => {
+      Meteor.logout( (err) => {
+          if (err) {
+              console.log( err.reason );
+          } else {
+
+          }
+      });
+  }
+
+  handleContact = () => {
+    this.setState({ contact: true })
+  }
+
+  onChange = e => {
+    this.setState({ form: { ...this.state.form, [e.target.id]: e.target.value }});
+  }
+
+  handleContactSubmit = () => {
+    Meteor.call('contactUsEmail', this.state.form);
+    this.setState({ submitted: true })
+  }
+
   // creates the links that appear in the left menu / Sidebar
   createLinks = routes => {
     return routes.map((prop, key) => {
@@ -171,9 +215,98 @@ class Sidebar extends React.Component {
               </Row>
             </div>
             {/* Navigation */}
-            <Nav navbar>{this.createLinks(routes)}</Nav>
-
+            <Nav navbar className="mb-auto">{this.createLinks(routes)}</Nav>
+            <Nav className="mb-md-3" navbar>
+              <NavItem className="active-pro active">
+                <Link className="nav-link" to="/login" onClick={this.handleLogout}>
+                  Logout
+                </Link>
+              </NavItem>
+              <NavItem className="active-pro active ml-4 my-2" float="right">
+                <Button color="primary" size="sm" className="btn-icon btn-2" onClick={this.handleContact}>
+                  <span className="btn-inner--icon">
+                    <FontAwesomeIcon icon={faInfoCircle}/>
+                  </span>
+                  <span className="btn-inner--text">Support</span>
+                </Button>
+              </NavItem>
+            </Nav>
           </Collapse>
+          <Modal
+            className="modal-dialog-centered"
+            isOpen={this.state.contact}
+            toggle={() => this.toggleModal()}
+          >
+            <div className="modal-header">
+              <h4 className="modal-title m-3" id="shareModalLabel">
+                How can we help?
+              </h4>
+              <button
+                aria-label="Close"
+                className="close"
+                data-dismiss="modal"
+                type="button"
+                onClick={() => this.toggleModal()}
+              >
+                <span aria-hidden={true}>×</span>
+              </button>
+            </div>
+            <div className="modal-body">
+              <Container fluid>
+                <Row>
+                  <Col className="text-center">
+                    <div className="py-2 text-center">
+                      { !this.state.submitted ?
+                        <Form role="form">
+                          <FormGroup>
+                            <InputGroup className="input-group-alternative">
+                              <Input id="name" placeholder="Full Name" type="text" onChange={this.onChange}/>
+                            </InputGroup>
+                          </FormGroup>
+                          <FormGroup className="mb-3">
+                            <InputGroup className="input-group-alternative">
+                              <Input id="email" placeholder="Email" type="email" onChange={this.onChange}/>
+                            </InputGroup>
+                          </FormGroup>
+                          <FormGroup>
+                            <InputGroup className="input-group-alternative">
+                              <Input
+                                id="message"
+                                placeholder="Message"
+                                rows="5"
+                                type="textarea"
+                                onChange={this.onChange}
+                              />
+                            </InputGroup>
+                          </FormGroup>
+                          <div className="text-center">
+                            <Button
+                              className="my-4"
+                              color="primary"
+                              type="button"
+                              onClick={this.handleContactSubmit}
+                            >
+                              Submit
+                            </Button>
+                          </div>
+                        </Form>
+                        :
+                        <div>
+                          <p className="display-3 text-center">Thanks!</p>
+                          <div className="text-center mb-3">
+                            <div className="icon icon-lg icon-shape icon-shape-secondary shadow rounded-circle mb-4">
+                              <FontAwesomeIcon icon={faCheckCircle}/>
+                            </div>
+                            <p>We will get back to you as soon as possible!</p>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  </Col>
+                </Row>
+              </Container>
+            </div>
+          </Modal>
         </Container>
       </Navbar>
     );

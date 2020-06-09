@@ -6,6 +6,8 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Donations } from '../../api/donations.js';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import MetaTags from 'react-meta-tags';
+import ShowMore from 'react-show-more';
 
 import { HTTP } from 'meteor/http';
 import Navigation from '../components/Navigation.jsx';
@@ -23,13 +25,15 @@ import {
   InputGroupText,
   InputGroupAddon,
   Button,
-  Alert
+  Alert,
+  Modal
 } from 'reactstrap';
 
 import {
   faDollarSign,
   faUserCircle,
-  faThumbsUp
+  faThumbsUp,
+  faExclamationTriangle
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Campaigns } from '../../api/campaigns.js';
@@ -38,10 +42,15 @@ import { Organizations } from '../../api/organizations.js';
 class PublicCampaignPage extends Component {
     constructor(props) {
         super(props);
+        var ua = window.navigator.userAgent;
+        var markup = (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) || (ua.indexOf("Instagram") > -1);
 
         this.state = {
             done: false,
-            error: ''
+            error: '',
+            markup: markup,
+            popup: markup,
+            failure: false
         }
 
     }
@@ -89,12 +98,13 @@ class PublicCampaignPage extends Component {
                   donation_amount = parseFloat(donation_amount);
                   if (donation_amount && donor) {
                     let platform_fee = (self.props.campaign.fee) ? .31 : 0;
+                    let braintree_fee = (self.props.campaign.braintree) ? (donation_amount *.0299) + .3 : 0;
                     donation_amount += platform_fee;
 
-                    Meteor.call('createTransaction', payload.nonce, donation_amount, function(transactionError, success) {
+                    Meteor.call('createTransaction', payload.nonce, Math.ceil((donation_amount + braintree_fee) * 100) / 100, function(transactionError, result) {
                       if (transactionError) {
                         console.log(transactionError);
-                        self.setState({ error: "Transaction creation failed" });
+                        self.setState({ failure: true });
                       } else {
                         var donation = {
                           donor: donor,
@@ -118,17 +128,23 @@ class PublicCampaignPage extends Component {
 
     }
 
+    toggle = () => {
+      this.setState({ popup: !this.state.popup });
+    }
+
     render() {
         let name = "";
         let description = "";
         let nonprofit = "";
         let org = "";
         let goalAmount = "";
+        let fee = false;
         if (this.props.campaign) {
             name = this.props.campaign.name;
             description = this.props.campaign.description;
             nonprofit = this.props.campaign.nonprofit;
             goalAmount = this.props.campaign.goalAmount;
+            fee = this.props.campaign.braintree;
         }
 
         if (this.props.org) {
@@ -143,29 +159,65 @@ class PublicCampaignPage extends Component {
           }
         }
 
+
+
       return (
         <div>
-          <Navigation transparent/>
+          <MetaTags>
+            <title>{name}</title>
+            <meta property="og:description" content={description}/>
+            <meta property="og:title" content={name}/>
+            <meta property="og:site_name" content="Phly"/>
+          </MetaTags>
+          <Navigation transparent mobile/>
           <section className="section bg-gradient-primary section-shaped section-lg section-bg">
             <Container fluid>
-              <Row className="mx-5 justify-content-center row-grid">
-                <Col xs="12">
+              <Row className="justify-content-center row-grid">
+                <Col xs="12" md="10">
+                  <Modal
+                    className="modal-dialog-centered modal-danger mt-0"
+                    contentClassName="bg-gradient-danger"
+                    isOpen={this.state.popup}
+                    toggle={() => this.toggle()}
+                  >
+                    <div className="modal-header">
+                      <h3 className="modal-title" id="modal-title-notification">
+                        Open to continue!
+                      </h3>
+                    </div>
+                    <div className="modal-body">
+                      <div className="py-3 text-center">
+                        <img
+                          alt="..."
+                          className="img-fluid"
+                          src="/images/custom/phly-browser.gif"
+                        />
+                      </div>
+                    </div>
+                  </Modal>
                   <Card className="bg-white shadow border-0 p-4 mb-5">
                     <CardBody>
-                      <h1 className="display-1">{name}</h1>
-                      <h2>for {nonprofit}</h2>
-                      <h2>by {org}</h2>
-                      <p className="lead">{description}</p>
+                      <h2 className="display-2">{name}</h2>
+                      <h3>for {nonprofit}</h3>
+                      <h3>by {org}</h3>
+                      <ShowMore
+                        className="lead"
+                        lines={3}
+                        more='Show more'
+                        less='Show less'
+                      >
+                        {description}
+                      </ShowMore>
                       <Row className="mt-3">
-                        <Col xs="11">
+                        <Col md={`${(totalRaised > 9999) ? 10 : 11}`} xs={`${(totalRaised > 9999) ? 8 : 9}`}>
                           <Progress
                             max="100"
-                            className="mt-2"
+                            className="mt-3"
                             value={`${Math.round(totalRaised * 100 / goalAmount)}`}
                             barClassName="bg-danger"
                           />
                         </Col>
-                        <Col xs="1">
+                        <Col md={`${(totalRaised > 9999) ? 2 : 1}`} xs={`${(totalRaised > 9999) ? 4 : 3}`}>
                           <h3 className="float-right">${totalRaised}</h3>
                         </Col>
                       </Row>
@@ -192,7 +244,7 @@ class PublicCampaignPage extends Component {
                             className="form-control-label"
                             htmlFor="input-donation-am"
                           >
-                            Donation
+                            Payment
                           </label>
                           <InputGroup className="input-group-alternative" size="lg">
                             <InputGroupAddon addonType="prepend">
@@ -200,13 +252,27 @@ class PublicCampaignPage extends Component {
                                 <FontAwesomeIcon icon={faDollarSign}/>
                               </InputGroupText>
                             </InputGroupAddon>
-                            <Input placeholder="00.00" type="number" id="donation-am"/>
+                            <Input placeholder="00.00" type="number" id="donation-am" min="0"/>
                           </InputGroup>
                         </FormGroup>
-                        <FormGroup>
-                          <div id="payment-container"></div>
-                        </FormGroup>
-                        <p><i>In light of COVID-19 Phly is waiving all fees.</i></p>
+                        { this.state.failure ?
+                          <FormGroup>
+                            <Alert color="danger" className="mt-4">
+                              <span className="alert-inner--icon">
+                                <FontAwesomeIcon icon={faExclamationTriangle}/>
+                              </span>{" "}
+                              <span className="alert-inner--text">
+                                <strong>Oh no! Your payment didn't go through.</strong> Refresh to try again.
+                              </span>
+                            </Alert>
+                          </FormGroup>
+
+                          :
+                          <FormGroup>
+                            <div id="payment-container"></div>
+                          </FormGroup>
+                        }
+                        { fee ? <p><i>Standard processing fee of 2.9% plus 30 cents is added to each donation.</i></p> : '' }
                         <Button type="submit" size="lg" color="primary">Submit</Button>
                       </Form>
                       :

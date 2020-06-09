@@ -4,7 +4,7 @@
         border-radius: $modal-content-border-radius;
     } @else {
         border-radius: 0;
-    }  
+    }
 }
 
 
@@ -18,9 +18,12 @@
     }
 }
 
+.modal-header {
+  border-bottom: 0;
+}
+
 @each $color, $value in $theme-colors {
     .modal-#{$color} {
         @include modal-variant($value);
     }
 }
-

@@ -69,20 +69,20 @@ class Landing extends React.Component {
   render() {
     return (
       <div>
-        <Navigation />
+        <Navigation mobile/>
         <main>
           <div className="position-relative">
             <section className="section section-lg section-shaped pb-100">
               <Container className="py-lg-md d-flex">
                 <div className="col px-0">
                   <Row className="justify-content-center">
-                    <Col lg="11" className="text-center">
+                    <Col lg="11" xs="10" className="text-center">
                       <h1 className="display-1 mb-0">We help clubs and communites</h1>
                       <ReactTypingEffect
                         className="h1 inline font-weight-bold font-size-xxl"
                         text={taglines}
                         speed={100}
-                        eraseDelay={5000}
+                        eraseDelay={3000}
                         typingDelay={100}
                       />
                       <p className="display-4 px-5 py-4">
@@ -94,7 +94,7 @@ class Landing extends React.Component {
                           className="btn-icon mb-3 mb-sm-0"
                           color="secondary"
                           tag={Link}
-                          to="/register"
+                          to="/getstarted"
                         >
                           <span className="btn-inner--text">Get Started</span>
                           <span className="btn-inner--icon mr-1">
@@ -179,7 +179,7 @@ class Landing extends React.Component {
                         <Card className="shadow border-0 px-4">
                           <CardBody>
                             <Row className="mt-4 align-items-center">
-                              <Col className="text-center">
+                              <Col className="text-center" xs="12">
                                 <div className="icon-lg icon-shape icon-shape-secondary rounded-circle mb-3">
                                   <FontAwesomeIcon icon={faAddressCard}/>
                                 </div>
@@ -328,14 +328,14 @@ class Landing extends React.Component {
                 </Col>
               </Row>
               <Row className="mb-lg align-items-center">
-                <Col className="order-md-1" md="3">
+                <Col className="order-md-1" md="3" xs="6">
                   <img
                     alt="..."
                     className="img-fluid floating shadow"
                     src="/images/custom/donate-1.png"
                   />
                 </Col>
-                <Col className="order-md-1" md="3">
+                <Col className="order-md-1" md="3" xs="6">
                   <img
                     alt="..."
                     className="img-fluid floating shadow"

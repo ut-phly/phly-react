@@ -5,6 +5,7 @@ import AppContainer from '../ui/containers/AppContainer.jsx';
 import MainContainer from '../ui/containers/MainContainer.jsx';
 
 import RegisterPage from '../ui/external/RegisterPage.jsx';
+import GetStarted from '../ui/external/GetStarted.jsx';
 import LoginPage from '../ui/external/LoginPage.jsx';
 import Landing from '../ui/external/Landing2.jsx';
 import AddCampaign from '../ui/pages/AddCampaign.jsx';
@@ -22,6 +23,7 @@ export const renderRoutes = () => (
             <Route exact path="/" component={Landing}/>
             <Route path="/login" component={LoginPage}/>
             <Route path="/register" component={RegisterPage}/>
+            <Route path="/getstarted" component={GetStarted}/>
             <Route path="/home" component={AppContainer}/>
             <Route path="/public/:id" component={CampaignContainer}/>
             <Route path="/campaigns" component={MarketplaceContainer}/>

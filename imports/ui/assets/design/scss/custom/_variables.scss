@@ -839,8 +839,8 @@ $modal-title-line-height:           1.1;
 
 $modal-content-bg:               $white !default;
 $modal-content-border-color:     rgba($black, .2);
-$modal-content-border-width:     1px !default;
-$modal-content-border-radius:   $border-radius-lg !default;
+$modal-content-border-width:     0px !default;
+$modal-content-border-radius:   $border-radius-xl !default;
 $modal-content-box-shadow-xs:    0 15px 35px rgba(50,50,93,.2), 0 5px 15px rgba(0,0,0,.17);
 $modal-content-box-shadow-sm-up: 0 15px 35px rgba(50,50,93,.2), 0 5px 15px rgba(0,0,0,.17);
 

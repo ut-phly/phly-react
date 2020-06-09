@@ -1,5 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
+import { Promise } from 'meteor/promise';
+
 import SimpleSchema from 'simpl-schema';
 
 export const Organizations = new Mongo.Collection('organizations');
@@ -67,7 +69,10 @@ Meteor.methods({
     },
 
     'organizations.join'(code, user) {
+      let org = Organizations.findOne({ share: code });
+      if (org) {
         Organizations.update({ share: code }, { $push: { users: user }});
+      } else throw new Meteor.Error('join-error', "Join code is invalid");
     },
 
     'organizations.addCampaign'(id, campaign) {

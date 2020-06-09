@@ -4,8 +4,8 @@ import { HTTP } from 'meteor/http';
 import { Mongo } from 'meteor/mongo';
 
 import { withHistory, Link, Redirect } from 'react-router-dom';
-import DayPickerInput from 'react-day-picker/DayPickerInput';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import ReactDatetime from 'react-datetime';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -23,7 +23,8 @@ import {
   CardHeader,
   Button,
   Table,
-  Modal
+  Modal,
+  Input
 } from 'reactstrap';
 
 import {
@@ -31,7 +32,8 @@ import {
   faDonate,
   faGlassCheers,
   faHeart,
-  faCopy
+  faCopy,
+  faEdit
 } from '@fortawesome/free-solid-svg-icons';
 
 var QRCode = require('qrcode.react');
@@ -60,13 +62,9 @@ export default class CampaignPage extends Component {
       return (<QRCode value={url} renderAs='canvas'/>);
     }
 
-    handleSubmit = (event) => {
-        event.preventDefault();
-        const date = new Date();
+    handleSave = () => {
         var campaign = {
             name: this.state.name,
-            owner: Meteor.userId(),
-            username: Meteor.user().username,
             startDate: this.state.startDate,
             endDate: this.state.endDate,
             description: this.state.description,
@@ -87,11 +85,20 @@ export default class CampaignPage extends Component {
         this.setState({ public: true });
     }
 
-/*
+
     handleEdit = () => {
-        this.setState({ editing: true });
+      var obj = Campaigns.findOne({ _id: this.props.match.params.id });
+      this.setState({
+        editing: true,
+        name: obj.name,
+        startDate: obj.startDate,
+        endDate: obj.endDate,
+        description: obj.description,
+        nonprofit: obj.nonprofit,
+        goalAmount: obj.goalAmount
+      });
     }
-*/
+
 
     handleChange = (key) => {
         return function(e){
@@ -102,11 +109,11 @@ export default class CampaignPage extends Component {
     }
 
     handleStartDayChange = (day) => {
-        this.setState({startDate: day});
+        this.setState({startDate: day.toDate()});
     }
 
     handleEndDayChange = (day) => {
-        this.setState({endDate: day});
+        this.setState({endDate: day.toDate()});
     }
 
     getDonations = (donations) => {
@@ -150,13 +157,6 @@ export default class CampaignPage extends Component {
             var endString = campEndDate.toLocaleDateString();
             var nonprofit = obj.nonprofit;
             var goalAmount = obj.goalAmount;
-        }
-
-        if (this.state.editing === true) {
-            return (
-                <div>
-                </div>
-            )
         }
 
         let percent = Math.round(totalRaised * 100 / goalAmount);
@@ -290,10 +290,30 @@ export default class CampaignPage extends Component {
                               <h6 className="text-uppercase text-light ls-1 mb-1">
                                 Overview
                               </h6>
-                              <h2 className="mb-0 font-weight-bold">{campName}</h2>
+                              { this.state.editing ?
+                                <Input
+                                  className="form-control-alternative"
+                                  id="input-name"
+                                  defaultValue={campName}
+                                  type="text"
+                                  onChange={this.handleChange("name")}
+                                />
+                                :
+                                <h2 className="mb-0 font-weight-bold">{campName}</h2>
+                              }
                             </div>
                           </Col>
                           <Col className="text-right" xs="4">
+                            <Button
+                              className="btn-icon btn-2"
+                              color="primary"
+                              type="button"
+                              onClick={() => this.handleEdit()}
+                            >
+                              <span className="btn-inner--icon">
+                                <FontAwesomeIcon icon={faEdit}/>
+                              </span>
+                            </Button>
                             <Button
                               color="primary"
                               onClick={() => this.toggleModal()}
@@ -307,9 +327,9 @@ export default class CampaignPage extends Component {
                               toggle={() => this.toggleModal()}
                             >
                               <div className="modal-header">
-                                <h5 className="modal-title" id="shareModalLabel">
+                                <h4 className="modal-title" id="shareModalLabel">
                                   Share your campaign
-                                </h5>
+                                </h4>
                                 <button
                                   aria-label="Close"
                                   className="close"
@@ -363,7 +383,18 @@ export default class CampaignPage extends Component {
                               <h6 className="text-uppercase text-light ls-1 mb-1">
                                 Description
                               </h6>
-                              <p>{campDes}</p>
+                              { this.state.editing ?
+                                <Input
+                                  className="form-control-alternative"
+                                  id="input-description"
+                                  defaultValue={campDes}
+                                  rows="5"
+                                  type="textarea"
+                                  onChange={this.handleChange("description")}
+                                />
+                                :
+                                <p>{campDes}</p>
+                              }
                             </div>
                           </Col>
                         </Row>
@@ -373,7 +404,17 @@ export default class CampaignPage extends Component {
                               <h6 className="text-uppercase text-light ls-1 mb-1">
                                 Nonprofit
                               </h6>
-                              <h4>{nonprofit}</h4>
+                              { this.state.editing ?
+                                <Input
+                                  className="form-control-alternative"
+                                  id="input-np"
+                                  defaultValue={nonprofit}
+                                  type="text"
+                                  onChange={this.handleChange("nonprofit")}
+                                />
+                                :
+                                <h4>{nonprofit}</h4>
+                              }
                             </div>
                           </Col>
                         </Row>
@@ -383,7 +424,16 @@ export default class CampaignPage extends Component {
                               <h6 className="text-uppercase text-light ls-1 mb-1">
                                 Start Date
                               </h6>
-                              <h4>{startString}</h4>
+                              { this.state.editing ?
+                                <ReactDatetime
+                                  defaultValue={campStartDate}
+                                  timeFormat={false}
+                                  id="input-start"
+                                  onChange={this.handleStartDayChange}
+                                />
+                                :
+                                <h4>{startString}</h4>
+                              }
                             </div>
                           </Col>
                           <Col xs="6">
@@ -391,10 +441,31 @@ export default class CampaignPage extends Component {
                               <h6 className="text-uppercase text-light ls-1 mb-1">
                                 End Date
                               </h6>
-                              <h4>{endString}</h4>
+                              { this.state.editing ?
+                                <ReactDatetime
+                                  defaultValue={campEndDate}
+                                  timeFormat={false}
+                                  id="input-start"
+                                  onChange={this.handleEndDayChange}
+                                />
+                                :
+                                <h4>{endString}</h4>
+                              }
                             </div>
                           </Col>
                         </Row>
+                        { this.state.editing ?
+                          <Row className="mt-4">
+                            <Col className="text-right" xs="12">
+                              <Button
+                                color="primary"
+                                onClick={() => this.handleSave()}
+                              >
+                                Save
+                              </Button>
+                            </Col>
+                          </Row> : ""
+                        }
                       </CardBody>
                     </Card>
                   </Col>
@@ -407,7 +478,17 @@ export default class CampaignPage extends Component {
                               <h6 className="text-uppercase text-light ls-1 mb-1">
                                 Goal
                               </h6>
-                              <h2 className="mb-0 font-weight-bold">${goalAmount}</h2>
+                              { this.state.editing ?
+                                <Input
+                                  className="form-control-alternative"
+                                  id="input-goal"
+                                  defaultValue={goalAmount}
+                                  type="number"
+                                  onChange={this.handleChange("goalAmount")}
+                                />
+                                :
+                                <h2 className="mb-0 font-weight-bold">${goalAmount}</h2>
+                              }
                             </div>
                           </Col>
                         </Row>
