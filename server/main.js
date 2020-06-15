@@ -2,6 +2,9 @@ import { Meteor } from 'meteor/meteor';
 import { Promise } from 'meteor/promise';
 import { Email } from 'meteor/email';
 
+import { onPageLoad } from 'meteor/server-render';
+import { Campaigns } from '../imports/api/campaigns';
+
 import '../imports/api/campaigns.js';
 import '../imports/api/organizations.js';
 import '../imports/api/potentials.js';
@@ -11,27 +14,68 @@ import './publish.js';
 // Define gateway variable
 var gateway;
 
+const siteName = 'Phly';
+const defaultImage = '/images/phly-color.png';
+const defaultMetaTags = `
+<meta property="og:title"       content="${siteName}" />
+<meta property="og:description" content="Collect and track all payments for your club or community in one place." />
+<meta property="og:image"       content="${defaultImage}" />
+`;
+
+function extractCampaignId(pathname) {
+  const tripIdRegExp = new RegExp('/public/([23456789ABCDEFGHJKLMNPQRSTWXYZabcdefghijkmnopqrstuvwxyz0123456789]{17})');
+  const match = pathname.match(tripIdRegExp);
+  if (!match || match.length > 2) {
+    return null;
+  }
+  return match[1];
+}
+
+function createMetaTag(property, content) {
+  return `<meta property="${property}" content="${content}">`;
+}
+
+onPageLoad((sink) => {
+  const { pathname } = sink.request.url;
+  const meteorHost = Meteor.absoluteUrl();
+  const campaignId = extractCampaignId(pathname);
+  const campaign = campaignId ? Campaigns.findOne({ _id: campaignId }) : null;
+
+  if (campaign) {
+    const title = campaign.name;
+    const description = campaign.description;
+    const fullUrl = meteorHost + pathname.replace(/^\/+/g, '');
+    sink.appendToHead(createMetaTag('og:title', title));
+    sink.appendToHead(createMetaTag('og:description', description));
+    sink.appendToHead(createMetaTag('og:url', fullUrl));
+    sink.appendToHead(createMetaTag('og:image', defaultImage));
+    sink.appendToHead(createMetaTag('og:site_name', siteName));
+  } else {
+    sink.appendToHead(defaultMetaTags);
+    sink.appendToHead(createMetaTag('og:url', meteorHost));
+  }
+});
+
 Meteor.startup(() => {
-    var env;
-    var braintree = require('braintree');
-    //process.env.MAIL_URL = "smtp://hello@phly.co:phi1@nthropy@smtp.porkbun.com:587";
+  var env;
+  var braintree = require('braintree');
   // Pick Braintree environment based on environment defined in Meteor settings.
 
-    if (Meteor.isProduction) {
-        gateway = braintree.connect({
-            environment:  braintree.Environment.Production,
-            merchantId:   'kbgtdmr6tz3y36hr',
-            publicKey:    '3cdj78frnf6mk7qw',
-            privateKey:   '93641e2bea82f47e45d1b66fcda8c33d'
-        });
-    } else {
-        gateway = braintree.connect({
-            environment:  braintree.Environment.Sandbox,
-            merchantId:   '3wy8txzn8txdcppk',
-            publicKey:    'mqvthtfyjbs2chw6',
-            privateKey:   '1ff396c3113380a124ef3861106eebc8'
-        });
-    }
+  if (Meteor.isProduction) {
+      gateway = braintree.connect({
+          environment:  braintree.Environment.Production,
+          merchantId:   'kbgtdmr6tz3y36hr',
+          publicKey:    '3cdj78frnf6mk7qw',
+          privateKey:   '93641e2bea82f47e45d1b66fcda8c33d'
+      });
+  } else {
+      gateway = braintree.connect({
+          environment:  braintree.Environment.Sandbox,
+          merchantId:   '3wy8txzn8txdcppk',
+          publicKey:    'mqvthtfyjbs2chw6',
+          privateKey:   '1ff396c3113380a124ef3861106eebc8'
+      });
+  }
 });
 
 Meteor.methods({

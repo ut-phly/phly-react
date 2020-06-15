@@ -6,7 +6,6 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { Donations } from '../../api/donations.js';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import MetaTags from 'react-meta-tags';
 import ShowMore from 'react-show-more';
 
 import { HTTP } from 'meteor/http';
@@ -43,7 +42,7 @@ class PublicCampaignPage extends Component {
     constructor(props) {
         super(props);
         var ua = window.navigator.userAgent;
-        var markup = (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) || (ua.indexOf("Instagram") > -1);
+        var markup = (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) || (ua.indexOf("Instagram") > -1) || (ua.indexOf("LinkedIn") > -1) || (ua.indexOf("Twitter") > -1);
 
         this.state = {
             done: false,
@@ -163,12 +162,6 @@ class PublicCampaignPage extends Component {
 
       return (
         <div>
-          <MetaTags>
-            <title>{name}</title>
-            <meta property="og:description" content={description}/>
-            <meta property="og:title" content={name}/>
-            <meta property="og:site_name" content="Phly"/>
-          </MetaTags>
           <Navigation transparent mobile/>
           <section className="section bg-gradient-primary section-shaped section-lg section-bg">
             <Container fluid>
@@ -272,7 +265,7 @@ class PublicCampaignPage extends Component {
                             <div id="payment-container"></div>
                           </FormGroup>
                         }
-                        { fee ? <p><i>Standard processing fee of 2.9% plus 30 cents is added to each donation.</i></p> : '' }
+                        { fee ? <p><i>Standard processing fee of 2.9% plus 30 cents is added to each payment.</i></p> : '' }
                         <Button type="submit" size="lg" color="primary">Submit</Button>
                       </Form>
                       :

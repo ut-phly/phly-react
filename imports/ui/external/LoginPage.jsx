@@ -73,7 +73,7 @@ export default class LoginPage extends Component {
                         <CardBody className="px-lg-5 py-lg-5">
                           <p className="display-3 text-center">Login</p>
                           <div className="text-center mb-3">
-                            <small>Don't have an account? Sign up <Link to="/register">here</Link>.</small>
+                            <small>Don't have an account? Sign up <Link to="/getstarted">here</Link>.</small>
                           </div>
                           <div className="text-center mb-3">
                             {

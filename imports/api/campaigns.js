@@ -37,6 +37,7 @@ Campaigns.schema = new SimpleSchema({
     nonprofit: {type: String},
     goalAmount: {type: Number},
     braintree: {type: Boolean},
+    active: {type: Boolean}
 });
 
 //this will automatically check against the scehma when created
@@ -57,6 +58,7 @@ Meteor.methods({
               nonprofit: campaign.nonprofit,
               goalAmount: campaign.goalAmount,
               braintree: true,
+              active: false
           }
         )
     },
