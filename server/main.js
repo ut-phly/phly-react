@@ -17,6 +17,11 @@ var gateway;
 const siteName = 'Phly';
 const defaultImage = '/images/phly-color.png';
 const defaultMetaTags = `
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@getphly" />
+<meta property="twitter:title"       content="${siteName}" />
+<meta property="twitter:description" content="Collect and track all payments for your club or community in one place." />
+<meta property="twitter:image"       content="${defaultImage}" />
 <meta property="og:title"       content="${siteName}" />
 <meta property="og:description" content="Collect and track all payments for your club or community in one place." />
 <meta property="og:image"       content="${defaultImage}" />
@@ -45,6 +50,11 @@ onPageLoad((sink) => {
     const title = campaign.name;
     const description = campaign.description;
     const fullUrl = meteorHost + pathname.replace(/^\/+/g, '');
+    sink.appendToHead(createMetaTag('twitter:card', 'summary'));
+    sink.appendToHead(createMetaTag('twitter:site', '@getphly'));
+    sink.appendToHead(createMetaTag('twitter:title', title));
+    sink.appendToHead(createMetaTag('twitter:description', description));
+    sink.appendToHead(createMetaTag('twitter:image', defaultImage));
     sink.appendToHead(createMetaTag('og:title', title));
     sink.appendToHead(createMetaTag('og:description', description));
     sink.appendToHead(createMetaTag('og:url', fullUrl));
