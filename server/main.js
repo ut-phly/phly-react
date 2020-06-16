@@ -15,7 +15,7 @@ import './publish.js';
 var gateway;
 
 const siteName = 'Phly';
-const defaultImage = '/images/phly-color.png';
+const defaultImage = 'https://www.phly.co/images/meta-image.png';
 const defaultMetaTags = `
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@getphly" />
