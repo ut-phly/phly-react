@@ -15,12 +15,20 @@ import AddOrg from '../AddOrg.jsx'
 import Campaigns from '../Campaigns.jsx';
 import MyOrganizations from '../../pages/Organizations.jsx';
 
+import {
+  Modal,
+  Pagination,
+  PaginationItem,
+  PaginationLink
+} from 'reactstrap';
+
 
 export default class MainPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
             logout: false,
+            intro: false
         };
     }
 
@@ -39,6 +47,10 @@ export default class MainPage extends Component {
     handleChangeOrg = (key) => {
       console.log(key);
       Meteor.call('organizations.save', key, this.props.currentUser._id);
+    }
+
+    toggle = () => {
+      this.setState({ intro: !this.state.intro });
     }
 
     render() {
@@ -71,6 +83,66 @@ export default class MainPage extends Component {
                   imgAlt: "..."
                 }}
               />
+
+              <Modal
+                className="modal-dialog-centered"
+                isOpen={this.state.intro}
+                toggle={() => this.toggle()}
+                size="lg"
+              >
+                <div className="modal-header">
+                  <h2 className="modal-title ml-3 mt-3" id="modal-title-notification">
+                    Phly Basics
+                  </h2>
+                  <button
+                    aria-label="Close"
+                    className="close"
+                    data-dismiss="modal"
+                    type="button"
+                    onClick={() => this.toggle()}
+                  >
+                    <span aria-hidden={true}>×</span>
+                  </button>
+                </div>
+                <div className="modal-body">
+                  <div className="pb-3 text-center">
+                    <p className="lead">Dashboard Analytics</p>
+                    <img
+                      alt="..."
+                      className="img-fluid"
+                      src="/images/custom/analytics.gif"
+                    />
+                  <Pagination
+                    className="pagination justify-content-center mt-3"
+                    listClassName="justify-content-center"
+                  >
+                      <PaginationItem className="active">
+                        <PaginationLink
+                          href="#pablo"
+                          onClick={e => e.preventDefault()}
+                        >
+                          1
+                        </PaginationLink>
+                      </PaginationItem>
+                      <PaginationItem>
+                        <PaginationLink href="#pablo" onClick={e => e.preventDefault()}>
+                          2
+                        </PaginationLink>
+                      </PaginationItem>
+                      <PaginationItem>
+                        <PaginationLink href="#pablo" onClick={e => e.preventDefault()}>
+                          3
+                        </PaginationLink>
+                      </PaginationItem>
+                      <PaginationItem>
+                        <PaginationLink href="#pablo" onClick={e => e.preventDefault()}>
+                          4
+                        </PaginationLink>
+                      </PaginationItem>
+                    </Pagination>
+                  </div>
+                </div>
+              </Modal>
 
               <div className="main-content" ref="mainContent">
                 <AdminNavbar
