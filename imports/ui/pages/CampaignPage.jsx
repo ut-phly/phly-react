@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { HTTP } from 'meteor/http';
 import { Mongo } from 'meteor/mongo';
+import classnames from 'classnames';
 
 import { withHistory, Link, Redirect } from 'react-router-dom';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -24,7 +25,12 @@ import {
   Button,
   Table,
   Modal,
-  Input
+  Form,
+  FormGroup,
+  Input,
+  InputGroup,
+  CustomInput,
+  Alert,
 } from 'reactstrap';
 
 import {
@@ -40,6 +46,8 @@ var QRCode = require('qrcode.react');
 //var ShortUrl = require('node-url-shortener');
 //import GoogleUrlShortner from 'react-google-url-shortner';
 
+STATES = ['Alabama','Alaska','American Samoa','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','District of Columbia','Federated States of Micronesia','Florida','Georgia','Guam','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Marshall Islands','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Northern Mariana Islands','Ohio','Oklahoma','Oregon','Palau','Pennsylvania','Puerto Rico','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virgin Island','Virginia','Washington','West Virginia','Wisconsin','Wyoming']
+
 export default class CampaignPage extends Component {
     constructor(props) {
         super(props);
@@ -52,7 +60,19 @@ export default class CampaignPage extends Component {
             startDate: new Date(),
             endDate: new Date(),
             goalAmount: 0,
-            share: false
+            share: false,
+            endCampaign: false,
+            showAlert: false,
+            payTo: '',
+            payWith: '',
+            handle: '',
+            handle2: '',
+            address: '',
+            address2: '',
+            city: '',
+            state: '',
+            zipcode: '',
+            donationLink: '',
         }
 
     }
@@ -71,6 +91,7 @@ export default class CampaignPage extends Component {
             nonprofit: this.state.nonprofit,
             goalAmount: this.state.goalAmount
         }
+        console.log(campaign);
         Meteor.call('campaigns.edit', campaign, this.props.match.params.id);
         this.setState({ editing: false });
     }
@@ -127,8 +148,370 @@ export default class CampaignPage extends Component {
       })
     }
 
-    toggleModal = () => {
-      this.setState({ share: !this.state.share });
+    showStateSelector = () => {
+
+      return STATES.map((state) => {
+        return (<option>{state}</option>)
+      });
+
+    }
+
+    toggleModal = (modalType) => {
+      if(modalType == ("share")){
+        this.setState({ share: !this.state.share });
+      } else if (modalType == ("endCampaign")) {
+        this.setState({
+          endCampaign: !this.state.endCampaign,
+          payTo: '',
+          payWith: '',
+          handle: '',
+          address: '',
+          address2: '',
+          city: '',
+          state: '',
+          zipcode: '',
+          donationLink: '',
+          additionalInfo: '',
+        });
+      }
+    }
+
+    handlePayOutFields = (field) => {
+      switch(field.formName){
+        case "payTo":
+          // if (field.label === "my organization"){
+          //   this.setState({payTo: "org"});
+          // }
+          // else if(field.label === "another organization or charity"){
+          //   this.setState({payTo: "outsideOrg"});
+          // }
+          // else if(field.label === "two or more organizations/charities"){
+          //   this.setState({payTo: "multOrgs"});
+          // }
+          if (field.id === 0){
+            this.setState({payTo: "org"});
+          }
+          else if(field.id === 1){
+            this.setState({payTo: "outsideOrg"});
+          }
+          else if(field.id === 2){
+            this.setState({payTo: "multOrgs"});
+          }
+
+        case "payWith":
+          this.setState({payWith: field.label});
+      }
+    }
+
+    // field = [formName, id, label]
+    createAltForm = (field) => {
+      var idString = "customeRadio" + field.id
+
+      return(
+        <div className="custom-control custom-radio mb-3">
+          <input
+            className="custom-control-input"
+            id={idString}
+            name={field.formName}
+            type="radio"
+            onClick = {() => this.handlePayOutFields(field)}
+          />
+          <label className="custom-control-label" htmlFor={idString}>
+            {field.label}
+          </label>
+        </div>
+      );
+    }
+
+    showPaymentOptions = () => {
+      var reciever = this.state.payTo;
+      if(reciever === '') { return(null); }
+      else{
+        return(
+          <FormGroup>
+            <label
+             className="form-control-label"
+            >
+              How would your organization like to receive the campaign funds?
+            </label>
+            {this.createAltForm({formName: "payWith", id: 3, label: "paypal"})}
+            {this.createAltForm({formName: "payWith", id: 4, label: "cashapp"})}
+            {this.createAltForm({formName: "payWith", id: 5, label: "venmo"})}
+            {this.createAltForm({formName: "payWith", id: 6, label: "check"})}
+          </FormGroup>
+        );
+      }
+    }
+
+    handleChange = (key) => {
+      return function(e) {
+        var state = {};
+        state[key] = e.target.value;
+        this.setState(state);
+      }.bind(this);
+    }
+
+    handleEndCampaignSubmit = (event) => {
+      event.preventDefault();
+      var paymentMethod = this.state.payWith;
+      if (( paymentMethod === "paypal" || paymentMethod === "cashapp" || paymentMethod === "venmo")
+          && ( this.state.handle !== this.state.handle2 )){
+            this.setState({showAlert: ! this.state.showAlert});
+      } else {
+        var campaign = {
+          payTo: this.state.payTo,
+          payWith: this.state.payWith,
+          handle: this.state.handle,
+          address: this.state.address,
+          address2: this.state.address2,
+          city: this.state.city,
+          state: this.state.state,
+          zipcode: this.state.zipcode,
+          donationLink: this.state.donationLink,
+          additionalInfo: this.state.additionalInfo,
+        }
+        console.log(campaign);
+        Meteor.call('campaigns.updatePayment', campaign, this.props.match.params.id);
+      }
+    }
+
+    showPaymentInfoFields = () => {
+      var paymentMethod = this.state.payWith;
+      var handleString1 = paymentMethod === "paypal" ?
+        "Enter the email linked to your organization's PayPal."
+        : "Enter your " + paymentMethod + " handle.";
+      var handleString2 = paymentMethod === "paypal" ?
+        "Re-enter the email linked to your organization's PayPal."
+        : "Re-enter your " + paymentMethod + " handle.";
+      var filler = paymentMethod === "paypal" ? "paypal@email.com" : "handle";
+      if( this.state.payTo === "outsideOrg" ) {
+        return(
+          <div>
+            <FormGroup>
+              <label
+                className="form-control-label"
+                htmlFor="donationLink"
+              >
+                Link to charity/organization website
+              </label>
+              <Input
+                className="form-control-alternative"
+                id="donationLink"
+                placeholder="Paste the link to the org/charitity's website here..."
+                type="text"
+                onChange={this.handleChange("donationLink")}
+              />
+            </FormGroup>
+            <FormGroup>
+              <label
+                className="form-control-label"
+                htmlFor="additionalInfo"
+              >
+                Additional Information
+              </label>
+              <Input
+                className="form-control-alternative"
+                id="additionalInfo"
+                placeholder="Include any additional information for sending the proceeds"
+                type="text"
+                onChange={this.handleChange("additionalInfo")}
+              />
+            </FormGroup>
+          </div>
+        )
+      }
+      else if ( this.state.payTo === "multOrgs"){
+        return(
+          <FormGroup>
+            <label
+              className="form-control-label"
+              htmlFor="addInfo"
+            >
+              We would love to help you send the funds to muliple organizations/charities.
+              Please describe your situation below and our team will contact you in 3-5 business days.
+            </label>
+            <Input
+              className="form-control-alternative"
+              id="addInfo"
+              placeholder="Name the organizations and the amounts..."
+              type="textarea"
+              onChange={this.handleChange("additionalInfo")}
+            />
+          </FormGroup>
+        );
+      }
+      else if ( paymentMethod === "paypal" || paymentMethod === "cashapp" || paymentMethod === "venmo") {
+        return(
+          <div>
+            <FormGroup>
+              <label
+                className="form-control-label"
+                htmlFor="handle"
+              >
+                {handleString1}
+              </label>
+              <Input
+                className="form-control-alternative"
+                id="handle"
+                placeholder={filler}
+                type="text"
+                onChange={this.handleChange("handle")}
+              />
+            </FormGroup>
+            <FormGroup>
+              <label
+                className="form-control-label"
+                htmlFor="re-enter-handle"
+              >
+                {handleString2}
+              </label>
+              <Input
+                className="form-control-alternative"
+                id="re-enter-handle"
+                placeholder={filler}
+                type="text"
+                onChange={this.handleChange("handle2")}
+              />
+            </FormGroup>
+          </div>
+        );
+      }
+      else if ( paymentMethod === "check" ) {
+        return (
+          <div>
+            <FormGroup>
+              <label
+                className="form-control-label"
+                htmlFor="primary-address"
+              >
+                Address
+              </label>
+              <Input
+                className="form-control-alternative"
+                id="primary-address"
+                placeholder="1234 Main Street"
+                type="text"
+                onChange={this.handleChange("address")}
+              />
+            </FormGroup>
+            <FormGroup>
+              <label
+                className="form-control-label"
+                htmlFor="secondary-address"
+              >
+                Address 2
+              </label>
+              <Input
+                className="form-control-alternative"
+                id="secondary-address"
+                placeholder="Apartment, studio, or floor"
+                type="text"
+                onChange={this.handleChange("address2")}
+              />
+            </FormGroup>
+            <Row>
+              <Col md="4">
+                <FormGroup>
+                  <label
+                    className="form-control-label"
+                    htmlFor="City"
+                  >
+                    City
+                  </label>
+                  <Input
+                    className="form-control-alternative"
+                    id="City"
+                    placeholder="City"
+                    type="text"
+                    onChange={this.handleChange("city")}
+                  />
+                </FormGroup>
+              </Col>
+              <Col md="4">
+                <FormGroup>
+                  <label
+                    className="form-control-label"
+                    htmlFor="state"
+                  >
+                    State
+                  </label>
+                  <Input
+                    className="form-control-alternative"
+                    id="state"
+                    type="select"
+                    onChange={this.handleChange("state")}
+                  >
+                    {this.showStateSelector()}
+                  </Input>
+                </FormGroup>
+              </Col>
+              <Col md="4">
+                <FormGroup>
+                  <label
+                    className="form-control-label"
+                    htmlFor="Zip-Code"
+                  >
+                    Zip Code
+                  </label>
+                  <Input
+                    className="form-control-alternative"
+                    id="Zip-Code"
+                    placeholder="Zip Code"
+                    type="text"
+                    onChange={this.handleChange("zipcode")}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+          </div>
+        );
+      }
+    }
+
+    endCampaignForm = () => {
+      return(
+        <div>
+          <div className="modal-header">
+            <h5 className="modal-title" id="exampleModalLabel">
+              END CAMPAIGN FORM
+            </h5>
+            <button
+              aria-label="Close"
+              className="close"
+              data-dismiss="modal"
+              type="button"
+              onClick={() => this.toggleModal("endCampaign")}
+            >
+              <span aria-hidden={true}>×</span>
+            </button>
+          </div>
+          <div className="modal-body">
+            <FormGroup>
+              <label
+               className="form-control-label"
+              >
+                Where do you want the proceeds of this campaign to go?
+              </label>
+              {this.createAltForm({formName: "payTo", id: 0, label: "my organization"})}
+              {this.createAltForm({formName: "payTo", id: 1, label: "another organization or charity"})}
+              {this.createAltForm({formName: "payTo", id: 2, label: "two or more organizations/charities"})}
+            </FormGroup>
+            {this.state.payTo === "org" ? this.showPaymentOptions() : null}
+            {this.showPaymentInfoFields()}
+            {this.state.showAlert ?
+              <Alert color="warning">
+                <strong>Warning!</strong> Please check if your handle is correct
+              </Alert>
+              : null
+            }
+          </div>
+          <div className="modal-footer">
+            <Button color="primary" type="button" onClick={(event) => this.handleEndCampaignSubmit(event)}>
+              Submit
+            </Button>
+          </div>
+        </div>
+      );
     }
 
     render() {
@@ -285,7 +668,7 @@ export default class CampaignPage extends Component {
                     <Card className="shadow">
                       <CardHeader className="border-0">
                         <Row className="align-items-center">
-                          <Col xs="8">
+                          <Col xs="4">
                             <div className="col">
                               <h6 className="text-uppercase text-light ls-1 mb-1">
                                 Overview
@@ -303,7 +686,20 @@ export default class CampaignPage extends Component {
                               }
                             </div>
                           </Col>
-                          <Col className="text-right" xs="4">
+                          <Col className="text-right" xs="8">
+                            <Button
+                              color="primary"
+                              onClick={() => this.toggleModal("endCampaign")}
+                            >
+                              End Campaign
+                            </Button>
+                            <Modal
+                              className="modal-dialog-centered"
+                              isOpen={this.state.endCampaign}
+                              toggle={() => this.toggleModal("endCampaign")}
+                            >
+                              {this.endCampaignForm()}
+                            </Modal>
                             <Button
                               className="btn-icon btn-2"
                               color="primary"
@@ -316,15 +712,14 @@ export default class CampaignPage extends Component {
                             </Button>
                             <Button
                               color="primary"
-                              onClick={() => this.toggleModal()}
+                              onClick={() => this.toggleModal("share")}
                             >
                               Share
                             </Button>
-
                             <Modal
                               className="modal-dialog-centered"
                               isOpen={this.state.share}
-                              toggle={() => this.toggleModal()}
+                              toggle={() => this.toggleModal("share")}
                             >
                               <div className="modal-header">
                                 <h4 className="modal-title" id="shareModalLabel">
@@ -335,7 +730,7 @@ export default class CampaignPage extends Component {
                                   className="close"
                                   data-dismiss="modal"
                                   type="button"
-                                  onClick={() => this.toggleModal()}
+                                  onClick={() => this.toggleModal("share")}
                                 >
                                   <span aria-hidden={true}>×</span>
                                 </button>
@@ -590,7 +985,6 @@ export default class CampaignPage extends Component {
                                 <Grid.Row className="ml-3">
                                   <p>Total: ${totalRaised}</p>
                                 </Grid.Row>
-
                             </Grid.Column>
                             <Grid.Column>
                                 <Grid.Row className="mt-5 ml-3">
