@@ -58,7 +58,7 @@ Meteor.methods({
               nonprofit: campaign.nonprofit,
               goalAmount: campaign.goalAmount,
               braintree: true,
-              active: false
+              active: true
           }
         )
     },
