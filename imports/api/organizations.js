@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
 import { Promise } from 'meteor/promise';
+import { Email } from 'meteor/email';
 
 import SimpleSchema from 'simpl-schema';
 
@@ -73,6 +74,38 @@ Meteor.methods({
       if (org) {
         Organizations.update({ share: code }, { $push: { users: user }});
       } else throw new Meteor.Error('join-error', "Join code is invalid");
+    },
+
+    'organizations.invite'(org, email) {
+      let user = Meteor.user();
+      let username = "Phly";
+      if (user) {
+        if (user.profile) username = user.profile.first + " " + user.profile.last;
+        else username = user.username;
+      }
+
+      let text = `Howdy,
+
+
+Phly.co helps clubs and communities safely collect and manage payments with ease. To join the ${org.name} online dashboard:
+  1. Create your own personal Phly account at www.phly.co/register
+  2. Select “Join”
+  3. Enter your custom join code: ${org.share}
+  4. All done! Welcome to Phly!
+
+
+Need help? Contact our customer support team by emailing us at support@phly.co or give us a call at 512-522-2764`;
+
+      let subject = `${username} has invited you to join ${org.name} on Phly.co`;
+      let to = email;
+      let from = "hello@phly.co";
+
+      Email.send({
+        to: to,
+        from: from,
+        subject: subject,
+        text: text
+      });
     },
 
     'organizations.addCampaign'(id, campaign) {

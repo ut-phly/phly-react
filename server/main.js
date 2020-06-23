@@ -17,8 +17,8 @@ var gateway;
 const siteName = 'Phly';
 const defaultImage = 'https://www.phly.co/images/meta-image.png';
 const defaultMetaTags = `
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:site" content="@getphly" />
+<meta property="twitter:card" content="summary" />
+<meta property="twitter:site" content="@getphly" />
 <meta property="twitter:title"       content="${siteName}" />
 <meta property="twitter:description" content="Collect and track all payments for your club or community in one place." />
 <meta property="twitter:image"       content="${defaultImage}" />
@@ -63,12 +63,14 @@ onPageLoad((sink) => {
   } else {
     sink.appendToHead(defaultMetaTags);
     sink.appendToHead(createMetaTag('og:url', meteorHost));
+    sink.appendToHead(createMetaTag('og:site_name', siteName));
   }
 });
 
 Meteor.startup(() => {
   var env;
   var braintree = require('braintree');
+  process.env.MAIL_URL = "smtp://hello@phly.co:phi1@nthropy@smtp.porkbun.com:587";
   // Pick Braintree environment based on environment defined in Meteor settings.
 
   if (Meteor.isProduction) {

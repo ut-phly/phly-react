@@ -23,6 +23,8 @@ import { NavLink as NavLinkRRD, Link } from "react-router-dom";
 import { PropTypes } from "prop-types";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import IntroModal from './IntroModal.jsx';
+
 // reactstrap components
 import {
   Button,
@@ -59,7 +61,8 @@ import {
   faEnvelope,
   faUser,
   faCheckCircle,
-  faInfoCircle
+  faInfoCircle,
+  faQuestionCircle
 } from '@fortawesome/free-solid-svg-icons';
 
 var ps;
@@ -75,9 +78,11 @@ class Sidebar extends React.Component {
     },
     submitted: false
   };
+  
   constructor(props) {
     super(props);
     this.activeRoute.bind(this);
+    this.openIntroModal = React.createRef()
   }
   // verifies if routeName is the one active (in browser input)
   activeRoute(routeName) {
@@ -114,6 +119,10 @@ class Sidebar extends React.Component {
     this.setState({ contact: true })
   }
 
+  handleIntro = () => {
+    this.openIntroModal.current.toggle();
+  }
+
   onChange = e => {
     this.setState({ form: { ...this.state.form, [e.target.id]: e.target.value }});
   }
@@ -143,6 +152,7 @@ class Sidebar extends React.Component {
       );
     });
   };
+
   render() {
     const { bgColor, routes, logo } = this.props;
     let navbarBrandProps;
@@ -230,8 +240,19 @@ class Sidebar extends React.Component {
                   <span className="btn-inner--text">Support</span>
                 </Button>
               </NavItem>
+              <NavItem className="active-pro active ml-4 my-2" float="right">
+                <Button color="primary" size="sm" className="btn-icon btn-2"
+                  onClick={this.handleIntro}
+                >
+                  <span className="btn-inner--icon">
+                    <FontAwesomeIcon icon={faQuestionCircle}/>
+                  </span>
+                  <span className="btn-inner--text">Walkthrough</span>
+                </Button>
+              </NavItem>
             </Nav>
           </Collapse>
+          <IntroModal ref={this.openIntroModal}/>
           <Modal
             className="modal-dialog-centered"
             isOpen={this.state.contact}

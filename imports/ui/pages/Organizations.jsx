@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Redirect, Link } from 'react-router-dom';
 import { Organizations } from '../../api/organizations.js';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import InviteModal from '../components/InviteModal.jsx';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -14,24 +14,39 @@ import {
   Table,
   Badge,
   Button,
-  UncontrolledTooltip
+  Modal,
+  Input,
+  InputGroup,
+  Form,
+  FormGroup
 } from 'reactstrap';
 
 import {
-  faCopy
+  faCopy,
+  faCheckCircle
 } from '@fortawesome/free-solid-svg-icons';
 
 export default class MyOrganizations extends Component {
-    state = {};
+
+    constructor(props) {
+      super(props);
+      this.inviteRefs = {};
+    }
 
     handleDelete = () => {
         Meteor.call('organizations.delete', this.props.org, this.props.currentUser._id);
     }
 
+    handleInviteModal = (id) => {
+      this.inviteRefs[id].toggleModal();
+    }
+
     getOrganizations = (organizations, user) => {
+
       return organizations.map((org) => {
         let admin = (user._id === org.owner) ? true : false;
         let members = 1 + org.users.length;
+
         return (
           <tr key={org._id}>
             <th>{org.name}</th>
@@ -50,32 +65,16 @@ export default class MyOrganizations extends Component {
             <td>{members}</td>
             <td>{ admin ? org.share : "Contact admin"}</td>
             <td className="text-right">
-              { admin ?
+              { admin && org.share ?
                 <div>
-                  <CopyToClipboard
-                    text={org.share}
-                    onCopy={() => this.setState({ copiedText: org.share })}
+                  <Button
+                    color="primary"
+                    type="button"
+                    onClick={() => this.handleInviteModal(org._id)}
                   >
-                    <Button
-                      className="btn-icon btn-2"
-                      color="primary"
-                      id={`tt${org._id}`}
-                      type="button"
-                    >
-                      <span className="btn-inner--icon">
-                        <FontAwesomeIcon icon={faCopy}/>
-                      </span>
-                    </Button>
-                  </CopyToClipboard>
-                  <UncontrolledTooltip
-                    delay={0}
-                    trigger="hover focus"
-                    target={`tt${org._id}`}
-                  >
-                    {this.state.copiedText === org.share
-                      ? "Copied"
-                      : "Copy To Clipboard"}
-                  </UncontrolledTooltip>
+                    Invite
+                  </Button>
+                  <InviteModal org={org} ref={(ref) => this.inviteRefs[org._id] = ref}/>
                 </div> :
                 ""
               }

@@ -8,6 +8,10 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import ReactDatetime from 'react-datetime';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  FacebookShareButton,
+  TwitterShareButton
+} from 'react-share';
 
 import { Campaigns } from '../../api/campaigns.js';
 import { Donations } from '../../api/donations.js';
@@ -368,6 +372,12 @@ export default class CampaignPage extends Component {
                                         </Button>
                                       </CopyToClipboard>
                                     </Col>
+                                  </Row>
+                                  <Row>
+                                    <FacebookShareButton url="https://www.phly.co">Facebook</FacebookShareButton>
+                                  </Row>
+                                  <Row>
+                                    <TwitterShareButton url="https://www.phly.co">Twitter</TwitterShareButton>
                                   </Row>
                                 </Container>
                               </div>

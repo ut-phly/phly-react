@@ -164,9 +164,10 @@ class PublicCampaignPage extends Component {
         <div>
           <Navigation transparent mobile/>
           <section className="section bg-gradient-primary section-shaped section-lg section-bg">
-            <Container fluid>
+            <Container className="py-lg-md d-flex">
+              <div className="col px-0">
               <Row className="justify-content-center row-grid">
-                <Col xs="12" md="10">
+                <Col xs="12">
                   <Modal
                     className="modal-dialog-centered modal-danger mt-0"
                     contentClassName="bg-gradient-danger"
@@ -282,6 +283,7 @@ class PublicCampaignPage extends Component {
                   </Card>
                 </Col>
               </Row>
+            </div>
             </Container>
           </section>
         {/*
