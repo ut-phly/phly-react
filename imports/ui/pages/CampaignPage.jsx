@@ -37,8 +37,13 @@ import {
   faGlassCheers,
   faHeart,
   faCopy,
-  faEdit
+  faEdit,
 } from '@fortawesome/free-solid-svg-icons';
+
+import {
+  faFacebook,
+  faTwitter
+} from '@fortawesome/free-brands-svg-icons';
 
 var QRCode = require('qrcode.react');
 //var ShortUrl = require('node-url-shortener');
@@ -346,18 +351,15 @@ export default class CampaignPage extends Component {
                               </div>
                               <div className="modal-body">
                                 <Container fluid>
-                                  <Row>
-                                    <Col className="text-center">
-                                      <p>Download QR code or link and share</p>
+                                  <Row className="mb-3">
+                                    <Col className="text-center" xs="6">
+                                      <p>Download QR code</p>
                                       <div>
                                         {this.getQRCode()}
                                       </div>
-                                      <a
-                                        className="mt-3 mr-3"
-                                        href={`https://www.phly.co/public/${this.props.match.params.id}`}
-                                      >
-                                        {`https://www.phly.co/public/${this.props.match.params.id}`}
-                                      </a>
+                                    </Col>
+                                    <Col xs="6" className="text-center">
+                                      <p>Or share the link</p>
                                       <CopyToClipboard
                                         text={`https://www.phly.co/public/${this.props.match.params.id}`}
                                       >
@@ -369,15 +371,34 @@ export default class CampaignPage extends Component {
                                           <span className="btn-inner--icon">
                                             <FontAwesomeIcon icon={faCopy}/>
                                           </span>
+                                          <span className="btn-inner--text">Copy</span>
                                         </Button>
                                       </CopyToClipboard>
+                                      <FacebookShareButton className="mt-3" url={`https://www.phly.co/public/${this.props.match.params.id}`}>
+                                        <Button
+                                          className="btn-icon btn-2"
+                                          color="primary"
+                                          type="button"
+                                        >
+                                          <span className="btn-inner--icon">
+                                            <FontAwesomeIcon icon={faFacebook}/>
+                                          </span>
+                                          <span className="btn-inner--text">Facebook</span>
+                                        </Button>
+                                      </FacebookShareButton>
+                                      <TwitterShareButton className="mt-3" url={`https://www.phly.co/public/${this.props.match.params.id}`}>
+                                        <Button
+                                          className="btn-icon btn-2"
+                                          color="primary"
+                                          type="button"
+                                        >
+                                          <span className="btn-inner--icon">
+                                            <FontAwesomeIcon icon={faTwitter}/>
+                                          </span>
+                                          <span className="btn-inner--text">Twitter</span>
+                                        </Button>
+                                      </TwitterShareButton>
                                     </Col>
-                                  </Row>
-                                  <Row>
-                                    <FacebookShareButton url="https://www.phly.co">Facebook</FacebookShareButton>
-                                  </Row>
-                                  <Row>
-                                    <TwitterShareButton url="https://www.phly.co">Twitter</TwitterShareButton>
                                   </Row>
                                 </Container>
                               </div>

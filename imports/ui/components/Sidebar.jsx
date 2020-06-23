@@ -78,7 +78,7 @@ class Sidebar extends React.Component {
     },
     submitted: false
   };
-  
+
   constructor(props) {
     super(props);
     this.activeRoute.bind(this);
@@ -154,7 +154,7 @@ class Sidebar extends React.Component {
   };
 
   render() {
-    const { bgColor, routes, logo } = this.props;
+    const { bgColor, routes, logo, user } = this.props;
     let navbarBrandProps;
     if (logo && logo.innerLink) {
       navbarBrandProps = {
