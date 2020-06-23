@@ -179,7 +179,7 @@ class Landing extends React.Component {
                         <Card className="shadow border-0 px-4">
                           <CardBody>
                             <Row className="mt-4 align-items-center">
-                              <Col className="text-center" xs="12">
+                              <Col className="text-center">
                                 <div className="icon-lg icon-shape icon-shape-secondary rounded-circle mb-3">
                                   <FontAwesomeIcon icon={faAddressCard}/>
                                 </div>

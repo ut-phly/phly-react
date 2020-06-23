@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Meteor } from 'meteor/meteor';
 import routes from './routes.js';
+import classnames from 'classnames';
 
 import Sidebar from '../../components/Sidebar.jsx';
 import AdminNavbar from '../../components/AdminNavbar.jsx';

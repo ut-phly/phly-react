@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import PieChart from 'react-minimal-pie-chart';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import IntroModal from '../components/IntroModal.jsx';
 
 import {
   Container,
@@ -27,6 +28,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 export default class Campaign extends Component {
+  constructor(props) {
+    super(props);
+    this.openIntroModal = React.createRef();
+  }
 
   getCampaigns = (donations) => {
     return this.props.campaigns.map((camp) => {
@@ -77,6 +82,10 @@ export default class Campaign extends Component {
         </Card>
       )
     })
+  }
+
+  handleIntro = () => {
+    this.openIntroModal.current.toggle();
   }
 
   render() {
@@ -235,25 +244,26 @@ export default class Campaign extends Component {
                 </Col>
               </Row>
               { (campaigns.length == 0) ?
-                <Card className="mt-3 shadow" tag={Link} to='/home/new'>
+                <Card className="mt-3 shadow">
                   <CardBody>
                     <Row className="py-2 px-3">
                       <Col md="10">
                         <CardTitle
                           className="h3 font-weight-bold mb-0"
                         >
-                          Make your first campaign!
+                          Learn about Phly
                         </CardTitle>
                       </Col>
                       <Col md="2" className="text-right">
                         <Button
                           color="primary"
-                          tag={Link} to="/home/new"
+                          onClick={this.handleIntro}
                         >
-                          + New
+                          Walkthrough
                         </Button>
                       </Col>
                     </Row>
+                    <IntroModal ref={this.openIntroModal}/>
                   </CardBody>
                 </Card>
                 : this.getCampaigns(donations)

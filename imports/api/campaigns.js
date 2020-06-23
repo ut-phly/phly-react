@@ -67,6 +67,7 @@ Meteor.methods({
               nonprofit: campaign.nonprofit,
               goalAmount: campaign.goalAmount,
               braintree: true,
+<<<<<<< HEAD
               payTo: "temp",
               payWith: "temp",
               handle: "temp",
@@ -77,6 +78,9 @@ Meteor.methods({
               zipcode: "temp",
               donationLink: "temp",
               complete: false
+=======
+              active: true
+>>>>>>> master
           }
         )
     },

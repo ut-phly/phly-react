@@ -3,4 +3,5 @@ client/lib/themes/
 package-lock.json
 package.json
 .secret/
+.deploy/
 .meteor/

@@ -29,6 +29,11 @@ class Marketplace extends Component {
 
     renderCampaigns = (campaigns, organizations, donations) => {
       campaigns.reverse();
+      campaigns = campaigns.filter((camp) => {
+        if (donations.some((don) => don.campaign == camp._id)) return true;
+        else return false;
+      });
+      
       return campaigns.map((camp, i) => {
         let org = organizations.find((org) => org._id == camp.owner) ? organizations.find((org) => org._id == camp.owner).name : "";
         let totalRaised = 0;

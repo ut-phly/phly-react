@@ -1,5 +1,5 @@
 accounts-base@1.6.0
-accounts-password@1.6.0
+accounts-password@1.6.1
 aldeed:collection2@3.0.6
 allow-deny@1.1.0
 autoupdate@1.6.0
@@ -74,6 +74,7 @@ retry@1.1.0
 routepolicy@1.1.0
 semantic:ui@2.3.1
 semantic:ui-data@2.3.1
+server-render@0.3.1
 service-configuration@1.0.11
 sha@1.0.9
 shell-server@0.5.0

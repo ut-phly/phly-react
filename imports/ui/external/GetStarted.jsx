@@ -57,6 +57,7 @@ export default class GetStarted extends Component {
     handleSubmit = (e) => {
       e.preventDefault();
 
+      if (!this.state.university) this.state.university = "none";
       let user = {
         first: this.state.first,
         last: this.state.last,
@@ -172,6 +173,7 @@ export default class GetStarted extends Component {
                                 <FontAwesomeIcon icon={faCheckCircle}/>
                               </div>
                               <p>Welcome to Phly! Check your email to login.</p>
+                              <small>If it doesn't show up immediately, check your spam folder.</small>
                             </div>
                           </CardBody>
                         }
