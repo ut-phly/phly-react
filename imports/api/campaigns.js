@@ -37,7 +37,16 @@ Campaigns.schema = new SimpleSchema({
     nonprofit: {type: String},
     goalAmount: {type: Number},
     braintree: {type: Boolean},
-    active: {type: Boolean}
+    payTo: {type: String},
+    payWith: {type: String},
+    handle: {type: String, optional: true},
+    address: {type: String, optional: true},
+    address2: {type: String, optional: true},
+    city: {type: String, optional: true},
+    state: {type: String, optional: true},
+    zipcode: {type: String, optional: true},
+    donationLink: {type: String, optional: true},
+    complete: {type: Boolean},
 });
 
 //this will automatically check against the scehma when created
@@ -58,7 +67,16 @@ Meteor.methods({
               nonprofit: campaign.nonprofit,
               goalAmount: campaign.goalAmount,
               braintree: true,
-              active: true
+              payTo: "temp",
+              payWith: "temp",
+              handle: "temp",
+              address: "temp",
+              address2: "temp",
+              city: "temp",
+              state: "temp",
+              zipcode: "temp",
+              donationLink: "temp",
+              complete: false
           }
         )
     },
@@ -84,6 +102,28 @@ Meteor.methods({
     'campaigns.delete'(id) {
         Campaigns.remove({ _id: id });
     },
+
+    'campaigns.updatePayment'(campaign, id){
+      Campaigns.update(
+        {_id: id},
+        {
+          $set:
+          {
+            payTo: campaign.payTo,
+            payWith: campaign.payWith,
+            payInfo: campaign.payInfo,
+            handle: campaign.handle,
+            address: campaign.address,
+            address2: campaign.address2,
+            city: campaign.city,
+            state: campaign.state,
+            zipcode: campaign.zipcode,
+            donationLink: campaign.donationLink,
+            complete: true,
+          }
+        }
+      );
+    }
 });
 
 //,
