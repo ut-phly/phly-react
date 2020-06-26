@@ -34,7 +34,7 @@ class InviteModal extends React.Component {
   }
 
   toggleModal = () => {
-    this.setState({ open: !this.state.open });
+    this.setState({ open: !this.state.open, email: "", sent: false });
   }
 
   addEmail = (e) => {

@@ -30,10 +30,11 @@ class Marketplace extends Component {
     renderCampaigns = (campaigns, organizations, donations) => {
       campaigns.reverse();
       campaigns = campaigns.filter((camp) => {
+        if (camp.complete) return false;
         if (donations.some((don) => don.campaign == camp._id)) return true;
         else return false;
       });
-      
+
       return campaigns.map((camp, i) => {
         let org = organizations.find((org) => org._id == camp.owner) ? organizations.find((org) => org._id == camp.owner).name : "";
         let totalRaised = 0;
@@ -73,6 +74,47 @@ class Marketplace extends Component {
       });
     }
 
+    renderPastCampaigns = (campaigns, organizations, donations) => {
+      campaigns.reverse();
+      campaigns = campaigns.filter((camp) => {
+        if (camp.complete && donations.some((don) => don.campaign == camp._id)) return true;
+        else return false;
+      });
+
+      return campaigns.map((camp, i) => {
+        let org = organizations.find((org) => org._id == camp.owner) ? organizations.find((org) => org._id == camp.owner).name : "";
+        let totalRaised = 0;
+        donations.forEach((don) => {
+          if (don.campaign == camp._id) totalRaised += don.amount;
+        })
+        return (
+          <Col lg="4" xs="12" className="my-4" key={i} tag={Link} to={`/public/${camp._id}`}>
+            <Card className="shadow">
+              <CardHeader className="h3 font-weight-bold mb-0 text-muted">
+                {camp.name}
+              </CardHeader>
+              <CardBody>
+                <h4 className="text-muted">
+                  <span className="mr-3">
+                    <FontAwesomeIcon icon={faUsers}/>
+                  </span>
+                  <span>{org}</span>
+                  <span>
+                    <h4 className="float-right text-muted">${totalRaised}</h4>
+                  </span>
+                </h4>
+                <Row className="mt-3">
+                  <Col xs="12">
+                    <h4 className="text-success font-weight-bold">Complete</h4>
+                  </Col>
+                </Row>
+              </CardBody>
+            </Card>
+          </Col>
+        );
+      });
+    }
+
     render() {
         const { campaigns, organizations, donations } = this.props;
 
@@ -97,6 +139,7 @@ class Marketplace extends Component {
                       <div className="col px-0">
                         <Row>
                           {this.renderCampaigns(campaigns, organizations, donations)}
+                          {this.renderPastCampaigns(campaigns, organizations, donations)}
                         </Row>
                         <Row></Row>
                       </div>

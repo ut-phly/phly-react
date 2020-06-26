@@ -44,6 +44,7 @@ import {
   faHeart,
   faCopy,
   faEdit,
+  faCheckCircle
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -76,12 +77,14 @@ export default class CampaignPage extends Component {
             payWith: '',
             handle: '',
             handle2: '',
+            checkName: '',
             address: '',
             address2: '',
             city: '',
             state: '',
             zipcode: '',
             donationLink: '',
+            submitted: false
         }
 
     }
@@ -160,7 +163,7 @@ export default class CampaignPage extends Component {
     showStateSelector = () => {
 
       return STATES.map((state) => {
-        return (<option>{state}</option>)
+        return (<option key={state}>{state}</option>)
       });
 
     }
@@ -174,6 +177,7 @@ export default class CampaignPage extends Component {
           payTo: '',
           payWith: '',
           handle: '',
+          checkName: '',
           address: '',
           address2: '',
           city: '',
@@ -243,10 +247,10 @@ export default class CampaignPage extends Component {
             >
               How would your organization like to receive the campaign funds?
             </label>
-            {this.createAltForm({formName: "payWith", id: 3, label: "paypal"})}
-            {this.createAltForm({formName: "payWith", id: 4, label: "cashapp"})}
-            {this.createAltForm({formName: "payWith", id: 5, label: "venmo"})}
-            {this.createAltForm({formName: "payWith", id: 6, label: "check"})}
+            {this.createAltForm({formName: "payWith", id: 3, label: "PayPal"})}
+            {this.createAltForm({formName: "payWith", id: 4, label: "Cashapp"})}
+            {this.createAltForm({formName: "payWith", id: 5, label: "Venmo"})}
+            {this.createAltForm({formName: "payWith", id: 6, label: "Check"})}
           </FormGroup>
         );
       }
@@ -263,7 +267,7 @@ export default class CampaignPage extends Component {
     handleEndCampaignSubmit = (event) => {
       event.preventDefault();
       var paymentMethod = this.state.payWith;
-      if (( paymentMethod === "paypal" || paymentMethod === "cashapp" || paymentMethod === "venmo")
+      if (( paymentMethod === "PayPal" || paymentMethod === "Cashapp" || paymentMethod === "Venmo")
           && ( this.state.handle !== this.state.handle2 )){
             this.setState({showAlert: ! this.state.showAlert});
       } else {
@@ -271,6 +275,7 @@ export default class CampaignPage extends Component {
           payTo: this.state.payTo,
           payWith: this.state.payWith,
           handle: this.state.handle,
+          checkName: this.state.checkName,
           address: this.state.address,
           address2: this.state.address2,
           city: this.state.city,
@@ -280,19 +285,20 @@ export default class CampaignPage extends Component {
           additionalInfo: this.state.additionalInfo,
         }
         console.log(campaign);
+        this.setState({ submitted: true });
         Meteor.call('campaigns.updatePayment', campaign, this.props.match.params.id);
       }
     }
 
     showPaymentInfoFields = () => {
       var paymentMethod = this.state.payWith;
-      var handleString1 = paymentMethod === "paypal" ?
+      var handleString1 = paymentMethod === "PayPal" ?
         "Enter the email linked to your organization's PayPal."
         : "Enter your " + paymentMethod + " handle.";
-      var handleString2 = paymentMethod === "paypal" ?
+      var handleString2 = paymentMethod === "PayPal" ?
         "Re-enter the email linked to your organization's PayPal."
         : "Re-enter your " + paymentMethod + " handle.";
-      var filler = paymentMethod === "paypal" ? "paypal@email.com" : "handle";
+      var filler = paymentMethod === "PayPal" ? "PayPal@email.com" : "Handle";
       if( this.state.payTo === "outsideOrg" ) {
         return(
           <div>
@@ -306,7 +312,7 @@ export default class CampaignPage extends Component {
               <Input
                 className="form-control-alternative"
                 id="donationLink"
-                placeholder="Paste the link to the org/charitity's website here..."
+                placeholder="Paste the link to the org/charity's website here..."
                 type="text"
                 onChange={this.handleChange("donationLink")}
               />
@@ -337,7 +343,7 @@ export default class CampaignPage extends Component {
               htmlFor="addInfo"
             >
               We would love to help you send the funds to muliple organizations/charities.
-              Please describe your situation below and our team will contact you in 3-5 business days.
+              Please describe your request below and our team will contact you in 3-5 business days.
             </label>
             <Input
               className="form-control-alternative"
@@ -349,7 +355,7 @@ export default class CampaignPage extends Component {
           </FormGroup>
         );
       }
-      else if ( paymentMethod === "paypal" || paymentMethod === "cashapp" || paymentMethod === "venmo") {
+      else if ( paymentMethod === "PayPal" || paymentMethod === "Cashapp" || paymentMethod === "Venmo") {
         return(
           <div>
             <FormGroup>
@@ -385,9 +391,24 @@ export default class CampaignPage extends Component {
           </div>
         );
       }
-      else if ( paymentMethod === "check" ) {
+      else if ( paymentMethod === "Check" ) {
         return (
           <div>
+            <FormGroup>
+              <label
+                className="form-control-label"
+                htmlFor="check-name"
+              >
+                Name
+              </label>
+              <Input
+                className="form-control-alternative"
+                id="check-name"
+                placeholder="Name"
+                type="text"
+                onChange={this.handleChange("checkName")}
+              />
+            </FormGroup>
             <FormGroup>
               <label
                 className="form-control-label"
@@ -482,7 +503,7 @@ export default class CampaignPage extends Component {
         <div>
           <div className="modal-header">
             <h5 className="modal-title" id="exampleModalLabel">
-              END CAMPAIGN FORM
+              End Campaign Form
             </h5>
             <button
               aria-label="Close"
@@ -494,30 +515,50 @@ export default class CampaignPage extends Component {
               <span aria-hidden={true}>×</span>
             </button>
           </div>
-          <div className="modal-body">
-            <FormGroup>
-              <label
-               className="form-control-label"
-              >
-                Where do you want the proceeds of this campaign to go?
-              </label>
-              {this.createAltForm({formName: "payTo", id: 0, label: "my organization"})}
-              {this.createAltForm({formName: "payTo", id: 1, label: "another organization or charity"})}
-              {this.createAltForm({formName: "payTo", id: 2, label: "two or more organizations/charities"})}
-            </FormGroup>
-            {this.state.payTo === "org" ? this.showPaymentOptions() : null}
-            {this.showPaymentInfoFields()}
-            {this.state.showAlert ?
-              <Alert color="warning">
-                <strong>Warning!</strong> Please check if your handle is correct
-              </Alert>
-              : null
+          <div className="modal-body mx-3">
+            { this.state.submitted ?
+              <div>
+                <h3 className="text-center">Your campaign is complete!</h3>
+                <div className="text-center mb-3">
+                  <div className="icon icon-lg icon-shape icon-shape-success shadow rounded-circle mb-4">
+                    <FontAwesomeIcon icon={faCheckCircle}/>
+                  </div>
+                  <p>We have received your payment information and we will reach out as soon as possible with an update.</p>
+                </div>
+              </div>
+              :
+              <div>
+                <FormGroup>
+                  <label
+                   className="form-control-label"
+                  >
+                    Where do you want the proceeds of this campaign to go?
+                  </label>
+                  {this.createAltForm({formName: "payTo", id: 0, label: "My organization"})}
+                  {this.createAltForm({formName: "payTo", id: 1, label: "Another organization or charity"})}
+                  {this.createAltForm({formName: "payTo", id: 2, label: "Two or more organizations/charities"})}
+                </FormGroup>
+                {this.state.payTo === "org" ? this.showPaymentOptions() : null}
+                {this.showPaymentInfoFields()}
+                {this.state.showAlert ?
+                  <Alert color="warning">
+                    <strong>Warning!</strong> Please check if your handle is correct
+                  </Alert>
+                  : null
+                }
+              </div>
             }
           </div>
           <div className="modal-footer">
-            <Button color="primary" type="button" onClick={(event) => this.handleEndCampaignSubmit(event)}>
-              Submit
-            </Button>
+            { this.state.submitted ?
+              <Button color="primary" type="button" onClick={() => this.toggleModal("endCampaign")}>
+                Done
+              </Button>
+              :
+              <Button color="primary" type="button" onClick={(event) => this.handleEndCampaignSubmit(event)}>
+                Submit
+              </Button>
+            }
           </div>
         </div>
       );
@@ -549,6 +590,7 @@ export default class CampaignPage extends Component {
             var endString = campEndDate.toLocaleDateString();
             var nonprofit = obj.nonprofit;
             var goalAmount = obj.goalAmount;
+            var completed = (obj.complete != null) ? obj.complete : false;
         }
 
         let percent = Math.round(totalRaised * 100 / goalAmount);
@@ -677,7 +719,7 @@ export default class CampaignPage extends Component {
                     <Card className="shadow">
                       <CardHeader className="border-0">
                         <Row className="align-items-center">
-                          <Col xs="4">
+                          <Col xs="8">
                             <div className="col">
                               <h6 className="text-uppercase text-light ls-1 mb-1">
                                 Overview
@@ -695,24 +737,12 @@ export default class CampaignPage extends Component {
                               }
                             </div>
                           </Col>
-                          <Col className="text-right" xs="8">
-                            <Button
-                              color="primary"
-                              onClick={() => this.toggleModal("endCampaign")}
-                            >
-                              End Campaign
-                            </Button>
-                            <Modal
-                              className="modal-dialog-centered"
-                              isOpen={this.state.endCampaign}
-                              toggle={() => this.toggleModal("endCampaign")}
-                            >
-                              {this.endCampaignForm()}
-                            </Modal>
+                          <Col className="text-right" xs="4">
                             <Button
                               className="btn-icon btn-2"
                               color="primary"
                               type="button"
+                              disabled={completed}
                               onClick={() => this.handleEdit()}
                             >
                               <span className="btn-inner--icon">
@@ -762,6 +792,7 @@ export default class CampaignPage extends Component {
                                           className="btn-icon btn-2"
                                           color="primary"
                                           type="button"
+                                          block
                                         >
                                           <span className="btn-inner--icon">
                                             <FontAwesomeIcon icon={faCopy}/>
@@ -769,11 +800,12 @@ export default class CampaignPage extends Component {
                                           <span className="btn-inner--text">Copy</span>
                                         </Button>
                                       </CopyToClipboard>
-                                      <FacebookShareButton className="mt-3" url={`https://www.phly.co/public/${this.props.match.params.id}`}>
+                                      <FacebookShareButton className="mt-3 btn-block" url={`https://www.phly.co/public/${this.props.match.params.id}`}>
                                         <Button
                                           className="btn-icon btn-2"
-                                          color="primary"
+                                          color="facebook"
                                           type="button"
+                                          block
                                         >
                                           <span className="btn-inner--icon">
                                             <FontAwesomeIcon icon={faFacebook}/>
@@ -781,11 +813,12 @@ export default class CampaignPage extends Component {
                                           <span className="btn-inner--text">Facebook</span>
                                         </Button>
                                       </FacebookShareButton>
-                                      <TwitterShareButton className="mt-3" url={`https://www.phly.co/public/${this.props.match.params.id}`}>
+                                      <TwitterShareButton className="mt-3 btn-block" url={`https://www.phly.co/public/${this.props.match.params.id}`}>
                                         <Button
                                           className="btn-icon btn-2"
-                                          color="primary"
+                                          color="twitter"
                                           type="button"
+                                          block
                                         >
                                           <span className="btn-inner--icon">
                                             <FontAwesomeIcon icon={faTwitter}/>
@@ -899,7 +932,7 @@ export default class CampaignPage extends Component {
                     <Card className="shadow">
                       <CardHeader className="border-0">
                         <Row className="align-items-center">
-                          <Col xs="8">
+                          <Col lg="6" md="12">
                             <div className="col">
                               <h6 className="text-uppercase text-light ls-1 mb-1">
                                 Goal
@@ -916,6 +949,27 @@ export default class CampaignPage extends Component {
                                 <h2 className="mb-0 font-weight-bold">${goalAmount}</h2>
                               }
                             </div>
+                          </Col>
+                          <Col lg="6" md="12" className="text-right">
+                            { completed ?
+                              <h3 className="text-success font-weight-bold">Complete</h3>
+                              :
+                              <div>
+                                <Button
+                                  color="primary"
+                                  onClick={() => this.toggleModal("endCampaign")}
+                                >
+                                  End Campaign
+                                </Button>
+                              </div>
+                            }
+                            <Modal
+                              className="modal-dialog-centered"
+                              isOpen={this.state.endCampaign}
+                              toggle={() => this.toggleModal("endCampaign")}
+                            >
+                              {this.endCampaignForm()}
+                            </Modal>
                           </Col>
                         </Row>
                       </CardHeader>
@@ -958,89 +1012,6 @@ export default class CampaignPage extends Component {
                   </Col>
                 </Row>
               </Container>
-
-            {/*
-                <Responsive>
-                    <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic clearing>
-                        <Header as='h1'
-                                floated='left'
-                                color='orange'
-                                style={{
-                                      fontSize: '2em',
-                                      letterSpacing: '1.5px',
-                                      margin: 0,
-                                      paddingRight: '.5em' }}>
-                          {campName}
-                        </Header>
-                        <Modal trigger={<Button floated='right'><Icon name='external'/>Share</Button>} size='small'>
-                          <Header icon='plus' content='Share your campaign'/>
-                          <Modal.Content>
-                            <p>
-                              Your external link is: <Link to={`/public/${this.props.match.params.id}`}>phly.co/public/{this.props.match.params.id}</Link>
-                            </p>
-                            <div>{this.getQRCode()}</div>
-                          </Modal.Content>
-                          <Modal.Actions>
-                            <CopyToClipboard text={`phly.co/public/${this.props.match.params.id}`}>
-                              <Button color='green' inverted>
-                                <Icon name='copy'/> Copy
-                              </Button>
-                            </CopyToClipboard>
-                          </Modal.Actions>
-                        </Modal>
-                    </Segment>
-                    <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic>
-                        <Grid columns={2}>
-                            <Grid.Column>
-                                <Grid.Row className="mt-5 ml-3">
-                                  <Header sub>Non-Profit</Header>
-                                </Grid.Row>
-                                <Grid.Row className="ml-3">
-                                  <p>{nonprofit}</p>
-                                </Grid.Row>
-                                <Grid.Row className="mt-5 ml-3">
-                                  <Header sub>Goal</Header>
-                                </Grid.Row>
-                                <Grid.Row className="ml-3">
-                                  <p>{'$'}{goalAmount}</p>
-                                </Grid.Row>
-                                <Grid.Row className="mt-5 ml-3">
-                                  <Header sub>Description</Header>
-                                </Grid.Row>
-                                <Grid.Row className="ml-3">
-                                  <p>{campDes}</p>
-                                </Grid.Row>
-                                <Grid.Row className="mt-5 ml-3">
-                                  <Header sub>Donations</Header>
-                                </Grid.Row>
-                                <Grid.Row className="ml-3">
-                                  <p>Total: ${totalRaised}</p>
-                                </Grid.Row>
-                            </Grid.Column>
-                            <Grid.Column>
-                                <Grid.Row className="mt-5 ml-3">
-                                  <Header sub>Start Date</Header>
-                                </Grid.Row>
-                                <Grid.Row className="ml-3">
-                                  <p>{startString}</p>
-                                </Grid.Row>
-                                <Grid.Row className="mt-5 ml-3">
-                                  <Header sub>End Date</Header>
-                                </Grid.Row>
-                                <Grid.Row className="ml-3">
-                                  <p>{endString}</p>
-                                </Grid.Row>
-                                <Grid.Row className="mt-5 ml-3">
-                                  <Header sub>QR Code</Header>
-                                </Grid.Row>
-                                <Grid.Row className="ml-3">
-                                  <div>{this.getQRCode()}</div>
-                                </Grid.Row>
-                            </Grid.Column>
-                        </Grid>
-                    </Segment>
-                </Responsive>
-            */}
           </div>
         );
     }

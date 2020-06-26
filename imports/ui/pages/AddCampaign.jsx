@@ -50,6 +50,7 @@ export default class AddCampaign extends Component {
           if (err) {
             console.log(err)
           } else {
+            this.props.showCampaignModal();
             this.setState({ created: true });
           }
         });

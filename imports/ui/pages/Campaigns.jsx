@@ -34,7 +34,12 @@ export default class Campaign extends Component {
   }
 
   getCampaigns = (donations) => {
-    return this.props.campaigns.map((camp) => {
+    let campaigns = this.props.campaigns.filter((camp) => {
+      if (!camp.complete) return true;
+      else return false;
+    });
+
+    return campaigns.map((camp) => {
 
       let goal = (camp.goalAmount) ? camp.goalAmount : 500;
       let totalDon = 0;
@@ -71,11 +76,68 @@ export default class Campaign extends Component {
                 </span>
               </Col>
               <Col md="2" className="mt-3">
+                { }
                 <Progress
                   max={`${goal}`}
                   value={`${totalDon}`}
                   barClassName="bg-danger"
                 />
+              </Col>
+            </Row>
+          </CardBody>
+        </Card>
+      )
+    })
+  }
+
+  getPastCampaigns = (donations) => {
+    let campaigns = this.props.campaigns.filter((camp) => {
+      if (camp.complete) return true;
+      else return false;
+    });
+
+    return campaigns.map((camp) => {
+
+      let goal = (camp.goalAmount) ? camp.goalAmount : 500;
+      let totalDon = 0;
+      donations.forEach((don) => {
+        if (don.campaign == camp._id) {
+          totalDon += don.amount;
+        }
+      });
+
+      let percent = Math.round(totalDon * 100 / goal);
+
+      return (
+        <Card className="mt-3 shadow" tag={Link} to={`/home/${camp._id}`} key={camp._id}>
+          <CardBody>
+            <Row className="py-2 px-3">
+              <Col md="3">
+                <CardTitle
+                  className="h3 font-weight-bold mb-0 text-muted"
+                >
+                  {camp.name}
+                </CardTitle>
+              </Col>
+              <Col md="2">
+                <span className="h3 font-weight-bold mb-3 text-muted">
+                  {`${camp.endDate.toLocaleDateString()}`}
+                </span>
+              </Col>
+              <Col md="2">
+                <span className="h3 font-weight-bold mb-0 text-muted">
+                  ${totalDon}
+                </span>
+              </Col>
+              <Col md="2" className="mr-3">
+                <span className="h3 font-weight-bold mb-0 text-muted">
+                  {percent}%
+                </span>
+              </Col>
+              <Col md="2">
+                <span className="h3 font-weight-bold text-success mb-0">
+                  Complete
+                </span>
               </Col>
             </Row>
           </CardBody>
@@ -266,7 +328,18 @@ export default class Campaign extends Component {
                     <IntroModal ref={this.openIntroModal}/>
                   </CardBody>
                 </Card>
-                : this.getCampaigns(donations)
+                :
+                <div>
+                  {this.getCampaigns(donations)}
+                  {/*
+                  <Row className="mt-5 px-5">
+                    <Col>
+                      <h5 className="h4 mb-0 text-uppercase d-none d-lg-inline-block">Past Campaigns</h5>
+                    </Col>
+                  </Row>
+                  */}
+                  {this.getPastCampaigns(donations)}
+                </div>
               }
             </Col>
           </Row>

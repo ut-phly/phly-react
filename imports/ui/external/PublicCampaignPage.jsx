@@ -7,6 +7,11 @@ import { Donations } from '../../api/donations.js';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import ShowMore from 'react-show-more';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import {
+  FacebookShareButton,
+  TwitterShareButton
+} from 'react-share';
 
 import { HTTP } from 'meteor/http';
 import Navigation from '../components/Navigation.jsx';
@@ -32,8 +37,16 @@ import {
   faDollarSign,
   faUserCircle,
   faThumbsUp,
-  faExclamationTriangle
+  faExclamationTriangle,
+  faHandHoldingHeart,
+  faExternalLinkAlt,
+  faCopy
 } from '@fortawesome/free-solid-svg-icons';
+
+import {
+  faFacebook,
+  faTwitter
+} from '@fortawesome/free-brands-svg-icons';
 
 import { Campaigns } from '../../api/campaigns.js';
 import { Organizations } from '../../api/organizations.js';
@@ -97,7 +110,7 @@ class PublicCampaignPage extends Component {
                   donation_amount = parseFloat(donation_amount);
                   if (donation_amount && donor) {
                     let platform_fee = (self.props.campaign.fee) ? .31 : 0;
-                    let braintree_fee = (self.props.campaign.braintree) ? (donation_amount *.0299) + .3 : 0;
+                    let braintree_fee = (self.props.campaign.braintree) ? (donation_amount *.029) + .3 : 0;
                     donation_amount += platform_fee;
 
                     Meteor.call('createTransaction', payload.nonce, Math.ceil((donation_amount + braintree_fee) * 100) / 100, function(transactionError, result) {
@@ -138,12 +151,14 @@ class PublicCampaignPage extends Component {
         let org = "";
         let goalAmount = "";
         let fee = false;
+        let complete = false;
         if (this.props.campaign) {
             name = this.props.campaign.name;
             description = this.props.campaign.description;
             nonprofit = this.props.campaign.nonprofit;
             goalAmount = this.props.campaign.goalAmount;
             fee = this.props.campaign.braintree;
+            complete = (this.props.campaign.complete) ? true : false;
         }
 
         if (this.props.org) {
@@ -164,7 +179,7 @@ class PublicCampaignPage extends Component {
         <div>
           <Navigation transparent mobile/>
           <section className="section bg-gradient-primary section-shaped section-lg section-bg">
-            <Container className="py-lg-md d-flex">
+            <Container className="d-flex">
               <div className="col px-0">
               <Row className="justify-content-center row-grid">
                 <Col xs="12">
@@ -215,70 +230,145 @@ class PublicCampaignPage extends Component {
                           <h3 className="float-right">${totalRaised}</h3>
                         </Col>
                       </Row>
-                      { !this.state.done ?
-                      <Form id="dropin-form">
-                        <FormGroup className="mb-3">
-                          <label
-                            className="form-control-label"
-                            htmlFor="input-donor"
-                          >
-                            Name
-                          </label>
-                          <InputGroup className="input-group-alternative" size="lg">
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <FontAwesomeIcon icon={faUserCircle}/>
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <Input placeholder="Enter your name" type="text" id="donor"/>
-                          </InputGroup>
-                        </FormGroup>
-                        <FormGroup>
-                          <label
-                            className="form-control-label"
-                            htmlFor="input-donation-am"
-                          >
-                            Payment
-                          </label>
-                          <InputGroup className="input-group-alternative" size="lg">
-                            <InputGroupAddon addonType="prepend">
-                              <InputGroupText>
-                                <FontAwesomeIcon icon={faDollarSign}/>
-                              </InputGroupText>
-                            </InputGroupAddon>
-                            <Input placeholder="00.00" type="number" id="donation-am" min="0"/>
-                          </InputGroup>
-                        </FormGroup>
-                        { this.state.failure ?
-                          <FormGroup>
-                            <Alert color="danger" className="mt-4">
-                              <span className="alert-inner--icon">
-                                <FontAwesomeIcon icon={faExclamationTriangle}/>
-                              </span>{" "}
-                              <span className="alert-inner--text">
-                                <strong>Oh no! Your payment didn't go through.</strong> Refresh to try again.
-                              </span>
-                            </Alert>
-                          </FormGroup>
+                      { complete ?
+                        <Row className="mt-3">
+                          <Col>
+                            <Card className="bg-gradient-success text-white border-0 p-4">
+                              <CardBody className="text-center">
+                                <FontAwesomeIcon size="6x" className="m-4" icon={faHandHoldingHeart}/>
+                                <h2 className="text-white font-weight-bold">This campaign is complete!</h2>
+                                <p className="text-white">Check out our <Link to="/campaigns" className="text-white font-weight-bold">campaign page <FontAwesomeIcon icon={faExternalLinkAlt}/></Link> to support other campaigns</p>
+                              </CardBody>
+                            </Card>
+                          </Col>
+                        </Row>
+                        :
+                        <div>
+                          { !this.state.done ?
+                            <Form id="dropin-form">
+                              <FormGroup className="mb-3">
+                                <label
+                                  className="form-control-label"
+                                  htmlFor="input-donor"
+                                >
+                                  Name
+                                </label>
+                                <InputGroup className="input-group-alternative" size="lg">
+                                  <InputGroupAddon addonType="prepend">
+                                    <InputGroupText>
+                                      <FontAwesomeIcon icon={faUserCircle}/>
+                                    </InputGroupText>
+                                  </InputGroupAddon>
+                                  <Input placeholder="Enter your name" type="text" id="donor"/>
+                                </InputGroup>
+                              </FormGroup>
+                              <FormGroup>
+                                <label
+                                  className="form-control-label"
+                                  htmlFor="input-donation-am"
+                                >
+                                  Payment
+                                </label>
+                                <InputGroup className="input-group-alternative" size="lg">
+                                  <InputGroupAddon addonType="prepend">
+                                    <InputGroupText>
+                                      <FontAwesomeIcon icon={faDollarSign}/>
+                                    </InputGroupText>
+                                  </InputGroupAddon>
+                                  <Input placeholder="00.00" type="number" id="donation-am" min="0"/>
+                                </InputGroup>
+                              </FormGroup>
+                              { this.state.failure ?
+                                <FormGroup>
+                                  <Alert color="danger" className="mt-4">
+                                    <span className="alert-inner--icon">
+                                      <FontAwesomeIcon icon={faExclamationTriangle}/>
+                                    </span>{" "}
+                                    <span className="alert-inner--text">
+                                      <strong>Oh no! Your payment didn't go through.</strong> Refresh to try again.
+                                    </span>
+                                  </Alert>
+                                </FormGroup>
 
-                          :
-                          <FormGroup>
-                            <div id="payment-container"></div>
-                          </FormGroup>
-                        }
-                        { fee ? <p><i>Standard processing fee of 2.9% plus 30 cents is added to each payment.</i></p> : '' }
-                        <Button type="submit" size="lg" color="primary">Submit</Button>
-                      </Form>
-                      :
-                      <Alert color="success" className="mt-4">
-                        <span className="alert-inner--icon">
-                          <FontAwesomeIcon icon={faThumbsUp}/>
-                        </span>{" "}
-                        <span className="alert-inner--text">
-                          <strong>Thank you for your donation!</strong> Refresh to donate again.
-                        </span>
-                      </Alert>
-                    }
+                                :
+                                <FormGroup>
+                                  <div id="payment-container"></div>
+                                </FormGroup>
+                              }
+                              { fee ? <p><i>Standard processing fee of 2.9% plus 30 cents is added to each payment.</i></p> : '' }
+                              <Button type="submit" size="lg" color="primary">Submit</Button>
+                            </Form>
+                            :
+                            <Row className="mt-3">
+                              <Col md="4" xs="12">
+                                <Card className="bg-gradient-success text-white border-0 p-4 my-3 shadow">
+                                  <CardBody className="text-center">
+                                    <FontAwesomeIcon size="3x" className="mb-4" icon={faThumbsUp}/>
+                                    <h3 className="text-white font-weight-bold">Thank you for your donation!</h3>
+                                  </CardBody>
+                                </Card>
+                              </Col>
+                              <Col md="8" xs="12" className="mt-3">
+                                <Card className="border-0 p-4 shadow">
+                                  <CardBody>
+                                    <Row>
+                                      <Col md="6" xs="12" className="text-center mb-4">
+                                        <div className="icon icon-lg icon-shape icon-shape-success shadow rounded-circle mb-4">
+                                          <FontAwesomeIcon icon={faExternalLinkAlt}/>
+                                        </div>
+                                        <p>Keep supporting this campaign by sharing!</p>
+                                      </Col>
+                                      <Col md="6" xs="12">
+                                        <CopyToClipboard
+                                          text={`https://www.phly.co/public/${this.props.match.params.id}`}
+                                        >
+                                          <Button
+                                            className="btn-icon btn-2"
+                                            color="primary"
+                                            type="button"
+                                            block
+                                          >
+                                            <span className="btn-inner--icon">
+                                              <FontAwesomeIcon icon={faCopy}/>
+                                            </span>
+                                            <span className="btn-inner--text">Copy Link</span>
+                                          </Button>
+                                        </CopyToClipboard>
+                                        <FacebookShareButton className="mt-3 btn-block" url={`https://www.phly.co/public/${this.props.match.params.id}`}>
+                                          <Button
+                                            className="btn-icon btn-2"
+                                            color="facebook"
+                                            type="button"
+                                            block
+                                          >
+                                            <span className="btn-inner--icon">
+                                              <FontAwesomeIcon icon={faFacebook}/>
+                                            </span>
+                                            <span className="btn-inner--text">Facebook</span>
+                                          </Button>
+                                        </FacebookShareButton>
+                                        <TwitterShareButton className="mt-3 btn-block" url={`https://www.phly.co/public/${this.props.match.params.id}`}>
+                                          <Button
+                                            className="btn-icon btn-2"
+                                            color="twitter"
+                                            type="button"
+                                            block
+                                          >
+                                            <span className="btn-inner--icon">
+                                              <FontAwesomeIcon icon={faTwitter}/>
+                                            </span>
+                                            <span className="btn-inner--text">Twitter</span>
+                                          </Button>
+                                        </TwitterShareButton>
+                                      </Col>
+                                    </Row>
+                                  </CardBody>
+                                </Card>
+                              </Col>
+                            </Row>
+                          }
+                        </div>
+                      }
                     </CardBody>
                   </Card>
                 </Col>
