@@ -19,16 +19,16 @@ import { Campaigns } from '../api/campaigns.js';
 
 export const renderRoutes = () => (
     <Router>
-        <div>
-            <Route exact path="/" component={Landing}/>
-            <Route path="/login" component={LoginPage}/>
-            <Route path="/register" component={RegisterPage}/>
-            <Route path="/getstarted" component={GetStarted}/>
-            <Route path="/home" component={AppContainer}/>
-            <Route path="/public/:id" component={CampaignContainer}/>
-            <Route path="/campaigns" component={MarketplaceContainer}/>
-            <Route path="/policies" component={Policies}/>
-            <Route path="/tos" component={Terms}/>
-        </div>
+      <div>
+        <Route path="/home" component={AppContainer}/>
+        <Route exact path="/" component={Landing}/>
+        <Route path="/login" component={LoginPage}/>
+        <Route path="/register" component={RegisterPage}/>
+        <Route path="/getstarted" component={GetStarted}/>
+        <Route path="/public/:id" component={CampaignContainer}/>
+        <Route path="/campaigns" component={MarketplaceContainer}/>
+        <Route path="/policies" component={Policies}/>
+        <Route path="/tos" component={Terms}/>
+      </div>
     </Router>
 );

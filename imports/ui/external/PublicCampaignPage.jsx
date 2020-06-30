@@ -334,32 +334,28 @@ class PublicCampaignPage extends Component {
                                             <span className="btn-inner--text">Copy Link</span>
                                           </Button>
                                         </CopyToClipboard>
-                                        <FacebookShareButton className="mt-3 btn-block" url={`https://www.phly.co/public/${this.props.match.params.id}`}>
-                                          <Button
-                                            className="btn-icon btn-2"
-                                            color="facebook"
-                                            type="button"
-                                            block
-                                          >
-                                            <span className="btn-inner--icon">
-                                              <FontAwesomeIcon icon={faFacebook}/>
-                                            </span>
-                                            <span className="btn-inner--text">Facebook</span>
-                                          </Button>
-                                        </FacebookShareButton>
-                                        <TwitterShareButton className="mt-3 btn-block" url={`https://www.phly.co/public/${this.props.match.params.id}`}>
-                                          <Button
-                                            className="btn-icon btn-2"
-                                            color="twitter"
-                                            type="button"
-                                            block
-                                          >
-                                            <span className="btn-inner--icon">
-                                              <FontAwesomeIcon icon={faTwitter}/>
-                                            </span>
-                                            <span className="btn-inner--text">Twitter</span>
-                                          </Button>
-                                        </TwitterShareButton>
+                                        <Button
+                                          href={`https://www.facebook.com/sharer/sharer.php?u=www.phly.co/public/${this.props.match.params.id}`}
+                                          target="_blank"
+                                          className="button btn btn-facebook btn-block btn-icon btn-2 mt-3"
+
+                                        >
+                                          <span className="btn-inner--icon">
+                                            <FontAwesomeIcon icon={faFacebook}/>
+                                          </span>
+                                          <span className="btn-inner--text">Facebook</span>
+                                        </Button>
+
+                                        <Button
+                                          href={`https://twitter.com/intent/tweet?url=www.phly.co/public/${this.props.match.params.id}`}
+                                          target="_blank"
+                                          className="button btn btn-twitter btn-block btn-icon btn-2 mt-3"
+                                        >
+                                          <span className="btn-inner--icon">
+                                            <FontAwesomeIcon icon={faTwitter}/>
+                                          </span>
+                                          <span className="btn-inner--text">Twitter</span>
+                                        </Button>
                                       </Col>
                                     </Row>
                                   </CardBody>
@@ -376,89 +372,6 @@ class PublicCampaignPage extends Component {
             </div>
             </Container>
           </section>
-        {/*
-          <Responsive>
-              <Segment style={{ backgroundColor: '#F9FFFF', paddingTop: '6em' }} vertical>
-                  <Grid container centered stackable>
-                      <Grid.Column desktop={8} mobile={16}>
-                          <Header as='h1'
-                                  color='orange'
-                                  style={{
-                                      fontSize: '6em',
-                                      letterSpacing: '1.5px' }}>
-                              {name}
-                          </Header>
-                          <p style={{ fontSize: '3em' }}>for {nonprofit}</p>
-                          <Container fluid>
-                            <Row>
-                              <Col xs="11">
-                                <Progress
-                                  max="100"
-                                  className="mt-2"
-                                  value={`${Math.round(totalRaised * 100 / goalAmount)}`}
-                                  barClassName="bg-danger"
-                                />
-                              </Col>
-                              <Col xs="1">
-                                <h3 className="float-right">${totalRaised}</h3>
-                              </Col>
-                            </Row>
-                          </Container>
-                          <p style={{ fontSize: '1.5em' }}>{description}</p>
-
-                          { !this.state.done ?
-                            <Form id="dropin-form">
-                              <Form.Field>
-                                <Input
-                                  style={{ paddingTop: '1em' }}
-                                  type="text"
-                                  id="donor"
-                                  placeholder="Enter your name"
-                                  size="massive"/>
-                              </Form.Field>
-                              <Form.Field>
-                                  <Input
-                                    style={{ paddingTop: '1em', paddingBottom: '1em' }}
-                                    label="$"
-                                    type="number"
-                                    id="new-donation-am"
-                                    placeholder="00.00"
-                                    size="massive"
-                                    min="0.01" step="0.01"/>
-                              </Form.Field>
-                              <Form.Field>
-                                  <div id="payment-container"></div>
-                              </Form.Field>
-                              <p style={{ color: "gray" }}><i>Phly adds an additional flat .31 cent platform fee to your donation to help us maintain our platform and offer our service to student organizations for free</i></p>
-                              <Button type="submit" color="orange" size="massive">Submit</Button>
-                              <p style={{ color: "gray" }}>Check out our <Link to="/policies">privacy policy</Link> and <Link to="/tos">terms of service</Link></p>
-                            </Form>
-                            :
-                            <div>
-                              <Message positive>
-                                  <Header>Thank you for your donation!</Header>
-                                  <p>Refresh to donate again</p>
-                              </Message>
-                              <Message positive>
-                                  <Header>Check us out!</Header>
-                                  <p>Phly makes fundraising easier and safer for student organizations on
-                                      college campuses. Want to start fundraising a better way? Join for free today at <Link to='/'>www.phly.co</Link></p>
-                              </Message>
-                            </div>
-
-                          }
-
-                          { this.state.error ?
-                            <Message negative>{this.state.error}</Message> : ""
-                          }
-
-
-
-                      </Grid.Column>
-                  </Grid>
-              </Segment>
-          </Responsive>
-        */}
         </div>
       );
     }

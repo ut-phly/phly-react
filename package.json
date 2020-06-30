@@ -20,6 +20,7 @@
         "browserify-fs": "^1.0.0",
         "classnames": "^2.2.6",
         "http": "0.0.0",
+        "ios-webkit-debug-proxy": "0.0.3",
         "meteor-node-stubs": "^0.4.1",
         "moment": "^2.24.0",
         "node-sass": "^4.14.1",

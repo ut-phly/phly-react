@@ -91,7 +91,7 @@ Meteor.startup(() => {
 });
 
 Meteor.methods({
-  'getClientToken'(customerId) {
+  getClientToken: function(customerId) {
     console.log("Making client token");
     var generateToken = Meteor.wrapAsync(gateway.clientToken.generate, gateway.clientToken);
 
@@ -122,10 +122,6 @@ Meteor.methods({
       gateway.transaction.sale({
         amount: donation_amount,
         paymentMethodNonce: nonceFromTheClient, // Generated nonce passed from client
-
-        /*customer: {
-          id: user.customerId
-        },*/
         options: {
           submitForSettlement: true, // Payment is submitted for settlement immediatelly
           storeInVaultOnSuccess: true // Store customer in Braintree's Vault

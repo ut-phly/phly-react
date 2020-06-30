@@ -715,7 +715,7 @@ export default class CampaignPage extends Component {
               </div>
               <Container className="mt--7 mb-5" fluid>
                 <Row className="mt-3">
-                  <Col md="8">
+                  <Col md="12">
                     <Card className="shadow">
                       <CardHeader className="border-0">
                         <Row className="align-items-center">
@@ -800,32 +800,34 @@ export default class CampaignPage extends Component {
                                           <span className="btn-inner--text">Copy</span>
                                         </Button>
                                       </CopyToClipboard>
-                                      <FacebookShareButton className="mt-3 btn-block" url={`https://www.phly.co/public/${this.props.match.params.id}`}>
-                                        <Button
-                                          className="btn-icon btn-2"
-                                          color="facebook"
-                                          type="button"
-                                          block
-                                        >
-                                          <span className="btn-inner--icon">
-                                            <FontAwesomeIcon icon={faFacebook}/>
-                                          </span>
-                                          <span className="btn-inner--text">Facebook</span>
-                                        </Button>
-                                      </FacebookShareButton>
-                                      <TwitterShareButton className="mt-3 btn-block" url={`https://www.phly.co/public/${this.props.match.params.id}`}>
-                                        <Button
-                                          className="btn-icon btn-2"
-                                          color="twitter"
-                                          type="button"
-                                          block
-                                        >
-                                          <span className="btn-inner--icon">
-                                            <FontAwesomeIcon icon={faTwitter}/>
-                                          </span>
-                                          <span className="btn-inner--text">Twitter</span>
-                                        </Button>
-                                      </TwitterShareButton>
+
+                                      <Button
+                                        href={`https://www.facebook.com/sharer/sharer.php?u=www.phly.co/public/${this.props.match.params.id}`}
+                                        target="_blank"
+                                        className="btn-icon btn-2 mt-3"
+                                        color="facebook"
+                                        type="button"
+                                        block
+                                      >
+                                        <span className="btn-inner--icon">
+                                          <FontAwesomeIcon icon={faFacebook}/>
+                                        </span>
+                                        <span className="btn-inner--text">Facebook</span>
+                                      </Button>
+
+                                      <Button
+                                        href={`https://twitter.com/intent/tweet?url=www.phly.co/public/${this.props.match.params.id}`}
+                                        target="_blank"
+                                        className="btn-icon btn-2 mt-3"
+                                        color="twitter"
+                                        type="button"
+                                        block
+                                      >
+                                        <span className="btn-inner--icon">
+                                          <FontAwesomeIcon icon={faTwitter}/>
+                                        </span>
+                                        <span className="btn-inner--text">Twitter</span>
+                                      </Button>
                                     </Col>
                                   </Row>
                                 </Container>
@@ -928,8 +930,8 @@ export default class CampaignPage extends Component {
                       </CardBody>
                     </Card>
                   </Col>
-                  <Col md="4">
-                    <Card className="shadow">
+                  <Col md="12">
+                    <Card className="shadow mt-5">
                       <CardHeader className="border-0">
                         <Row className="align-items-center">
                           <Col lg="6" md="12">
@@ -981,7 +983,7 @@ export default class CampaignPage extends Component {
                                 Progress
                               </h6>
                               <Row>
-                                <Col xs="10">
+                                <Col xs="11">
                                   <Progress
                                     max="100"
                                     className="mt-2"
@@ -989,7 +991,7 @@ export default class CampaignPage extends Component {
                                     barClassName="bg-danger"
                                   />
                                 </Col>
-                                <Col xs="2">
+                                <Col xs="1">
                                   <p className="float-right">{percent}%</p>
                                 </Col>
                               </Row>

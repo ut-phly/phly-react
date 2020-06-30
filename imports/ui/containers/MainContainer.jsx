@@ -17,8 +17,6 @@ export default MainContainer = withTracker(({history}) => {
     const organizations = Organizations.find({}).fetch();
     const donations = Donations.find({}).fetch();
 
-    //console.log(campaigns);
-    //console.log(organizations);
     return {
         history: history,
         currentUser: currentUser,

@@ -43,17 +43,17 @@ if (Meteor.isServer) {
 }
 
 Campaigns.schema = new SimpleSchema({
-    name: {type: String},
-    createdAt: {type: Date},
-    owner: {type: String},
-    startDate: {type: Date},
-    endDate: {type: Date},
-    description: {type: String},
-    nonprofit: {type: String},
-    goalAmount: {type: Number},
-    braintree: {type: Boolean},
-    payTo: {type: String},
-    payWith: {type: String},
+    name: String,
+    createdAt: Date,
+    owner: String,
+    startDate: Date,
+    endDate: Date,
+    description: String,
+    nonprofit: String,
+    goalAmount: Number,
+    braintree: Boolean,
+    payTo: String,
+    payWith: String,
     additionalInfo: {type: String, optional: true},
     handle: {type: String, optional: true},
     checkName: {type: String, optional: true},
@@ -64,6 +64,11 @@ Campaigns.schema = new SimpleSchema({
     zipcode: {type: String, optional: true},
     donationLink: {type: String, optional: true},
     complete: {type: Boolean},
+    form: {type: Array, optional: true},
+    'form.$': {type: Object},
+    'form.$.label': {type: String},
+    'form.$.type': {type: String},
+    'form.$.required': {type: Boolean}
 });
 
 //this will automatically check against the scehma when created

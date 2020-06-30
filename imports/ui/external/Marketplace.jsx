@@ -133,93 +133,66 @@ class Marketplace extends Component {
         return (
             <div>
               <Navigation transparent mobile/>
-                <main>
-                  <section className="section bg-gradient-primary section-shaped section-lg">
-                    <Container className="py-lg-md d-flex">
-                      <div className="col px-0">
-                        <Row>
-                          {this.renderCampaigns(campaigns, organizations, donations)}
-                          {this.renderPastCampaigns(campaigns, organizations, donations)}
-                        </Row>
-                        <Row></Row>
-                      </div>
-                    </Container>
-                  </section>
-                  <footer className="footer bg-white">
-                    <Container>
-                      <hr />
-                      <Row className=" align-items-center justify-content-md-between">
-                        <Col md="6">
-                          <div className=" copyright">
-
-                            © {new Date().getFullYear()}{" "}
-                            <a
-                              href="https://www.phly.co"
-                            >
-                              Phly
-                            </a>
-                            .
-                          </div>
-                        </Col>
-                        <Col md="6">
-                          <Nav className=" nav-footer justify-content-end">
-                          <NavItem>
-                            <NavLink
-                              href="https://www.phly.co"
-                              target="_blank"
-                            >
-                              Phly
-                            </NavLink>
-                          </NavItem>
-                          <NavItem>
-                            <NavLink
-                              href="https://www.phly.co"
-                              target="_blank"
-                            >
-                              About Us
-                            </NavLink>
-                          </NavItem>
-                          <NavItem>
-                            <NavLink
-                              href="https://www.phly.co/tos"
-                              target="_blank"
-                            >
-                              Terms of Service
-                            </NavLink>
-                          </NavItem>
-                        </Nav>
-                        </Col>
+              <main>
+                <section className="section bg-gradient-primary section-shaped section-lg">
+                  <Container className="py-lg-md d-flex">
+                    <div className="col px-0">
+                      <Row>
+                        {this.renderCampaigns(campaigns, organizations, donations)}
+                        {this.renderPastCampaigns(campaigns, organizations, donations)}
                       </Row>
-                    </Container>
-                  </footer>
-                </main>
-              {/*
-                <Menu fixed='top' inverted color='blue'>
-                    <Container>
-                        <Menu.Item onClick={this.handleReturn}>
-                                <Image style={{ height: '1.5em', width: '1.5em' }} src='/images/logo.png'/>
-                                 <p style={{
-                                     fontFamily: 'Nunito',
-                                     fontSize: '1.5em',
-                                     marginLeft: '.5em',
-                                     letterSpacing: '2px'}}>PHLY</p>
-                        </Menu.Item>
-                    </Container>
-                </Menu>
+                      <Row></Row>
+                    </div>
+                  </Container>
+                </section>
+                <footer className="footer bg-white">
+                  <Container>
+                    <hr />
+                    <Row className=" align-items-center justify-content-md-between">
+                      <Col md="6">
+                        <div className=" copyright">
 
-                <Responsive>
-                    <Segment style={{ padding: '8em', paddingTop: '9em', backgroundColor: '#F9FFFF'}} vertical>
-                        <Header as='h1'
-                                color='orange'
-                                style={{
-                                    fontSize: '2.5em',
-                                    letterSpacing: '1.5px' }}>
-                            Explore Current Campaigns
-                        </Header>
-                        <Card.Group itemsPerRow={3} items={items} />
-                    </Segment>
-                </Responsive>
-              */}
+                          © {new Date().getFullYear()}{" "}
+                          <a
+                            href="https://www.phly.co"
+                          >
+                            Phly
+                          </a>
+                          .
+                        </div>
+                      </Col>
+                      <Col md="6">
+                        <Nav className=" nav-footer justify-content-end">
+                        <NavItem>
+                          <NavLink
+                            href="https://www.phly.co"
+                            target="_blank"
+                          >
+                            Phly
+                          </NavLink>
+                        </NavItem>
+                        <NavItem>
+                          <NavLink
+                            href="https://www.phly.co"
+                            target="_blank"
+                          >
+                            About Us
+                          </NavLink>
+                        </NavItem>
+                        <NavItem>
+                          <NavLink
+                            href="https://www.phly.co/tos"
+                            target="_blank"
+                          >
+                            Terms of Service
+                          </NavLink>
+                        </NavItem>
+                      </Nav>
+                      </Col>
+                    </Row>
+                  </Container>
+                </footer>
+              </main>
             </div>
         )
     }

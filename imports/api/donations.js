@@ -34,7 +34,13 @@ Donations.schema = new SimpleSchema({
     donor: {type: String},
     campaign: {type: String},
     nonprofit: {type: String},
-    amount: {type: Number}
+    amount: {type: Number},
+    form: {type: Array, optional: true},
+    'form.$': {type: Object},
+    'form.$.label': {type: String},
+    'form.$.type': {type: String},
+    'form.$.required': {type: Boolean},
+    'form.$.value': {type: String}
 });
 
 //this will automatically check against the scehma when created
