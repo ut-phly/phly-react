@@ -40,7 +40,8 @@ import {
   faExclamationTriangle,
   faHandHoldingHeart,
   faExternalLinkAlt,
-  faCopy
+  faCopy,
+  faInfo
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -108,7 +109,25 @@ class PublicCampaignPage extends Component {
                   let donation_amount = document.getElementById('donation-am').value;
                   let donor = document.getElementById('donor').value;
                   donation_amount = parseFloat(donation_amount);
-                  if (donation_amount && donor) {
+
+                  let form = [];
+                  let required = true;
+                  if (self.props.campaign.form) {
+                    self.props.campaign.form.map((field, index) => {
+                      let value = document.getElementById(`custom-${index}`).value;
+                      if (!value && field.required) {
+                        required = false;
+                      }
+                      form.push({
+                        label: field.label,
+                        type: field.type,
+                        required: field.required,
+                        value: value
+                      })
+                    })
+                  }
+
+                  if (donation_amount && donor && required) {
                     let platform_fee = (self.props.campaign.fee) ? .31 : 0;
                     let braintree_fee = (self.props.campaign.braintree) ? (donation_amount *.029) + .3 : 0;
                     donation_amount += platform_fee;
@@ -122,7 +141,8 @@ class PublicCampaignPage extends Component {
                           donor: donor,
                           campaign: self.props.campaign._id,
                           nonprofit: self.props.campaign.nonprofit,
-                          amount: donation_amount - platform_fee
+                          amount: donation_amount - platform_fee,
+                          form: form
                         }
                         Meteor.call('donations.insert', donation);
                         self.setState({ done: true, error: '' })
@@ -152,6 +172,7 @@ class PublicCampaignPage extends Component {
         let goalAmount = "";
         let fee = false;
         let complete = false;
+        let form = [];
         if (this.props.campaign) {
             name = this.props.campaign.name;
             description = this.props.campaign.description;
@@ -159,6 +180,7 @@ class PublicCampaignPage extends Component {
             goalAmount = this.props.campaign.goalAmount;
             fee = this.props.campaign.braintree;
             complete = (this.props.campaign.complete) ? true : false;
+            if (this.props.campaign.form) form = this.props.campaign.form;
         }
 
         if (this.props.org) {
@@ -251,7 +273,7 @@ class PublicCampaignPage extends Component {
                                   className="form-control-label"
                                   htmlFor="input-donor"
                                 >
-                                  Name
+                                  Name <span className="text-danger">*</span>
                                 </label>
                                 <InputGroup className="input-group-alternative" size="lg">
                                   <InputGroupAddon addonType="prepend">
@@ -259,7 +281,7 @@ class PublicCampaignPage extends Component {
                                       <FontAwesomeIcon icon={faUserCircle}/>
                                     </InputGroupText>
                                   </InputGroupAddon>
-                                  <Input placeholder="Enter your name" type="text" id="donor"/>
+                                  <Input placeholder="Enter your name" type="text" id="donor" required/>
                                 </InputGroup>
                               </FormGroup>
                               <FormGroup>
@@ -267,7 +289,7 @@ class PublicCampaignPage extends Component {
                                   className="form-control-label"
                                   htmlFor="input-donation-am"
                                 >
-                                  Payment
+                                  Payment <span className="text-danger">*</span>
                                 </label>
                                 <InputGroup className="input-group-alternative" size="lg">
                                   <InputGroupAddon addonType="prepend">
@@ -275,9 +297,30 @@ class PublicCampaignPage extends Component {
                                       <FontAwesomeIcon icon={faDollarSign}/>
                                     </InputGroupText>
                                   </InputGroupAddon>
-                                  <Input placeholder="00.00" type="number" id="donation-am" min="0"/>
+                                  <Input placeholder="00.00" type="number" id="donation-am" min="0" required/>
                                 </InputGroup>
                               </FormGroup>
+                              { form.map((field, index) => {
+                                  return (
+                                    <FormGroup key={index}>
+                                      <label
+                                        className="form-control-label"
+                                        htmlFor={`custom-${index}`}
+                                      >
+                                        {field.label} {field.required ? <span className="text-danger">*</span> : ""}
+                                      </label>
+                                      <InputGroup className="input-group-alternative" size="lg">
+                                        <InputGroupAddon addonType="prepend">
+                                          <InputGroupText>
+                                            <FontAwesomeIcon icon={faInfo}/>
+                                          </InputGroupText>
+                                        </InputGroupAddon>
+                                        <Input placeholder={field.label} type={field.type} id={`custom-${index}`} required={field.required}/>
+                                      </InputGroup>
+                                    </FormGroup>
+                                  )
+                                }
+                              )}
                               { this.state.failure ?
                                 <FormGroup>
                                   <Alert color="danger" className="mt-4">

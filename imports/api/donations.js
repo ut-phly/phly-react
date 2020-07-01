@@ -40,7 +40,7 @@ Donations.schema = new SimpleSchema({
     'form.$.label': {type: String},
     'form.$.type': {type: String},
     'form.$.required': {type: Boolean},
-    'form.$.value': {type: String}
+    'form.$.value': {type: String, optional: true}
 });
 
 //this will automatically check against the scehma when created
@@ -55,7 +55,8 @@ Meteor.methods({
             donor: donation.donor,
             campaign: donation.campaign,
             nonprofit: donation.nonprofit,
-            amount: donation.amount
+            amount: donation.amount,
+            form: donation.form
         });
     },
 

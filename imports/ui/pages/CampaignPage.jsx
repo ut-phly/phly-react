@@ -151,10 +151,12 @@ export default class CampaignPage extends Component {
 
     getDonations = (donations) => {
       return donations.map((don) => {
+        let form = (don.form) ? don.form : [];
         return (
           <tr key={don._id}>
             <td>{don.donor}</td>
             <td>${Math.round(don.amount * 100) / 100}</td>
+            { form.map((field, index) => <td key={index}>{field.value ? field.value : ""}</td>) }
           </tr>
         )
       })
@@ -570,6 +572,7 @@ export default class CampaignPage extends Component {
         var obj = Campaigns.findOne({ _id: this.props.match.params.id });
         var donations = Donations.find({campaign: this.props.match.params.id}).fetch();
 
+        let form = [];
         let totalRaised = 0;
         let totalDonations = 0;
         let lastDonation = {};
@@ -591,6 +594,7 @@ export default class CampaignPage extends Component {
             var nonprofit = obj.nonprofit;
             var goalAmount = obj.goalAmount;
             var completed = (obj.complete != null) ? obj.complete : false;
+            if (obj.form != null) form = obj.form;
         }
 
         let percent = Math.round(totalRaised * 100 / goalAmount);
@@ -1004,6 +1008,7 @@ export default class CampaignPage extends Component {
                           <tr>
                             <th scope="col">Name</th>
                             <th scope="col">Payment</th>
+                            { form.map((field, index) => <th key={index} scope="col">{field.label}</th>) }
                           </tr>
                         </thead>
                         <tbody>

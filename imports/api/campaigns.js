@@ -89,20 +89,12 @@ Meteor.methods({
               nonprofit: campaign.nonprofit,
               goalAmount: campaign.goalAmount,
               braintree: true,
-              additionalInfo: "temp",
               payTo: "temp",
               payWith: "temp",
-              handle: "temp",
-              checkName: "temp",
-              address: "temp",
-              address2: "temp",
-              city: "temp",
-              state: "temp",
-              zipcode: "temp",
-              donationLink: "temp",
-              complete: false
+              complete: false,
+              form: campaign.form
           }
-        )
+        );
     },
 
     'campaigns.edit'(campaign, id) {

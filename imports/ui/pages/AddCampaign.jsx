@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { withHistory, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import ReactDatetime from 'react-datetime';
+import Datetime from 'react-datetime';
 import { withRouter } from 'react-router-dom';
+
+import FormBuilder from '../components/FormBuilder.jsx';
 
 import {
   Container,
@@ -15,8 +17,15 @@ import {
   FormGroup,
   Input,
   InputGroup,
-  Button
+  Button,
+  Label,
+  Alert
 } from 'reactstrap';
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faExclamationTriangle
+} from '@fortawesome/free-solid-svg-icons';
 
 export default class AddCampaign extends Component {
     constructor(props) {
@@ -24,17 +33,34 @@ export default class AddCampaign extends Component {
       this.state = {
         name: '',
         description: '',
-        startDate: new Date(),
-        endDate: new Date(),
+        startDate: null,
+        endDate: null,
         goalAmount: 0,
         nonprofit: '',
-        created: false
+        created: false,
+        advanced: false,
+        error: ''
       };
-
+      this.formRef = React.createRef(null);
     }
 
     handleSubmit = (event) => {
         event.preventDefault();
+
+        let fields = [];
+        if (this.state.advanced) {
+          fields = this.formRef.current.getFormContents();
+          if (fields === null) return;
+          console.log(fields);
+        }
+
+        for (var key in this.state) {
+          if ((this.state[key] === null || this.state[key] === "") && key !== "error") {
+            this.setState({ error: "Please fill out all the form fields"});
+            return;
+          }
+        }
+
         var campaign = {
             name: this.state.name,
             createdAt: new Date(),
@@ -44,7 +70,12 @@ export default class AddCampaign extends Component {
             description: this.state.description,
             nonprofit: this.state.nonprofit,
             goalAmount: this.state.goalAmount,
+            form: []
         }
+
+        console.log(fields);
+        if (this.state.advanced) campaign.form = fields;
+
         console.log(campaign);
         Meteor.call('campaigns.insert', campaign, (err) => {
           if (err) {
@@ -70,6 +101,12 @@ export default class AddCampaign extends Component {
 
     handleEndDayChange = (date) => {
       this.setState({endDate: date});
+    }
+
+    toggleAdvanced = () => {
+      this.setState({
+        advanced: !this.state.advanced
+      });
     }
 
     render() {
@@ -162,7 +199,7 @@ export default class AddCampaign extends Component {
                               Start Date
                             </label>
                             <InputGroup className="input-group-alternative">
-                              <ReactDatetime
+                              <Datetime
                                 inputProps={{
                                   placeholder: "Start Date"
                                 }}
@@ -182,7 +219,7 @@ export default class AddCampaign extends Component {
                           </label>
                           <FormGroup>
                             <InputGroup className="input-group-alternative">
-                              <ReactDatetime
+                              <Datetime
                                 inputProps={{
                                   placeholder: "End Date"
                                 }}
@@ -214,6 +251,27 @@ export default class AddCampaign extends Component {
                           </FormGroup>
                         </Col>
                       </Row>
+                      <Row className="my-3">
+                        <Col>
+                          <Button size="sm" color="secondary" type="button" onClick={this.toggleAdvanced}>
+                            { this.state.advanced ? "-" : "+"} Advanced
+                          </Button>
+                          { this.state.advanced ?
+                             <FormBuilder ref={this.formRef}/>
+                             : ""
+                          }
+                        </Col>
+                      </Row>
+                      { this.state.error ?
+                        <Alert color="danger" className="mt-4">
+                          <span className="alert-inner--icon">
+                            <FontAwesomeIcon icon={faExclamationTriangle}/>
+                          </span>{" "}
+                          <span className="alert-inner--text">
+                            {this.state.error}
+                          </span>
+                        </Alert> : ''
+                      }
                       <Row>
                         <Col className="text-right">
                           <FormGroup>
@@ -232,46 +290,6 @@ export default class AddCampaign extends Component {
               </Col>
             </Row>
           </Container>
-        {/*
-        <Responsive>
-          <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic clearing>
-            <Header as='h1'
-                    floated='left'
-                    color='orange'
-                    style={{
-                          fontSize: '2em',
-                          letterSpacing: '1.5px',
-                          margin: 0,
-                          paddingRight: '.5em' }}>
-              New Campaign
-            </Header>
-          </Segment>
-          <Segment style={{ backgroundColor: '#F9FFFF', margin: 0 }} basic clearing>
-            <Form noValidate onSubmit={this.handleSubmit}>
-              <Form.Group widths="equal">
-                <Form.Input fluid type="text" label="Name" value={this.state.name} onChange={this.handleChange('name')} />
-                <Form.Input fluid type="text" label="Non Profit" value={this.state.nonprofit} onChange={this.handleChange('nonprofit')} />
-              </Form.Group>
-              <Form.TextArea type="text" label="Description" value={this.state.description} onChange = {this.handleChange('description')} />
-              <Form.Group widths="equal">
-                <Form.Field>
-                  <label htmlFor="startDate">Start Date</label>
-                  <DayPickerInput onDayChange={this.handleStartDayChange.bind(this)}/>
-                </Form.Field>
-                <Form.Field>
-                  <label htmlFor="endDate">End Date</label>
-                  <DayPickerInput onDayChange={this.handleEndDayChange.bind(this)}/>
-                </Form.Field>
-                <Form.Field>
-                  <label>Goal</label>
-                  <Input type="number" label="$" value = {this.state.goalAmount} onChange = {this.handleChange('goalAmount')}/>
-                </Form.Field>
-              </Form.Group>
-              <Button color='orange' type='submit'>Create</Button>
-            </Form>
-          </Segment>
-        </Responsive>
-        */}
         </div>
       );
     }
