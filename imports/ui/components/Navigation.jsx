@@ -15,7 +15,7 @@ import {
 export default class Navigation extends React.Component {
 
   render() {
-    const { transparent, mobile } = this.props;
+    const { transparent, mobile, secondary } = this.props;
 
     return (
       <div>
@@ -52,8 +52,7 @@ export default class Navigation extends React.Component {
                 </NavItem>
                 <NavItem className="d-none d-lg-block ml-lg-4">
                   <Button
-                    className="btn-secondary"
-                    color="secondary"
+                    color={ secondary ? "white" : "secondary"}
                     tag={Link} to="/getstarted"
                   >
                     <span className="nav-link-inner--text ml-1">

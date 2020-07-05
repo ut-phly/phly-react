@@ -56,6 +56,10 @@ export default class FormBuilder extends Component {
 
   getFormContents = () => {
 
+    if (this.state.form.some((field) => (field.label === '' && field.type === '')) && inputs == 1) {
+      return [];
+    }
+
     if (this.state.form.some((field) => (field.label === '' || field.type === ''))) {
       this.setState({ error: "Please fill out all inputs or delete unused fields"});
       return null;
