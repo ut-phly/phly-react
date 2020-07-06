@@ -331,13 +331,6 @@ export default class Campaign extends Component {
                 :
                 <div>
                   {this.getCampaigns(donations)}
-                  {/*
-                  <Row className="mt-5 px-5">
-                    <Col>
-                      <h5 className="h4 mb-0 text-uppercase d-none d-lg-inline-block">Past Campaigns</h5>
-                    </Col>
-                  </Row>
-                  */}
                   {this.getPastCampaigns(donations)}
                 </div>
               }

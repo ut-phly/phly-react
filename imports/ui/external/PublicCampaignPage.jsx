@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Meteor } from 'meteor/meteor';
 import { Mongo } from 'meteor/mongo';
+import validator from "validator";
 import { withHistory, Link } from 'react-router-dom';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Donations } from '../../api/donations.js';
@@ -30,7 +31,8 @@ import {
   InputGroupAddon,
   Button,
   Alert,
-  Modal
+  Modal,
+  FormFeedback
 } from 'reactstrap';
 
 import {
@@ -40,7 +42,8 @@ import {
   faExclamationTriangle,
   faHandHoldingHeart,
   faExternalLinkAlt,
-  faCopy
+  faCopy,
+  faInfo
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -62,9 +65,28 @@ class PublicCampaignPage extends Component {
             error: '',
             markup: markup,
             popup: markup,
-            failure: false
+            failure: false,
+            payee: {
+              value: '',
+              valid: true
+            },
+            amount: {
+              value: '',
+              valid: true
+            },
+            'custom-0': {
+              value: '',
+              valid: true
+            },
+            'custom-1': {
+              value: '',
+              valid: true
+            },
+            'custom-2': {
+              value: '',
+              valid: true
+            },
         }
-
     }
 
     componentDidMount() {
@@ -99,15 +121,51 @@ class PublicCampaignPage extends Component {
 
               form.addEventListener('submit', function(event) {
                 event.preventDefault();
+
                 instance.requestPaymentMethod(function(requestPaymentMethodErr, payload) {
                   if (requestPaymentMethodErr) {
                     console.log(requestPaymentMethodErr);
                     return;
                   }
 
-                  let donation_amount = document.getElementById('donation-am').value;
-                  let donor = document.getElementById('donor').value;
+                  if (!self.state.amount.valid) {
+                    self.setState({ error: "Please enter a valid payment amount" });
+                    return;
+                  }
+                  let donation_amount = self.state.amount.value;
+
+                  if (!self.state.payee.valid) {
+                    self.setState({ error: "Please enter a name for the payment" });
+                    return;
+                  }
+                  let donor = self.state.payee.value;
                   donation_amount = parseFloat(donation_amount);
+
+                  let form = [];
+                  let invalid = false;
+                  if (self.props.campaign.form) {
+                    self.props.campaign.form.map((field, index) => {
+                      let value = self.state[`custom-${index}`].value;
+                      if (!self.state[`custom-${index}`].valid) invalid = true;
+
+
+                      if (field.type === "tel") {
+                        value = value.replace(/\D/g, "");
+                      }
+                      form.push({
+                        label: field.label,
+                        type: field.type,
+                        required: field.required,
+                        value: value
+                      })
+                    })
+                  }
+
+                  if (invalid) {
+                    self.setState({ error: "Please make sure all the required fields are filled and valid" });
+                    return;
+                  }
+
                   if (donation_amount && donor) {
                     let platform_fee = (self.props.campaign.fee) ? .31 : 0;
                     let braintree_fee = (self.props.campaign.braintree) ? (donation_amount *.029) + .3 : 0;
@@ -122,7 +180,8 @@ class PublicCampaignPage extends Component {
                           donor: donor,
                           campaign: self.props.campaign._id,
                           nonprofit: self.props.campaign.nonprofit,
-                          amount: donation_amount - platform_fee
+                          amount: donation_amount - platform_fee,
+                          form: form
                         }
                         Meteor.call('donations.insert', donation);
                         self.setState({ done: true, error: '' })
@@ -140,6 +199,40 @@ class PublicCampaignPage extends Component {
 
     }
 
+    onInputChange = (e) => {
+      let valid = this.validateInput(e.target.type, e.target.value) || !e.target.required;
+      this.setState({
+        [e.target.name]: {
+          value: e.target.value,
+          valid: valid
+        }
+      })
+    }
+
+    validateInput = (type, value) => {
+      switch (type) {
+        case "text":
+          return true;
+          break;
+
+        case "email":
+          return validator.isEmail(value);
+          break;
+
+        case "number":
+          return validator.isNumeric(value);
+          break;
+
+        case "tel":
+          return validator.isMobilePhone(value, "en-US");
+          break;
+
+        default:
+        return true;
+        break;
+      }
+    }
+
     toggle = () => {
       this.setState({ popup: !this.state.popup });
     }
@@ -152,6 +245,7 @@ class PublicCampaignPage extends Component {
         let goalAmount = "";
         let fee = false;
         let complete = false;
+        let form = [];
         if (this.props.campaign) {
             name = this.props.campaign.name;
             description = this.props.campaign.description;
@@ -159,6 +253,7 @@ class PublicCampaignPage extends Component {
             goalAmount = this.props.campaign.goalAmount;
             fee = this.props.campaign.braintree;
             complete = (this.props.campaign.complete) ? true : false;
+            if (this.props.campaign.form) form = this.props.campaign.form;
         }
 
         if (this.props.org) {
@@ -172,8 +267,6 @@ class PublicCampaignPage extends Component {
             totalRaised += donation.amount;
           }
         }
-
-
 
       return (
         <div>
@@ -206,9 +299,9 @@ class PublicCampaignPage extends Component {
                   </Modal>
                   <Card className="bg-white shadow border-0 p-4 mb-5">
                     <CardBody>
-                      <h2 className="display-2">{name}</h2>
-                      <h3>for {nonprofit}</h3>
-                      <h3>by {org}</h3>
+                      <h3 className="display-2">{name}</h3>
+                      <h4>for {nonprofit}</h4>
+                      <h4>by {org}</h4>
                       <ShowMore
                         className="lead"
                         lines={3}
@@ -251,32 +344,52 @@ class PublicCampaignPage extends Component {
                                   className="form-control-label"
                                   htmlFor="input-donor"
                                 >
-                                  Name
+                                  Name <span className="text-danger">*</span>
                                 </label>
-                                <InputGroup className="input-group-alternative" size="lg">
-                                  <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>
-                                      <FontAwesomeIcon icon={faUserCircle}/>
-                                    </InputGroupText>
-                                  </InputGroupAddon>
-                                  <Input placeholder="Enter your name" type="text" id="donor"/>
-                                </InputGroup>
+                                <Input
+                                  placeholder="Enter your name"
+                                  type="text" id="donor"
+                                  name="payee"
+                                  required
+                                  onChange={this.onInputChange}/>
                               </FormGroup>
+                              { form.map((field, index) => {
+                                  return (
+                                    <FormGroup key={index}>
+                                      <label
+                                        className="form-control-label"
+                                        htmlFor={`custom-${index}`}
+                                      >
+                                        {field.label} {field.required ? <span className="text-danger">*</span> : ""}
+                                      </label>
+                                      <Input
+                                        placeholder={field.label}
+                                        type={field.type}
+                                        name={`custom-${index}`}
+                                        required={field.required}
+                                        rows={field.type === "textarea" ? "4" : ""}
+                                        invalid={(this.state[`custom-${index}`]) ? !this.state[`custom-${index}`].valid : false}
+                                        onChange={this.onInputChange}
+                                        />
+                                    </FormGroup>
+                                  )
+                                }
+                              )}
                               <FormGroup>
                                 <label
                                   className="form-control-label"
-                                  htmlFor="input-donation-am"
+                                  htmlFor="donation"
                                 >
-                                  Payment
+                                  Payment <span className="text-danger">*</span>
                                 </label>
-                                <InputGroup className="input-group-alternative" size="lg">
-                                  <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>
-                                      <FontAwesomeIcon icon={faDollarSign}/>
-                                    </InputGroupText>
-                                  </InputGroupAddon>
-                                  <Input placeholder="00.00" type="number" id="donation-am" min="0"/>
-                                </InputGroup>
+                                <Input
+                                  placeholder="00.00"
+                                  type="number" id="donation"
+                                  name="amount"
+                                  min="0"
+                                  required
+                                  invalid={!this.state.amount.valid}
+                                  onChange={this.onInputChange}/>
                               </FormGroup>
                               { this.state.failure ?
                                 <FormGroup>
@@ -291,11 +404,22 @@ class PublicCampaignPage extends Component {
                                 </FormGroup>
 
                                 :
-                                <FormGroup>
+                                <FormGroup className="mt-4">
                                   <div id="payment-container"></div>
                                 </FormGroup>
+
                               }
                               { fee ? <p><i>Standard processing fee of 2.9% plus 30 cents is added to each payment.</i></p> : '' }
+                              { this.state.error ?
+                                <Alert color="danger" className="mt-4">
+                                  <span className="alert-inner--icon">
+                                    <FontAwesomeIcon icon={faExclamationTriangle}/>
+                                  </span>{" "}
+                                  <span className="alert-inner--text">
+                                    {this.state.error}
+                                  </span>
+                                </Alert> : ''
+                              }
                               <Button type="submit" size="lg" color="primary">Submit</Button>
                             </Form>
                             :

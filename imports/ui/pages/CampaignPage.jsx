@@ -151,10 +151,12 @@ export default class CampaignPage extends Component {
 
     getDonations = (donations) => {
       return donations.map((don) => {
+        let form = (don.form) ? don.form : [];
         return (
           <tr key={don._id}>
             <td>{don.donor}</td>
             <td>${Math.round(don.amount * 100) / 100}</td>
+            { form.map((field, index) => <td key={index}>{field.value ? field.value : ""}</td>) }
           </tr>
         )
       })
@@ -195,7 +197,7 @@ export default class CampaignPage extends Component {
           // if (field.label === "my organization"){
           //   this.setState({payTo: "org"});
           // }
-          // else if(field.label === "another organization or charity"){
+          // else if(field.label === "another organization or nonprofit"){
           //   this.setState({payTo: "outsideOrg"});
           // }
           // else if(field.label === "two or more organizations/charities"){
@@ -307,12 +309,12 @@ export default class CampaignPage extends Component {
                 className="form-control-label"
                 htmlFor="donationLink"
               >
-                Link to charity/organization website
+                Link to nonprofit/organization website
               </label>
               <Input
                 className="form-control-alternative"
                 id="donationLink"
-                placeholder="Paste the link to the org/charity's website here..."
+                placeholder="Paste the link to the org/nonprofit's website here..."
                 type="text"
                 onChange={this.handleChange("donationLink")}
               />
@@ -342,7 +344,7 @@ export default class CampaignPage extends Component {
               className="form-control-label"
               htmlFor="addInfo"
             >
-              We would love to help you send the funds to muliple organizations/charities.
+              We would love to help you send the funds to muliple organizations/nonprofits.
               Please describe your request below and our team will contact you in 3-5 business days.
             </label>
             <Input
@@ -535,8 +537,8 @@ export default class CampaignPage extends Component {
                     Where do you want the proceeds of this campaign to go?
                   </label>
                   {this.createAltForm({formName: "payTo", id: 0, label: "My organization"})}
-                  {this.createAltForm({formName: "payTo", id: 1, label: "Another organization or charity"})}
-                  {this.createAltForm({formName: "payTo", id: 2, label: "Two or more organizations/charities"})}
+                  {this.createAltForm({formName: "payTo", id: 1, label: "Another organization or nonprofit"})}
+                  {this.createAltForm({formName: "payTo", id: 2, label: "Two or more organizations/nonprofits"})}
                 </FormGroup>
                 {this.state.payTo === "org" ? this.showPaymentOptions() : null}
                 {this.showPaymentInfoFields()}
@@ -570,6 +572,7 @@ export default class CampaignPage extends Component {
         var obj = Campaigns.findOne({ _id: this.props.match.params.id });
         var donations = Donations.find({campaign: this.props.match.params.id}).fetch();
 
+        let form = [];
         let totalRaised = 0;
         let totalDonations = 0;
         let lastDonation = {};
@@ -591,6 +594,7 @@ export default class CampaignPage extends Component {
             var nonprofit = obj.nonprofit;
             var goalAmount = obj.goalAmount;
             var completed = (obj.complete != null) ? obj.complete : false;
+            if (obj.form != null) form = obj.form;
         }
 
         let percent = Math.round(totalRaised * 100 / goalAmount);
@@ -715,7 +719,7 @@ export default class CampaignPage extends Component {
               </div>
               <Container className="mt--7 mb-5" fluid>
                 <Row className="mt-3">
-                  <Col md="12">
+                  <Col md="4">
                     <Card className="shadow">
                       <CardHeader className="border-0">
                         <Row className="align-items-center">
@@ -749,12 +753,7 @@ export default class CampaignPage extends Component {
                                 <FontAwesomeIcon icon={faEdit}/>
                               </span>
                             </Button>
-                            <Button
-                              color="primary"
-                              onClick={() => this.toggleModal("share")}
-                            >
-                              Share
-                            </Button>
+
                             <Modal
                               className="modal-dialog-centered"
                               isOpen={this.state.share}
@@ -925,11 +924,11 @@ export default class CampaignPage extends Component {
                       </CardBody>
                     </Card>
                   </Col>
-                  <Col md="12">
-                    <Card className="shadow mt-5">
+                  <Col md="8">
+                    <Card className="shadow">
                       <CardHeader className="border-0">
                         <Row className="align-items-center">
-                          <Col lg="6" md="12">
+                          <Col lg="4" md="12">
                             <div className="col">
                               <h6 className="text-uppercase text-light ls-1 mb-1">
                                 Goal
@@ -947,18 +946,22 @@ export default class CampaignPage extends Component {
                               }
                             </div>
                           </Col>
-                          <Col lg="6" md="12" className="text-right">
+                          <Col lg="8" md="12" className="text-right">
+                            <Button
+                              color="primary"
+                              onClick={() => this.toggleModal("share")}
+                            >
+                              Share
+                            </Button>
                             { completed ?
                               <h3 className="text-success font-weight-bold">Complete</h3>
                               :
-                              <div>
-                                <Button
-                                  color="primary"
-                                  onClick={() => this.toggleModal("endCampaign")}
-                                >
-                                  End Campaign
-                                </Button>
-                              </div>
+                              <Button
+                                color="primary"
+                                onClick={() => this.toggleModal("endCampaign")}
+                              >
+                                End Campaign
+                              </Button>
                             }
                             <Modal
                               className="modal-dialog-centered"
@@ -999,6 +1002,7 @@ export default class CampaignPage extends Component {
                           <tr>
                             <th scope="col">Name</th>
                             <th scope="col">Payment</th>
+                            { form.map((field, index) => <th key={index} scope="col">{field.label}</th>) }
                           </tr>
                         </thead>
                         <tbody>

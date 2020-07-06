@@ -74,7 +74,7 @@ export default class GetStarted extends Component {
 
         return (
           <div>
-            <Navigation transparent/>
+            <Navigation transparent secondary/>
             <main>
               <section className="section bg-gradient-primary section-shaped section-lg section-bg">
                 <Container className="py-lg-md">
@@ -83,7 +83,7 @@ export default class GetStarted extends Component {
                       <Card className="bg-white shadow border-0">
                         { !this.state.success ?
                           <CardBody className="px-lg-5 py-lg-5">
-                            <p className="display-3 text-center">Sign up</p>
+                            <p className="display-3 text-center">Get Started</p>
                             <div className="text-center mb-3">
                               <small>Already have an account? Login <Link to="/login">here</Link>.</small>
                             </div>
@@ -167,12 +167,12 @@ export default class GetStarted extends Component {
                           </CardBody>
                           :
                           <CardBody className="px-lg-5 py-lg-5">
-                            <p className="display-3 text-center">Sign up</p>
+                            <p className="display-3 text-center">Get Started</p>
                             <div className="text-center mb-3">
                               <div className="icon icon-lg icon-shape icon-shape-secondary shadow rounded-circle mb-4">
                                 <FontAwesomeIcon icon={faCheckCircle}/>
                               </div>
-                              <p>Welcome to Phly! Check your email to login.</p>
+                              <p>Welcome to Phly! We will be sending an email with login instructions to <strong>{this.state.email}</strong> shortly.</p>
                               <small>If it doesn't show up immediately, check your spam folder.</small>
                             </div>
                           </CardBody>

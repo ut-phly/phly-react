@@ -151,6 +151,12 @@ class Marketplace extends Component {
                     <Row className=" align-items-center justify-content-md-between">
                       <Col md="6">
                         <div className=" copyright">
+                          Call us at <a href="tel:+15125222764">(512) 522-2764</a>
+                        </div>
+                        <div className=" copyright mt-2">
+                          Email us at <a href="mailto:hello@phly.co">hello@phly.co</a>
+                        </div>
+                        <div className=" copyright">
 
                           © {new Date().getFullYear()}{" "}
                           <a

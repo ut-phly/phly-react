@@ -73,6 +73,7 @@ Meteor.methods({
       let org = Organizations.findOne({ share: code });
       if (org) {
         Organizations.update({ share: code }, { $push: { users: user }});
+        Meteor.users.update(user, { $set: { org: org._id } });
       } else throw new Meteor.Error('join-error', "Join code is invalid");
     },
 
