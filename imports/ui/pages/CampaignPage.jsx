@@ -804,10 +804,8 @@ export default class CampaignPage extends Component {
                                       <Button
                                         href={`https://www.facebook.com/sharer/sharer.php?u=www.phly.co/public/${this.props.match.params.id}`}
                                         target="_blank"
-                                        className="btn-icon btn-2 mt-3"
-                                        color="facebook"
-                                        type="button"
-                                        block
+                                        className="button btn btn-facebook btn-block btn-icon btn-2 mt-3"
+
                                       >
                                         <span className="btn-inner--icon">
                                           <FontAwesomeIcon icon={faFacebook}/>
@@ -818,10 +816,7 @@ export default class CampaignPage extends Component {
                                       <Button
                                         href={`https://twitter.com/intent/tweet?url=www.phly.co/public/${this.props.match.params.id}`}
                                         target="_blank"
-                                        className="btn-icon btn-2 mt-3"
-                                        color="twitter"
-                                        type="button"
-                                        block
+                                        className="button btn btn-twitter btn-block btn-icon btn-2 mt-3"
                                       >
                                         <span className="btn-inner--icon">
                                           <FontAwesomeIcon icon={faTwitter}/>
