@@ -74,6 +74,10 @@ class PublicCampaignPage extends Component {
               value: '',
               valid: true
             },
+            phone: {
+              value: '',
+              valid: true
+            },
             'custom-0': {
               value: '',
               valid: true
@@ -132,6 +136,11 @@ class PublicCampaignPage extends Component {
                     self.setState({ error: "Please enter a valid payment amount" });
                     return;
                   }
+                  if (!self.state.phone.valid) {
+                    self.setState({ error: "Please enter a valid payment amount" });
+                    return;
+                  }
+
                   let donation_amount = self.state.amount.value;
 
                   if (!self.state.payee.valid) {
@@ -168,7 +177,7 @@ class PublicCampaignPage extends Component {
 
                   if (donation_amount && donor) {
                     let platform_fee = (self.props.campaign.fee) ? .31 : 0;
-                    let braintree_fee = (self.props.campaign.braintree) ? (donation_amount *.029) + .3 : 0;
+                    let braintree_fee = (self.props.campaign.braintree) ? (donation_amount *.0299) + .31 : 0;
                     donation_amount += platform_fee;
 
                     Meteor.call('createTransaction', payload.nonce, Math.ceil((donation_amount + braintree_fee) * 100) / 100, function(transactionError, result) {
@@ -177,7 +186,9 @@ class PublicCampaignPage extends Component {
                         self.setState({ failure: true });
                       } else {
                         var donation = {
+                          transaction: result.transaction.id,
                           donor: donor,
+                          phone: self.state.phone.value,
                           campaign: self.props.campaign._id,
                           nonprofit: self.props.campaign.nonprofit,
                           amount: donation_amount - platform_fee,
@@ -220,7 +231,7 @@ class PublicCampaignPage extends Component {
           break;
 
         case "number":
-          return validator.isNumeric(value);
+          return validator.isCurrency(value);
           break;
 
         case "tel":
@@ -299,7 +310,7 @@ class PublicCampaignPage extends Component {
                   </Modal>
                   <Card className="bg-white shadow border-0 p-4 mb-5">
                     <CardBody>
-                      <h3 className="display-2">{name}</h3>
+                      <h3 className="display-3">{name}</h3>
                       <h4>for {nonprofit}</h4>
                       <h4>by {org}</h4>
                       <ShowMore
@@ -351,6 +362,21 @@ class PublicCampaignPage extends Component {
                                   type="text" id="donor"
                                   name="payee"
                                   required
+                                  onChange={this.onInputChange}/>
+                              </FormGroup>
+                              <FormGroup className="mb-3">
+                                <label
+                                  className="form-control-label"
+                                  htmlFor="input-phone"
+                                >
+                                  Phone Number <span className="text-danger">*</span>
+                                </label>
+                                <Input
+                                  placeholder="Enter your name"
+                                  type="tel" id="phone"
+                                  name="phone"
+                                  required
+                                  invalid={!this.state.phone.valid}
                                   onChange={this.onInputChange}/>
                               </FormGroup>
                               { form.map((field, index) => {

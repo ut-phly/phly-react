@@ -9,7 +9,13 @@ export const Donations = new Mongo.Collection('donations');
 
 if (Meteor.isServer) {
     Meteor.publish('donations', function donationPublication() {
-        return Donations.find({});
+        return Donations.find({}, {
+          fields: {
+            phone: 0,
+            transaction: 0,
+            form: 0,
+            donor: 0,
+        }});
     });
 
     Meteor.publish('myDonations', function () {
@@ -31,10 +37,12 @@ if (Meteor.isServer) {
 
 Donations.schema = new SimpleSchema({
     createdAt: {type: Date},
+    transaction: {type: String},
     donor: {type: String},
     campaign: {type: String},
     nonprofit: {type: String},
     amount: {type: Number},
+    phone: {type: Number},
     form: {type: Array, optional: true},
     'form.$': {type: Object},
     'form.$.label': {type: String},
@@ -52,7 +60,9 @@ Meteor.methods({
         // add validation that the user is signed in and the schema is correct
         Donations.insert({
             createdAt: new Date(),
+            transaction: donation.transaction,
             donor: donation.donor,
+            phone: donation.phone,
             campaign: donation.campaign,
             nonprofit: donation.nonprofit,
             amount: donation.amount,

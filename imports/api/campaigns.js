@@ -14,19 +14,20 @@ export const Campaigns = new Mongo.Collection('campaigns');
 if (Meteor.isServer) {
     Meteor.publish('campaigns', function campaignPublication() {
         return Campaigns.find({}, {
-          owner: 0,
-          payTo: 0,
-          payWith: 0,
-          handle: 0,
-          checkName: 0,
-          address: 0,
-          address2: 0,
-          city: 0,
-          state: 0,
-          zipcode: 0,
-          donationLink: 0,
-          additionalInfo: 0
-        });
+          fields: {
+            owner: 0,
+            payTo: 0,
+            payWith: 0,
+            handle: 0,
+            checkName: 0,
+            address: 0,
+            address2: 0,
+            city: 0,
+            state: 0,
+            zipcode: 0,
+            donationLink: 0,
+            additionalInfo: 0
+        }});
     });
 
     Meteor.publish('myCampaigns', function () {

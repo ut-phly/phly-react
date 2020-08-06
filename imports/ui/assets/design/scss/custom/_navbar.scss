@@ -19,6 +19,10 @@
       text-transform: $navbar-nav-link-text-transform;
       color: $primary;
     }
+
+    .navbar-toggler {
+        color: $default;
+    }
 }
 
 .navbar-brand {

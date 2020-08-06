@@ -14,6 +14,8 @@ import CampaignContainer from '../ui/external/PublicCampaignPage.jsx';
 import MarketplaceContainer from '../ui/external/Marketplace.jsx';
 import Policies from '../ui/external/Policies.jsx';
 import Terms from '../ui/external/Terms.jsx';
+import AboutUs from '../ui/external/AboutUs.jsx';
+import Pricing from '../ui/external/Pricing.jsx';
 
 import { Campaigns } from '../api/campaigns.js';
 
@@ -29,6 +31,8 @@ export const renderRoutes = () => (
         <Route path="/campaigns" component={MarketplaceContainer}/>
         <Route path="/policies" component={Policies}/>
         <Route path="/tos" component={Terms}/>
+        <Route path="/aboutus" component={AboutUs}/>
+        <Route path="/pricing" component={Pricing}/>
       </div>
     </Router>
 );

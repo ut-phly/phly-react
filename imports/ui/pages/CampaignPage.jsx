@@ -719,10 +719,10 @@ export default class CampaignPage extends Component {
               </div>
               <Container className="mt--7 mb-5" fluid>
                 <Row className="mt-3">
-                  <Col md="4">
+                  <Col md="4" xs="12">
                     <Card className="shadow">
                       <CardHeader className="border-0">
-                        <Row className="align-items-center">
+                        <Row>
                           <Col xs="8">
                             <div className="col">
                               <h6 className="text-uppercase text-light ls-1 mb-1">
@@ -924,7 +924,7 @@ export default class CampaignPage extends Component {
                       </CardBody>
                     </Card>
                   </Col>
-                  <Col md="8">
+                  <Col md="8" xs="12">
                     <Card className="shadow">
                       <CardHeader className="border-0">
                         <Row className="align-items-center">

@@ -130,7 +130,7 @@ export default class RegisterPage extends Component {
 
         return (
           <div>
-            <Navigation transparent secondary/>
+            <Navigation transparent secondary mobile/>
             <main>
               <section className="section bg-gradient-secondary section-shaped section-lg section-bg">
                 <Container className="py-lg-md">

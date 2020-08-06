@@ -386,15 +386,13 @@ class Landing extends React.Component {
                   <NavItem>
                     <NavLink
                       href="https://www.phly.co"
-                      target="_blank"
                     >
                       Phly
                     </NavLink>
                   </NavItem>
                   <NavItem>
                     <NavLink
-                      href="https://www.phly.co"
-                      target="_blank"
+                      href="https://www.phly.co/aboutus"
                     >
                       About Us
                     </NavLink>
@@ -402,7 +400,6 @@ class Landing extends React.Component {
                   <NavItem>
                     <NavLink
                       href="https://www.phly.co/tos"
-                      target="_blank"
                     >
                       Terms of Service
                     </NavLink>

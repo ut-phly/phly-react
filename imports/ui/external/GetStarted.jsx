@@ -74,7 +74,7 @@ export default class GetStarted extends Component {
 
         return (
           <div>
-            <Navigation transparent secondary/>
+            <Navigation transparent secondary mobile/>
             <main>
               <section className="section bg-gradient-primary section-shaped section-lg section-bg">
                 <Container className="py-lg-md">
