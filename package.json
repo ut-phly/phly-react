@@ -24,7 +24,7 @@
         "lodash": "^4.17.15",
         "meteor-node-stubs": "^0.4.1",
         "moment": "^2.24.0",
-        "node-sass": "^4.14.1",
+        "node-sass": "^7.0.0",
         "node-url-shortener": "^1.0.1",
         "postcss": "^6.0.23",
         "postcss-load-config": "^1.2.0",
