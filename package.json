@@ -23,7 +23,7 @@
         "ios-webkit-debug-proxy": "0.0.3",
         "lodash": "^4.17.15",
         "meteor-node-stubs": "^0.4.1",
-        "moment": "^2.24.0",
+        "moment": "^2.29.4",
         "node-sass": "^4.14.1",
         "node-url-shortener": "^1.0.1",
         "postcss": "^6.0.23",
